@@ -52,6 +52,8 @@
 #define DW_ATE(name, value) , name = value
 #define DW_ATE_DUP(name, value) , name = value
 #define DW_CFA(name, value) , name = value
+#define DW_IDX(name, value) , name = value
+#define DW_IDX_DUP(name, value) , name = value
 
 #define DW_FIRST_TAG(name, value) enum dwarf_tag { \
   name = value
@@ -71,6 +73,9 @@
 #define DW_FIRST_CFA(name, value) enum dwarf_call_frame_info { \
   name = value
 #define DW_END_CFA };
+#define DW_FIRST_IDX(name, value) enum dwarf_name_index_attribute { \
+  name = value
+#define DW_END_IDX };
 
 #include "dwarf2.def"
 
@@ -86,6 +91,8 @@
 #undef DW_END_ATE
 #undef DW_FIRST_CFA
 #undef DW_END_CFA
+#undef DW_FIRST_IDX
+#undef DW_END_IDX
 
 #undef DW_TAG
 #undef DW_TAG_DUP
@@ -97,6 +104,8 @@
 #undef DW_ATE
 #undef DW_ATE_DUP
 #undef DW_CFA
+#undef DW_IDX
+#undef DW_IDX_DUP
 
 /* Flag that tells whether entry has a child or not.  */
 #define DW_children_no   0
@@ -422,6 +431,10 @@ extern const char *get_DW_ATE_name (unsigned int enc);
 /* Return the name of a DW_CFA_ constant, or NULL if the value is not
    recognized.  */
 extern const char *get_DW_CFA_name (unsigned int opc);
+
+/* Return the name of a DW_IDX_ constant, or NULL if the value is not
+   recognized.  */
+extern const char *get_DW_IDX_name (unsigned int idx);
 
 #ifdef __cplusplus
 }
