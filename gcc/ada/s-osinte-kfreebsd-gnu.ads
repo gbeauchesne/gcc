@@ -45,6 +45,7 @@ package System.OS_Interface is
    pragma Preelaborate;
 
    pragma Linker_Options ("-lpthread");
+   pragma Linker_Options ("-lrt");
 
    subtype int            is Interfaces.C.int;
    subtype char           is Interfaces.C.char;
@@ -206,9 +207,7 @@ package System.OS_Interface is
    function nanosleep (rqtp, rmtp : access timespec) return int;
    pragma Import (C, nanosleep, "nanosleep");
 
-   type clockid_t is private;
-
-   CLOCK_REALTIME : constant clockid_t;
+   type clockid_t is new int;
 
    function clock_gettime
      (clock_id : clockid_t;
@@ -441,31 +440,25 @@ package System.OS_Interface is
    PTHREAD_PRIO_PROTECT : constant := 2;
    PTHREAD_PRIO_INHERIT : constant := 1;
 
+   --  GNU/kFreeBSD does not support Thread Priority Protection or Thread
+   --  Priority Inheritance and lacks some pthread_mutexattr_* functions.
+   --  Replace them with dummy versions.
+
    function pthread_mutexattr_setprotocol
      (attr     : access pthread_mutexattr_t;
       protocol : int) return int;
-   pragma Import
-      (C, pthread_mutexattr_setprotocol, "pthread_mutexattr_setprotocol");
 
    function pthread_mutexattr_getprotocol
      (attr     : access pthread_mutexattr_t;
       protocol : access int) return int;
-   pragma Import
-     (C, pthread_mutexattr_getprotocol, "pthread_mutexattr_getprotocol");
 
    function pthread_mutexattr_setprioceiling
      (attr     : access pthread_mutexattr_t;
       prioceiling : int) return int;
-   pragma Import
-     (C, pthread_mutexattr_setprioceiling,
-      "pthread_mutexattr_setprioceiling");
 
    function pthread_mutexattr_getprioceiling
      (attr     : access pthread_mutexattr_t;
       prioceiling : access int) return int;
-   pragma Import
-     (C, pthread_mutexattr_getprioceiling,
-      "pthread_mutexattr_getprioceiling");
 
    type struct_sched_param is record
       sched_priority : int;  --  scheduling priority
@@ -592,8 +585,8 @@ private
    --  #define sa_handler __sigaction_u._handler
    --  #define sa_sigaction __sigaction_u._sigaction
 
-   --  Should we add a signal_context type here ?
-   --  How could it be done independent of the CPU architecture ?
+   --  Should we add a signal_context type here ???
+   --  How could it be done independent of the CPU architecture ???
    --  sigcontext type is opaque, so it is architecturally neutral.
    --  It is always passed as an access type, so define it as an empty record
    --  since the contents are not used anywhere.
@@ -609,9 +602,6 @@ private
       tv_nsec : long;
    end record;
    pragma Convention (C, timespec);
-
-   type clockid_t is new int;
-   CLOCK_REALTIME : constant clockid_t := 0;
 
    type pthread_attr_t is record
       detachstate   : int;

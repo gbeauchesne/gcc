@@ -243,6 +243,7 @@
 #endif
 
 #if defined (__FreeBSD__) || defined (__vxworks) || defined(__rtems__) \
+ || defined (__FreeBSD_kernel__) || defined(__GNU__) \
  || defined (__DragonFly__) || defined (__NetBSD__) || defined (__OpenBSD__)
 # define Has_Sockaddr_Len 1
 #else

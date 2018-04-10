@@ -1071,7 +1071,8 @@ __gnat_setup_winsize (void *desc, int rows, int columns)
 /* On some system termio is either absent or including it will disable termios
    (HP-UX) */
 #if !defined (__hpux__) && !defined (BSD) && !defined (__APPLE__) \
-  && !defined (__rtems__)
+  && ! defined (__FreeBSD_kernel__) && ! defined (__GNU__) \
+  && ! defined (__rtems__)
 #   include <termio.h>
 #endif
 
