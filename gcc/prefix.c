@@ -70,7 +70,10 @@ License along with GCC; see the file COPYING3.  If not see
 #include <windows.h>
 #endif
 #include "prefix.h"
+
+#ifndef USED_FOR_TARGET
 #include "common/common-target.h"
+#endif
 
 static const char *std_prefix = PREFIX;
 
@@ -284,7 +287,11 @@ update_path (const char *path, const char *key)
 	  && (p != result && IS_DIR_SEPARATOR (p[-1])))
 	{
 	  *p = 0;
+#ifndef USED_FOR_TARGET
 	  if (!targetm_common.always_strip_dotdot
+#else
+	  if (true
+#endif
 	      && access (result, X_OK) == 0)
 	    {
 	      *p = '.';

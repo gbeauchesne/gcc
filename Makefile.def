@@ -190,6 +190,13 @@ target_modules = { module= libgnatvsn; no_check=true;
 		   missing= TAGS;
 		   missing= install-info;
 		   missing= installcheck; };
+target_modules = { module= libgnatprj; no_check=true;
+		   missing= info;
+		   missing= dvi;
+		   missing= html;
+		   missing= TAGS;
+		   missing= install-info;
+		   missing= installcheck; };
 target_modules = { module= libgomp; bootstrap= true; lib_path=.libs; };
 target_modules = { module= libitm; lib_path=.libs; };
 target_modules = { module= libatomic; lib_path=.libs; };
@@ -389,8 +396,12 @@ dependencies = { module=all-fixincludes; on=all-libiberty; };
 dependencies = { module=all-target-libada; on=all-gcc; };
 dependencies = { module=all-gnattools; on=all-target-libada; };
 dependencies = { module=all-gnattools; on=all-target-libgnatvsn; };
+dependencies = { module=all-gnattools; on=all-target-libgnatprj; };
 dependencies = { module=all-target-libgnatvsn; on=all-target-libada; };
+dependencies = { module=all-target-libgnatprj; on=all-target-libgnatvsn; };
+dependencies = { module=all-target-libgnatprj; on=all-target-libiberty; };
 dependencies = { module=all-gnattools; on=all-target-libstdc++-v3; };
+dependencies = { module=all-target-libgnatvsn; on=all-target-libstdc++-v3; };
 
 // Depending on the specific configuration, the LTO plugin will either use the
 // generic libiberty build or the specific build for linker plugins.
