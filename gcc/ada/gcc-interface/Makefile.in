@@ -1992,7 +1992,10 @@ ifeq ($(strip $(filter-out arm% linux-gnueabi%,$(target_cpu) $(target_os))),)
     LIBGNAT_TARGET_PAIRS += \
     system.ads<system-linux-armeb.ads
   else
-    EH_MECHANISM=-arm
+    # Special case; the GCC exception mechanism is supported under
+    # another name and with different files than for other
+    # target_cpus.
+    override EH_MECHANISM=-arm
     LIBGNAT_TARGET_PAIRS += \
     system.ads<system-linux-armel.ads \
     a-exexpr.adb<a-exexpr-gcc.adb \
