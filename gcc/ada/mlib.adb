@@ -30,6 +30,7 @@ with System;
 with Opt;
 with Output; use Output;
 
+with MLib.Tgt;
 with MLib.Utl; use MLib.Utl;
 
 with Prj.Com;
@@ -393,7 +394,11 @@ package body MLib is
    -- Major_Id_Name --
    -------------------
 
-   function Major_Id_Name
+   function Major_Id_Name_If_Supported
+     (Lib_Filename : String;
+      Lib_Version  : String)
+      return String;
+   function Major_Id_Name_If_Supported
      (Lib_Filename : String;
       Lib_Version  : String)
       return String
@@ -444,6 +449,19 @@ package body MLib is
 
       if Ok_Maj then
          return Maj_Version (Maj_Version'First .. Last_Maj);
+      else
+         return "";
+      end if;
+   end Major_Id_Name_If_Supported;
+
+   function Major_Id_Name
+     (Lib_Filename : String;
+      Lib_Version  : String)
+      return String
+   is
+   begin
+      if MLib.Tgt.Library_Major_Minor_Id_Supported then
+         return Major_Id_Name_If_Supported (Lib_Filename, Lib_Version);
       else
          return "";
       end if;

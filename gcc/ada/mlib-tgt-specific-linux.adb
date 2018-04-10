@@ -50,6 +50,8 @@ package body MLib.Tgt.Specific is
 
    function Is_Archive_Ext (Ext : String) return Boolean;
 
+   function Library_Major_Minor_Id_Supported return Boolean;
+
    ---------------------------
    -- Build_Dynamic_Library --
    ---------------------------
@@ -142,7 +144,18 @@ package body MLib.Tgt.Specific is
       return Ext = ".a" or else Ext = ".so";
    end Is_Archive_Ext;
 
+   --------------------------------------
+   -- Library_Major_Minor_Id_Supported --
+   --------------------------------------
+
+   function Library_Major_Minor_Id_Supported return Boolean is
+   begin
+      return False;
+   end Library_Major_Minor_Id_Supported;
+
 begin
    Build_Dynamic_Library_Ptr := Build_Dynamic_Library'Access;
    Is_Archive_Ext_Ptr := Is_Archive_Ext'Access;
+   Library_Major_Minor_Id_Supported_Ptr :=
+                                Library_Major_Minor_Id_Supported'Access;
 end MLib.Tgt.Specific;
