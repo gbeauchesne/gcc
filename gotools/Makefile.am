@@ -18,8 +18,9 @@
 ACLOCAL_AMFLAGS = -I ./config -I ../config
 
 gcc_version := $(shell $(GCC_FOR_TARGET) -dumpversion)
+short_version := $(shell echo $(gcc_version) | sed -r 's/([0-9]+)\..*/\1/')
 
-libexecsubdir = $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
+libexecsubdir = $(libexecdir)/gcc/$(target_noncanonical)/$(short_version)
 
 mkinstalldirs = $(SHELL) $(toplevel_srcdir)/mkinstalldirs
 PWD_COMMAND = $${PWDCMD-pwd}

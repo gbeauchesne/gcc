@@ -16,6 +16,7 @@ endif
 SUBDIRS = ${subdirs}
 
 gcc_version := $(shell $(GOC) -dumpversion)
+short_version := $(shell echo $(gcc_version) | sed -r 's/([0-9]+)\..*/\1/')
 
 MAINT_CHARSET = latin1
 
@@ -25,8 +26,8 @@ STAMP = echo timestamp >
 
 toolexecdir = $(glibgo_toolexecdir)
 toolexeclibdir = $(glibgo_toolexeclibdir)
-toolexeclibgodir = $(nover_glibgo_toolexeclibdir)/go/$(gcc_version)/$(target_alias)
-libexecsubdir = $(libexecdir)/gcc/$(target_alias)/$(gcc_version)
+toolexeclibgodir = $(nover_glibgo_toolexeclibdir)/go/$(short_version)
+libexecsubdir = $(libexecdir)/gcc/$(target_alias)/$(short_version)
 
 LIBFFI = @LIBFFI@
 LIBFFIINCS = @LIBFFIINCS@

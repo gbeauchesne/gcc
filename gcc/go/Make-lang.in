@@ -219,7 +219,9 @@ go.stageprofile: stageprofile-start
 go.stagefeedback: stagefeedback-start
 	-mv go/*$(objext) stagefeedback/go
 
-CFLAGS-go/go-lang.o += -DDEFAULT_TARGET_VERSION=\"$(version)\" \
+short_version := $(shell echo $(version) | sed -r 's/([0-9]+).*/\1/')
+
+CFLAGS-go/go-lang.o += -DDEFAULT_TARGET_VERSION=\"$(short_version)\" \
 	-DDEFAULT_TARGET_MACHINE=\"$(target_noncanonical)\"
 
 GOINCLUDES = -I $(srcdir)/go -I $(srcdir)/go/gofrontend
