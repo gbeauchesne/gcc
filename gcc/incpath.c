@@ -171,6 +171,14 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 			str = reconcat (str, str, dir_separator_str,
 					imultiarch, NULL);
 		    }
+		  {
+		    char *rp = lrealpath (str);
+		    if (rp)
+		      {
+			free (str);
+			str = rp;
+		      }
+		  }
 		  add_path (str, SYSTEM, p->cxx_aware, false);
 		}
 	    }
@@ -245,6 +253,14 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 	      else
 		str = reconcat (str, str, dir_separator_str, imultiarch, NULL);
 	    }
+	  {
+	    char *rp = lrealpath (str);
+	    if (rp)
+	      {
+		free (str);
+		str = rp;
+	      }
+	  }
 
 	  add_path (str, SYSTEM, p->cxx_aware, false);
 	}
