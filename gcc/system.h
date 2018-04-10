@@ -678,7 +678,9 @@ extern int vsnprintf (char *, size_t, const char *, va_list);
 
 /* Do not introduce a gmp.h dependency on the build system.  */
 #ifndef GENERATOR_FILE
+#ifndef LIBGNATPRJ_CROSS_HACK
 #include <gmp.h>
+#endif
 #endif
 
 /* Get libiberty declarations.  */

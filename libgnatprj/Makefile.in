@@ -37,7 +37,7 @@ TOOLS_TARGET_PAIRS := @TOOLS_TARGET_PAIRS@
 LN_S := @LN_S@
 
 ifneq (@build@,@host@)
-   CFLAGS += -b @host@
+   override CFLAGS += -DLIBGNATPRJ_CROSS_HACK
 endif
 
 .PHONY: libgnatprj install

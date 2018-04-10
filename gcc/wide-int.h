@@ -3106,7 +3106,9 @@ namespace wi
   wide_int from_buffer (const unsigned char *, unsigned int);
 
 #ifndef GENERATOR_FILE
+#ifndef LIBGNATPRJ_CROSS_HACK
   void to_mpz (const wide_int_ref &, mpz_t, signop);
+#endif
 #endif
 
   wide_int mask (unsigned int, bool, unsigned int);
