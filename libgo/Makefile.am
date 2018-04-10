@@ -2145,6 +2145,12 @@ else
 os_lib_inotify_lo =
 endif
 
+if LIBGO_IS_LINUX
+syscall_lib_clone_lo = syscall/clone_linux.lo
+else
+syscall_lib_clone_lo =
+endif
+
 libgo_go_objs = \
 	bufio.lo \
 	bytes.lo \
@@ -2175,6 +2181,7 @@ libgo_go_objs = \
 	strings/index.lo \
 	sync.lo \
 	syscall.lo \
+	$(syscall_lib_clone_lo) \
 	syscall/errno.lo \
 	syscall/signame.lo \
 	syscall/wait.lo \
@@ -3820,6 +3827,9 @@ syscall.lo.dep: $(go_syscall_files)
 	$(BUILDDEPS)
 syscall.lo: $(go_syscall_files)
 	$(BUILDPACKAGE)
+syscall/clone_linux.lo: go/syscall/clone_linux.c
+	@$(MKDIR_P) syscall
+	$(LTCOMPILE) -c -o $@ $<
 syscall/errno.lo: go/syscall/errno.c
 	@$(MKDIR_P) syscall
 	$(LTCOMPILE) -c -o $@ $<

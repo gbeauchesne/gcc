@@ -173,15 +173,16 @@ am__objects_3 = $(am__objects_2)
 am_libnetgo_a_OBJECTS = $(am__objects_3)
 libnetgo_a_OBJECTS = $(am_libnetgo_a_OBJECTS)
 LTLIBRARIES = $(toolexeclib_LTLIBRARIES)
-am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = bufio.lo bytes.lo bytes/index.lo crypto.lo \
+@LIBGO_IS_LINUX_TRUE@am__DEPENDENCIES_1 = syscall/clone_linux.lo
+am__DEPENDENCIES_2 =
+am__DEPENDENCIES_3 = bufio.lo bytes.lo bytes/index.lo crypto.lo \
 	encoding.lo errors.lo expvar.lo flag.lo fmt.lo hash.lo html.lo \
 	image.lo io.lo log.lo math.lo mime.lo net.lo os.lo path.lo \
 	reflect-go.lo reflect/makefunc_ffi_c.lo regexp.lo \
 	runtime-go.lo sort.lo strconv.lo strings.lo strings/index.lo \
-	sync.lo syscall.lo syscall/errno.lo syscall/signame.lo \
-	syscall/wait.lo testing.lo time-go.lo unicode.lo \
-	archive/tar.lo archive/zip.lo compress/bzip2.lo \
+	sync.lo syscall.lo $(am__DEPENDENCIES_1) syscall/errno.lo \
+	syscall/signame.lo syscall/wait.lo testing.lo time-go.lo \
+	unicode.lo archive/tar.lo archive/zip.lo compress/bzip2.lo \
 	compress/flate.lo compress/gzip.lo compress/lzw.lo \
 	compress/zlib.lo container/heap.lo container/list.lo \
 	container/ring.lo crypto/aes.lo crypto/cipher.lo crypto/des.lo \
@@ -213,18 +214,18 @@ am__DEPENDENCIES_2 = bufio.lo bytes.lo bytes/index.lo crypto.lo \
 	math/rand.lo mime/multipart.lo mime/quotedprintable.lo \
 	net/http.lo net/internal/socktest.lo net/mail.lo net/rpc.lo \
 	net/smtp.lo net/textproto.lo net/url.lo old/regexp.lo \
-	old/template.lo os/exec.lo $(am__DEPENDENCIES_1) os/signal.lo \
+	old/template.lo os/exec.lo $(am__DEPENDENCIES_2) os/signal.lo \
 	os/user.lo path/filepath.lo regexp/syntax.lo \
 	net/rpc/jsonrpc.lo runtime/debug.lo runtime/pprof.lo \
 	sync/atomic.lo sync/atomic_c.lo text/scanner.lo \
 	text/tabwriter.lo text/template.lo text/template/parse.lo \
 	testing/iotest.lo testing/quick.lo unicode/utf16.lo \
 	unicode/utf8.lo
-am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) \
-	../libbacktrace/libbacktrace.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
-libgo_llgo_la_DEPENDENCIES = $(am__DEPENDENCIES_3)
+am__DEPENDENCIES_4 = $(am__DEPENDENCIES_3) \
+	../libbacktrace/libbacktrace.la $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2)
+libgo_llgo_la_DEPENDENCIES = $(am__DEPENDENCIES_4)
 @LIBGO_IS_LINUX_FALSE@am__objects_4 = lock_sema.lo thread-sema.lo
 @LIBGO_IS_LINUX_TRUE@am__objects_4 = lock_futex.lo thread-linux.lo
 @HAVE_SYS_MMAN_H_FALSE@am__objects_5 = mem_posix_memalign.lo
@@ -276,7 +277,7 @@ libgo_llgo_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libgo_llgo_la_LDFLAGS) $(LDFLAGS) -o $@
 @GOC_IS_LLGO_TRUE@am_libgo_llgo_la_rpath = -rpath $(toolexeclibdir)
-libgo_la_DEPENDENCIES = $(am__DEPENDENCIES_3)
+libgo_la_DEPENDENCIES = $(am__DEPENDENCIES_4)
 am_libgo_la_OBJECTS = $(am__objects_9)
 libgo_la_OBJECTS = $(am_libgo_la_OBJECTS)
 libgo_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
@@ -2156,6 +2157,8 @@ go_syscall_test_files = \
 
 # os_lib_inotify_lo = os/inotify.lo
 @LIBGO_IS_LINUX_TRUE@os_lib_inotify_lo = 
+@LIBGO_IS_LINUX_FALSE@syscall_lib_clone_lo = 
+@LIBGO_IS_LINUX_TRUE@syscall_lib_clone_lo = syscall/clone_linux.lo
 libgo_go_objs = \
 	bufio.lo \
 	bytes.lo \
@@ -2186,6 +2189,7 @@ libgo_go_objs = \
 	strings/index.lo \
 	sync.lo \
 	syscall.lo \
+	$(syscall_lib_clone_lo) \
 	syscall/errno.lo \
 	syscall/signame.lo \
 	syscall/wait.lo \
@@ -6197,6 +6201,9 @@ syscall.lo.dep: $(go_syscall_files)
 	$(BUILDDEPS)
 syscall.lo: $(go_syscall_files)
 	$(BUILDPACKAGE)
+syscall/clone_linux.lo: go/syscall/clone_linux.c
+	@$(MKDIR_P) syscall
+	$(LTCOMPILE) -c -o $@ $<
 syscall/errno.lo: go/syscall/errno.c
 	@$(MKDIR_P) syscall
 	$(LTCOMPILE) -c -o $@ $<
