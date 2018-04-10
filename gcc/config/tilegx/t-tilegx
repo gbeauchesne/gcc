@@ -1,6 +1,7 @@
 MULTILIB_OPTIONS = m64/m32
 MULTILIB_DIRNAMES = 64 32
-MULTILIB_OSDIRNAMES = ../lib ../lib32
+MULTILIB_OSDIRNAMES = ../lib$(call if_multiarch,:tilegx-linux-gnu) ../lib32$(call if_multiarch,:tilegx32-linux-gnu)
+MULTIARCH_DIRNAME = $(call if_multiarch,tilegx-linux-gnu)
 
 LIBGCC = stmp-multilib
 INSTALL_LIBGCC = install-multilib

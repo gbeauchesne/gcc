@@ -2094,6 +2094,11 @@ mips*-*-linux*)				# Linux MIPS, either endian.
 			target_cpu_default=MASK_SOFT_FLOAT_ABI
 			enable_mips_multilibs="yes"
 			;;
+		mipsisa64r6*-*-linux-gnuabi64)
+			default_mips_abi=64
+			default_mips_arch=mips64r6
+			enable_mips_multilibs="yes"
+			;;
 		mipsisa64r6*-*-linux*)
 			default_mips_abi=n32
 			default_mips_arch=mips64r6
@@ -2102,6 +2107,10 @@ mips*-*-linux*)				# Linux MIPS, either endian.
 		mipsisa64r2*-*-linux*)
 			default_mips_abi=n32
 			default_mips_arch=mips64r2
+			enable_mips_multilibs="yes"
+			;;
+		mips64*-*-linux-gnuabi64 | mipsisa64*-*-linux-gnuabi64)
+			default_mips_abi=64
 			enable_mips_multilibs="yes"
 			;;
 		mips64*-*-linux* | mipsisa64*-*-linux*)
@@ -4453,7 +4462,7 @@ case ${target} in
 	i[34567]86-*-darwin* | x86_64-*-darwin*)
 		;;
 	i[34567]86-*-linux* | x86_64-*-linux*)
-		tmake_file="$tmake_file i386/t-linux"
+		tmake_file="i386/t-linux $tmake_file"
 		;;
 	i[34567]86-*-kfreebsd*-gnu | x86_64-*-kfreebsd*-gnu)
 		tmake_file="$tmake_file i386/t-kfreebsd"
