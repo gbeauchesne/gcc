@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Run ACATS with the GNU Ada compiler
 
 # The following functions are to be customized if you run in cross
@@ -11,6 +12,10 @@
 
 gccflags="-O2"
 gnatflags="-gnatws"
+
+RTS=`cd $GNATTOOLS/../gcc/ada/rts; ${PWDCMD-pwd}`
+LD_LIBRARY_PATH=$RTS:$LIBGNATVSN:$LIBGNATPRJ
+export LD_LIBRARY_PATH
 
 target_run () {
   eval $EXPECT -f $testdir/run_test.exp $*
@@ -63,12 +68,15 @@ if [ "$dir" = "$testdir" ]; then
 fi
 
 target_gnatchop () {
-  gnatchop --GCC="$GCC_DRIVER" $*
+  ADA_INCLUDE_PATH=$GNATTOOLS/../../src/gcc/ada $GNATTOOLS/gnatchop --GCC="$GCC_DRIVER" $*
 }
 
 target_gnatmake () {
-  echo gnatmake --GCC=\"$GCC\" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC=\"$GCC\"
-  gnatmake --GCC="$GCC" $gnatflags $gccflags $* -largs $EXTERNAL_OBJECTS --GCC="$GCC"
+  EXTERNAL_OBJECTS="$EXTERNAL_OBJECTS $RTS/adaint.o $RTS/sysdep.o $RTS/init.o $RTS/raise-gcc.o"
+  $GNATTOOLS/gnatmake -I- -I$RTS -I. \
+      --GCC="$GCC" --GNATBIND="$GNATTOOLS/gnatbind" \
+      --GNATLINK="$GNATTOOLS/gnatlink" $gnatflags $gccflags $* \
+      -bargs -static -largs $EXTERNAL_OBJECTS --GCC="$GCC -I- -I$RTS -I."
 }
 
 target_gcc () {
@@ -101,8 +109,8 @@ display target gcc is $GCC
 display `$GCC -v 2>&1`
 display host=`gcc -dumpmachine`
 display target=$target
-display `type gnatmake`
-gnatls -v >> $dir/acats.log
+display `type $GNATTOOLS/gnatmake`
+$GNATTOOLS/gnatls -I- -I$RTS -v >> $dir/acats.log
 display ""
 
 if [ -n "$GCC_RUNTEST_PARALLELIZE_DIR" ]; then
@@ -129,7 +137,7 @@ cp $testdir/support/*.ada $testdir/support/*.a $testdir/support/*.tst $dir/suppo
 # Find out the size in bit of an address on the target
 target_gnatmake $testdir/support/impbit.adb >> $dir/acats.log 2>&1
 target_run $dir/support/impbit > $dir/support/impbit.out 2>&1
-target_bit=`cat $dir/support/impbit.out`
+target_bit=`cat $dir/support/impbit.out | sed -e 's/ //g' -e 's/\r//g'`
 echo target_bit="$target_bit" >> $dir/acats.log
 
 # Find out a suitable asm statement
