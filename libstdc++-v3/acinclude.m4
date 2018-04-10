@@ -2902,7 +2902,20 @@ dnl
 AC_DEFUN([GLIBCXX_ENABLE_DEBUG], [
   AC_MSG_CHECKING([for additional debug build])
   GLIBCXX_ENABLE(libstdcxx-debug,$1,,[build extra debug library])
+  if test x$enable_libstdcxx_debug = xyes; then
+    if test -f $toplevel_builddir/../stage_final && test -f $toplevel_builddir/../stage_current; then
+      stage_final=`cat $toplevel_builddir/../stage_final`
+      stage_current=`cat $toplevel_builddir/../stage_current`
+      if test x$stage_current != x$stage_final ; then
+	skip_debug_build=yes
+	enable_libstdcxx_debug=no
+      fi
+    fi
+  fi
   AC_MSG_RESULT($enable_libstdcxx_debug)
+  if test x$skip_debug_build = xyes ; then
+    AC_MSG_NOTICE([Skip libstdc++-v3 debug build for bootstrap stage $stage_current])
+  fi
   GLIBCXX_CONDITIONAL(GLIBCXX_BUILD_DEBUG, test $enable_libstdcxx_debug = yes)
 ])
 
