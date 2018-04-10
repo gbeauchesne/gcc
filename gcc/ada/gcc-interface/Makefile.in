@@ -192,7 +192,7 @@ TOOLSCASE =
 
 # Multilib handling
 MULTISUBDIR =
-RTSDIR = rts$(subst /,_,$(MULTISUBDIR))
+RTSDIR := rts$(subst /,_,$(MULTISUBDIR))
 
 # Link flags used to build gnat tools.  By default we prefer to statically
 # link with libgcc to avoid a dependency on shared libgcc (which is tricky
@@ -2633,6 +2633,27 @@ install-gnatlib: ../stamp-gnatlib-$(RTSDIR) install-gcc-specs
 	cd $(DESTDIR)$(ADA_INCLUDE_DIR); $(CHMOD) a-wx *.adb
 	cd $(DESTDIR)$(ADA_INCLUDE_DIR); $(CHMOD) a-wx *.ads
 
+install-gnatlib-sjlj: ../stamp-gnatlib-$(RTSDIR)
+#	Create the directory before deleting it, in case the directory is
+#	a list of directories (as it may be on VMS). This ensures we are
+#	deleting the right one.
+	-$(MKDIR) $(DESTDIR)$(ADA_RTL_OBJ_DIR_SJLJ)
+	-$(MKDIR) $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ)
+	$(RMDIR) $(DESTDIR)$(ADA_RTL_OBJ_DIR_SJLJ)
+	$(RMDIR) $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ)
+	-$(MKDIR) $(DESTDIR)$(ADA_RTL_OBJ_DIR_SJLJ)
+	-$(MKDIR) $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ)
+	for file in $(RTSDIR)/*.ali; do \
+	    $(INSTALL_DATA_DATE) $$file $(DESTDIR)$(ADA_RTL_OBJ_DIR_SJLJ); \
+	done
+	# This copy must be done preserving the date on the original file.
+	for file in $(RTSDIR)/*.ad?; do \
+	    $(INSTALL_DATA_DATE) $$file $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ); \
+	done
+	cd $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ); $(CHMOD) a-wx *.adb
+	cd $(DESTDIR)$(ADA_INCLUDE_DIR_SJLJ); $(CHMOD) a-wx *.ads
+
+
 ../stamp-gnatlib1-$(RTSDIR): Makefile
 	$(RMDIR) $(RTSDIR)
 	$(MKDIR) $(RTSDIR)
@@ -2889,7 +2910,7 @@ gnatlib-shared:
 # in getting multiple blank lines, hence a style check error, as a
 # result.
 gnatlib-sjlj:
-	$(MAKE) $(FLAGS_TO_PASS) EH_MECHANISM="" \
+	$(MAKE) $(FLAGS_TO_PASS) EH_MECHANISM="" RTSDIR="$(RTSDIR)" \
 	THREAD_KIND="$(THREAD_KIND)" ../stamp-gnatlib1-$(RTSDIR)
 	sed \
 	  -e 's/Frontend_Exceptions.*/Frontend_Exceptions       : constant Boolean := True;/' \
@@ -2898,6 +2919,7 @@ gnatlib-sjlj:
 	  $(RTSDIR)/system.ads > $(RTSDIR)/s.ads
 	$(MV) $(RTSDIR)/s.ads $(RTSDIR)/system.ads
 	$(MAKE) $(FLAGS_TO_PASS) \
+	     RTSDIR="$(RTSDIR)" \
 	     EH_MECHANISM="" \
 	     GNATLIBFLAGS="$(GNATLIBFLAGS)" \
 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
@@ -2950,6 +2972,8 @@ b_gnatm.o : b_gnatm.adb
 
 ADA_INCLUDE_DIR = $(libsubdir)/adainclude
 ADA_RTL_OBJ_DIR = $(libsubdir)/adalib
+ADA_INCLUDE_DIR_SJLJ = $(libsubdir)/rts-sjlj/adainclude
+ADA_RTL_OBJ_DIR_SJLJ = $(libsubdir)/rts-sjlj/adalib
 
 # Special flags
 

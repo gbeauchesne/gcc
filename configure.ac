@@ -176,6 +176,7 @@ target_libraries="target-libgcc \
 		${libgcj} \
 		target-libobjc \
 		target-libada \
+		target-libada-sjlj \
 		${target_libiberty} \
 		target-libgnatvsn \
 		target-libgnatprj \
@@ -463,7 +464,7 @@ AC_ARG_ENABLE(libada,
 ENABLE_LIBADA=$enableval,
 ENABLE_LIBADA=yes)
 if test "${ENABLE_LIBADA}" != "yes" ; then
-  noconfigdirs="$noconfigdirs target-libgnatvsn target-libgnatprj gnattools"
+  noconfigdirs="$noconfigdirs target-libgnatvsn target-libgnatprj gnattools target-libada-sjlj"
 fi
 
 AC_ARG_ENABLE(libssp,

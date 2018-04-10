@@ -784,6 +784,7 @@ ada.install-common:
 
 install-gnatlib:
 	$(MAKE) -C ada $(COMMON_FLAGS_TO_PASS) $(ADA_FLAGS_TO_PASS) install-gnatlib$(LIBGNAT_TARGET)
+	$(MAKE) -C ada $(COMMON_FLAGS_TO_PASS) $(ADA_FLAGS_TO_PASS) RTSDIR="rts-sjlj" install-gnatlib-sjlj$(LIBGNAT_TARGET)
 
 install-gnatlib-obj:
 	$(MAKE) -C ada $(COMMON_FLAGS_TO_PASS) $(ADA_FLAGS_TO_PASS) install-gnatlib-obj
