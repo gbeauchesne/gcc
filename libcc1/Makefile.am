@@ -49,7 +49,7 @@ MOSTLYCLEANFILES = compiler-name.h
 # Put this in a header so we don't run sed for each compilation.  This
 # is also simpler to debug as one can easily see the constant.
 compiler-name.h: Makefile
-	echo "#define COMPILER_NAME \"`echo gcc | sed '$(transform)'`\"" > $@
+	echo "#define COMPILER_NAME \"`echo gcc-6`\"" > $@
 
 
 shared_source = callbacks.cc callbacks.hh connection.cc connection.hh \
