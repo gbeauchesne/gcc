@@ -16,6 +16,8 @@ dnl END GCJ LOCAL
 
 AC_CANONICAL_TARGET
 
+dnl dummy change to run autoconf
+
 dnl GCJ LOCAL
 AC_ARG_ENABLE(java-maintainer-mode,
 	AS_HELP_STRING([--enable-java-maintainer-mode],

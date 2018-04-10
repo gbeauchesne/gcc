@@ -1535,6 +1535,10 @@ case ${version_specific_libs} in
       .) toolexeclibdir=$toolexecmainlibdir ;; # Avoid trailing /.
       *) toolexeclibdir=$toolexecmainlibdir/$multi_os_directory ;;
     esac
+    multiarch=`$CC -print-multiarch`
+    if test -n "$multiarch"; then
+        toolexeclibdir=$toolexecmainlibdir/$multiarch
+    fi
     ;;
 esac
 AC_SUBST(toolexecdir)
@@ -1552,6 +1556,10 @@ AC_DEFINE_UNQUOTED(GCJVERSION, "$GCJVERSION", [Short GCJ version ID])
 # libraries are found.
 gcjsubdir=gcj-$gcjversion-$libgcj_soversion
 dbexecdir='$(toolexeclibdir)/'$gcjsubdir
+multiarch=`$CC -print-multiarch`
+if test -n "$multiarch"; then
+    dbexecdir='$(libdir)/'$multiarch/$gcjsubdir
+fi
 AC_SUBST(dbexecdir)
 AC_SUBST(gcjsubdir)
 

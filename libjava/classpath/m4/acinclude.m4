@@ -276,6 +276,10 @@ AC_DEFUN([CLASSPATH_TOOLEXECLIBDIR],
       esac
       ;;
   esac
+  multiarch=`$CC -print-multiarch`
+  if test -n "$multiarch"; then
+    toolexeclibdir=${libdir}/${multiarch}
+  fi
   AC_SUBST(toolexecdir)
   AC_SUBST(toolexecmainlibdir)
   AC_SUBST(toolexeclibdir)
