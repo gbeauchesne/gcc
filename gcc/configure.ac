@@ -207,7 +207,7 @@ if test x${gcc_gxx_include_dir} = x; then
   if test x${enable_version_specific_runtime_libs} = xyes; then
     gcc_gxx_include_dir='${libsubdir}/include/c++'
   else
-    libstdcxx_incdir='include/c++/$(version)'
+    libstdcxx_incdir='include/c++/$(BASEVER_c)'
     if test x$host != x$target; then
        libstdcxx_incdir="$target_alias/$libstdcxx_incdir"
     fi
@@ -1746,6 +1746,7 @@ changequote([,])dnl
 
 changequote(,)dnl
 gcc_BASEVER=`cat $srcdir/BASE-VER`
+gcc_FULLVER=`cat $srcdir/FULL-VER`
 gcc_DEVPHASE=`cat $srcdir/DEV-PHASE`
 gcc_DATESTAMP=`cat $srcdir/DATESTAMP`
 if test -f $srcdir/REVISION ; then
@@ -1756,12 +1757,12 @@ fi
 cat > plugin-version.h <<EOF
 #include "configargs.h"
 
-#define GCCPLUGIN_VERSION_MAJOR   `echo $gcc_BASEVER | sed -e 's/^\([0-9]*\).*$/\1/'`
-#define GCCPLUGIN_VERSION_MINOR   `echo $gcc_BASEVER | sed -e 's/^[0-9]*\.\([0-9]*\).*$/\1/'`
-#define GCCPLUGIN_VERSION_PATCHLEVEL   `echo $gcc_BASEVER | sed -e 's/^[0-9]*\.[0-9]*\.\([0-9]*\)$/\1/'`
+#define GCCPLUGIN_VERSION_MAJOR   `echo $gcc_FULLVER | sed -e 's/^\([0-9]*\).*$/\1/'`
+#define GCCPLUGIN_VERSION_MINOR   `echo $gcc_FULLVER | sed -e 's/^[0-9]*\.\([0-9]*\).*$/\1/'`
+#define GCCPLUGIN_VERSION_PATCHLEVEL   `echo $gcc_FULLVER | sed -e 's/^[0-9]*\.[0-9]*\.\([0-9]*\)$/\1/'`
 #define GCCPLUGIN_VERSION  (GCCPLUGIN_VERSION_MAJOR*1000 + GCCPLUGIN_VERSION_MINOR)
 
-static char basever[] = "$gcc_BASEVER";
+static char basever[] = "$gcc_FULLVER";
 static char datestamp[] = "$gcc_DATESTAMP";
 static char devphase[] = "$gcc_DEVPHASE";
 static char revision[] = "$gcc_REVISION";

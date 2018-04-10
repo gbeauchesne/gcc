@@ -278,7 +278,8 @@ static const char *compiler_version;
 
 /* The target version.  */
 
-static const char *const spec_version = DEFAULT_TARGET_VERSION;
+static const char *const base_version = DEFAULT_TARGET_VERSION;
+static const char *const spec_version = DEFAULT_TARGET_FULL_VERSION;
 
 /* The target machine.  */
 
@@ -4503,7 +4504,7 @@ process_command (unsigned int decoded_options_count,
      running, or, if that is not available, the configured prefix.  */
   tooldir_prefix
     = concat (gcc_exec_prefix ? gcc_exec_prefix : standard_exec_prefix,
-	      spec_host_machine, dir_separator_str, spec_version,
+	      spec_host_machine, dir_separator_str, base_version,
 	      accel_dir_suffix, dir_separator_str, tooldir_prefix2, NULL);
   free (tooldir_prefix2);
 
@@ -7378,7 +7379,7 @@ driver::set_up_specs () const
 
   /* Read specs from a file if there is one.  */
 
-  machine_suffix = concat (spec_host_machine, dir_separator_str, spec_version,
+  machine_suffix = concat (spec_host_machine, dir_separator_str, base_version,
 			   accel_dir_suffix, dir_separator_str, NULL);
   just_machine_suffix = concat (spec_machine, dir_separator_str, NULL);
 
@@ -7583,7 +7584,7 @@ driver::set_up_specs () const
   /* If we have a GCC_EXEC_PREFIX envvar, modify it for cpp's sake.  */
   if (gcc_exec_prefix)
     gcc_exec_prefix = concat (gcc_exec_prefix, spec_host_machine,
-			      dir_separator_str, spec_version,
+			      dir_separator_str, base_version,
 			      accel_dir_suffix, dir_separator_str, NULL);
 
   /* Now we have the specs.
