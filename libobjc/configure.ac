@@ -18,6 +18,8 @@
 #along with GCC; see the file COPYING3.  If not see
 #<http://www.gnu.org/licenses/>.
 
+m4_include([../config/pkg.m4])
+
 AC_PREREQ(2.64)
 AC_INIT(package-unused, version-unused,, libobjc)
 AC_CONFIG_SRCDIR([objc/objc.h])
@@ -56,26 +58,6 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
  esac],
 [version_specific_libs=no])
 AC_MSG_RESULT($version_specific_libs)
-
-AC_ARG_ENABLE(objc-gc,
-[  --enable-objc-gc       enable the use of Boehm's garbage collector with
-                          the GNU Objective-C runtime.],
-[case $enable_objc_gc in
-  no)
-    OBJC_GCFLAGS=''
-    OBJC_BOEHM_GC=''
-    OBJC_BOEHM_GC_INCLUDES=''
-    ;;
-  *)
-    OBJC_GCFLAGS='-DOBJC_WITH_GC=1'
-    OBJC_BOEHM_GC='libobjc_gc$(libsuffix).la'
-    OBJC_BOEHM_GC_INCLUDES='-I$(top_srcdir)/../boehm-gc/include -I../boehm-gc/include'
-    ;;
-esac],
-[OBJC_GCFLAGS=''; OBJC_BOEHM_GC=''; OBJC_BOEHM_GC_INCLUDES=''])
-AC_SUBST(OBJC_GCFLAGS)
-AC_SUBST(OBJC_BOEHM_GC)
-AC_SUBST(OBJC_BOEHM_GC_INCLUDES)
 
 # -----------
 # Directories
@@ -213,6 +195,87 @@ AC_CHECK_HEADERS(sched.h)
 GCC_CHECK_TLS
 
 gt_BITFIELD_TYPE_MATTERS
+
+# -----------
+# boehm-gc
+# -----------
+
+AC_ARG_ENABLE(objc-gc,
+[  --enable-objc-gc       enable the use of Boehm's garbage collector with
+                          the GNU Objective-C runtime. Valid values are
+                          yes, no, system or auto],
+[case $enable_objc_gc in
+  no)
+    use_boehm_gc=no
+    ;;
+  auto|system)
+    PKG_CHECK_MODULES(BDW_GC, bdw-gc >= 7)
+    AC_MSG_CHECKING([for system boehm-gc])
+    save_CFLAGS=$CFLAGS
+    save_LIBS=$LIBS
+    CFLAGS="$CFLAGS $BDW_GC_CFLAGS"
+    LIBS="$LIBS $BDW_GC_LIBS"
+    dnl the link test is not good enough for ARM32 multilib detection,
+    dnl first check to link, then to run
+    AC_LINK_IFELSE(
+      [AC_LANG_PROGRAM([#include <gc/gc.h>],[GC_init()])],
+      [
+        AC_RUN_IFELSE([AC_LANG_SOURCE([[
+          #include <gc/gc.h>
+          int main() {
+            GC_init();
+            return 0;
+          }
+          ]])],
+          [system_boehm_gc_found=yes],
+          [system_boehm_gc_found=no],
+          dnl assume no system boehm-gc for cross builds ...
+          [system_boehm_gc_found=no]
+        )
+      ],
+      [system_boehm_gc_found=no])
+    CFLAGS=$save_CFLAGS
+    LIBS=$save_LIBS
+    if test x$enable_objc_gc = xsystem && test x$system_boehm_gc_found = xno; then
+      AC_MSG_ERROR([system boehm-gc required but not found])
+    elif test x$system_boehm_gc_found = xno; then
+      use_boehm_gc=internal
+      AC_MSG_RESULT([not found, falling back to internal boehm-gc])
+    else
+      use_boehm_gc=system
+      AC_MSG_RESULT([found])
+    fi
+    ;;
+  *)
+    use_boehm_gc=internal
+    ;;
+esac],
+[use_boehm_gc=no])
+
+case "$use_boehm_gc" in
+  internal)
+    OBJC_GCFLAGS='-DOBJC_WITH_GC=1'
+    OBJC_BOEHM_GC='libobjc_gc$(libsuffix).la'
+    OBJC_BOEHM_GC_INCLUDES='-I$(top_srcdir)/../boehm-gc/include -I../boehm-gc/include'
+    OBJC_BOEHM_GC_LIBS='../boehm-gc/libgcjgc_convenience.la $(thread_libs_and_flags)'
+    ;;
+  system)
+    OBJC_GCFLAGS='-DOBJC_WITH_GC=1 -DSYSTEM_BOEHM_GC=1'
+    OBJC_BOEHM_GC='libobjc_gc$(libsuffix).la'
+    OBJC_BOEHM_GC_INCLUDES=$BDW_GC_CFLAGS
+    OBJC_BOEHM_GC_LIBS=$BDW_GC_LIBS
+    ;;
+  *)
+    OBJC_GCFLAGS=''
+    OBJC_BOEHM_GC=''
+    OBJC_BOEHM_GC_INCLUDES=''
+    OBJC_BOEHM_GC_LIBS=''
+    ;;
+esac
+AC_SUBST(OBJC_GCFLAGS)
+AC_SUBST(OBJC_BOEHM_GC)
+AC_SUBST(OBJC_BOEHM_GC_INCLUDES)
+AC_SUBST(OBJC_BOEHM_GC_LIBS)
 
 # ------
 # Output

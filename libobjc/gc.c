@@ -36,7 +36,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include "objc/runtime.h"
 #include "objc-private/module-abi-8.h"
 
+#if SYSTEM_BOEHM_GC
+#include <gc/gc.h>
+#else
 #include <gc.h>
+#endif
 #include <limits.h>
 
 /* gc_typed.h uses the following but doesn't declare them */
@@ -44,7 +48,11 @@ typedef GC_word word;
 typedef GC_signed_word signed_word;
 #define BITS_PER_WORD (CHAR_BIT * sizeof (word))
 
+#if SYSTEM_BOEHM_GC
+#include <gc/gc_typed.h>
+#else
 #include <gc_typed.h>
+#endif
 
 /* The following functions set up in `mask` the corresponding pointers.
    The offset is incremented with the size of the type.  */

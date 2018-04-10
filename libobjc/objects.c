@@ -31,8 +31,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>                     /* For memcpy()  */
 
 #if OBJC_WITH_GC
-# include <gc.h>
-# include <gc_typed.h>
+# if SYSTEM_BOEHM_GC
+#  include <gc/gc.h>
+#  include <gc/gc_typed.h>
+# else
+#  include <gc.h>
+#  include <gc_typed.h>
+# endif
 #endif
 
 /* FIXME: The semantics of extraBytes are not really clear.  */

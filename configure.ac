@@ -29,6 +29,7 @@ m4_include([ltsugar.m4])
 m4_include([ltversion.m4])
 m4_include([lt~obsolete.m4])
 m4_include([config/isl.m4])
+m4_include([config/pkg.m4])
 
 AC_INIT(move-if-change)
 AC_PREREQ(2.64)
@@ -2172,14 +2173,20 @@ AC_ARG_ENABLE(objc-gc,
 		[enable use of Boehm's garbage collector with the
 		 GNU Objective-C runtime])],
 [case ,${enable_languages},:${enable_objc_gc}:${noconfigdirs} in
-  *,objc,*:*:yes:*target-boehm-gc*)
+  *,objc,*:*:yes:*target-boehm-gc*|*,objc,*:*:auto:*target-boehm-gc*|*,objc,*:*:system:*target-boehm-gc*)
     AC_MSG_ERROR([Boehm's garbage collector was requested yet not supported in this configuration])
+esac
+case ,${enable_languages},:${enable_objc_gc} in
+  *,objc,*:auto|*,objc,*:system)
+    PKG_CHECK_EXISTS(bdw-gc,
+      AC_MSG_RESULT([found]),
+      AC_MSG_ERROR([bdw-gc pkg-config module not found]))
     ;;
 esac])
 
 # Make sure we only build Boehm's garbage collector if required.
 case ,${enable_languages},:${enable_objc_gc} in
-  *,objc,*:yes)
+  *,objc,*:yes|*,objc,*:auto)
     # Keep target-boehm-gc if requested for Objective-C.
     ;;
   *)
