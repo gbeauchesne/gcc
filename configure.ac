@@ -148,6 +148,11 @@ libgcj="target-libffi \
 	target-zlib \
 	target-libjava"
 
+case "${target}" in
+  hppa64-*linux*) ;;
+  *) target_libiberty="target-libiberty";;
+esac
+
 # these libraries are built for the target environment, and are built after
 # the host libraries and the host tools (which may be a cross compiler)
 # Note that libiberty is not a target library.
@@ -171,6 +176,7 @@ target_libraries="target-libgcc \
 		${libgcj} \
 		target-libobjc \
 		target-libada \
+		${target_libiberty} \
 		target-libgo"
 
 # these tools are built using the target libraries, and are intended to

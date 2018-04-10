@@ -127,7 +127,8 @@ AC_PROG_AWK
 AC_PROG_LN_S
 
 # Determine what to build for 'gnatlib'
-if test ${enable_shared} = yes; then
+if test ${enable_shared} = yes ; then
+  # Note that build=target is almost certainly the wrong test; FIXME
   default_gnatlib_target="gnatlib-shared"
 else
   default_gnatlib_target="gnatlib-plain"

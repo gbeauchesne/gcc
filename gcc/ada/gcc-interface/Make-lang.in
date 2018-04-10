@@ -58,11 +58,7 @@ WARN_ADAFLAGS= -W -Wall
 # need to be built by a recent/matching native so we might as well leave the
 # checks fully active.
 
-ifeq ($(CROSS),)
 ADAFLAGS= $(COMMON_ADAFLAGS) -gnatwns
-else
-ADAFLAGS= $(COMMON_ADAFLAGS)
-endif
 
 ALL_ADAFLAGS = \
   $(CFLAGS) $(ADA_CFLAGS) $(ADAFLAGS) $(CHECKING_ADAFLAGS) $(WARN_ADAFLAGS)

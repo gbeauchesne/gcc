@@ -35,7 +35,7 @@ gtfiles="\$(srcdir)/ada/gcc-interface/ada-tree.h \$(srcdir)/ada/gcc-interface/gi
 outputs="ada/gcc-interface/Makefile ada/Makefile"
 
 target_libs="target-libada"
-lang_dirs="gnattools"
+lang_dirs="libada gnattools"
 
 # Ada is not enabled by default for the time being.
 build_by_default=no
