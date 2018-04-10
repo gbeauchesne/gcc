@@ -1877,6 +1877,7 @@ package body Prj.Env is
       Target_Name  : String;
       Runtime_Name : String := "")
    is
+      pragma Unreferenced (Target_Name);
       Add_Default_Dir : Boolean := Target_Name /= "-";
       First           : Positive;
       Last            : Positive;
@@ -2075,82 +2076,9 @@ package body Prj.Env is
 
       --  Set the initial value of Current_Project_Path
 
-      if Add_Default_Dir then
-         if Sdefault.Search_Dir_Prefix = null then
-
-            --  gprbuild case
-
-            Prefix := new String'(Executable_Prefix_Path);
-
-         else
-            Prefix := new String'(Sdefault.Search_Dir_Prefix.all
-                                  & ".." & Dir_Separator
-                                  & ".." & Dir_Separator
-                                  & ".." & Dir_Separator
-                                  & ".." & Dir_Separator);
-         end if;
-
-         if Prefix.all /= "" then
-            if Target_Name /= "" then
-
-               if Runtime_Name /= "" then
-                  if Base_Name (Runtime_Name) = Runtime_Name then
-
-                     --  $prefix/$target/$runtime/lib/gnat
-                     Add_Target;
-                     Add_Str_To_Name_Buffer
-                       (Runtime_Name & Directory_Separator &
-                          "lib" & Directory_Separator & "gnat");
-
-                     --  $prefix/$target/$runtime/share/gpr
-                     Add_Target;
-                     Add_Str_To_Name_Buffer
-                       (Runtime_Name & Directory_Separator &
-                          "share" & Directory_Separator & "gpr");
-
-                  else
-                     Runtime :=
-                       new String'(Normalize_Pathname (Runtime_Name));
-
-                     --  $runtime_dir/lib/gnat
-                     Add_Str_To_Name_Buffer
-                       (Path_Separator & Runtime.all & Directory_Separator &
-                        "lib" & Directory_Separator & "gnat");
-
-                     --  $runtime_dir/share/gpr
-                     Add_Str_To_Name_Buffer
-                       (Path_Separator & Runtime.all & Directory_Separator &
-                        "share" & Directory_Separator & "gpr");
-                  end if;
-               end if;
-
-               --  $prefix/$target/lib/gnat
-
-               Add_Target;
-               Add_Str_To_Name_Buffer
-                 ("lib" & Directory_Separator & "gnat");
-
-               --  $prefix/$target/share/gpr
-
-               Add_Target;
-               Add_Str_To_Name_Buffer
-                 ("share" & Directory_Separator & "gpr");
-            end if;
-
-            --  $prefix/share/gpr
-
-            Add_Str_To_Name_Buffer
-              (Path_Separator & Prefix.all & "share"
-               & Directory_Separator & "gpr");
-
-            --  $prefix/lib/gnat
-
-            Add_Str_To_Name_Buffer
-              (Path_Separator & Prefix.all & "lib"
-               & Directory_Separator & "gnat");
-         end if;
-
-         Free (Prefix);
+      if Add_Default_Dir and Sdefault.Project_Dir_Prefix /= null then
+         Add_Str_To_Name_Buffer (Path_Separator
+                                 & Sdefault.Project_Dir_Prefix.all);
       end if;
 
       Self.Path := new String'(Name_Buffer (1 .. Name_Len));

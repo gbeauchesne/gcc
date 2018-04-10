@@ -76,6 +76,7 @@ $(ADA_GEN_SUBDIR)/stamp-sdefault : $(srcdir)/version.c Makefile
 	$(ECHO) "   S2 : constant String := \"$(ADA_RTL_OBJ_DIR)/\";" >>tmp-sdefault.adb
 	$(ECHO) "   S3 : constant String := \"$(target_noncanonical)/\";" >>tmp-sdefault.adb
 	$(ECHO) "   S4 : constant String := \"$(libsubdir)/\";" >>tmp-sdefault.adb
+	$(ECHO) "   S5 : constant String := \"/usr/share/ada/adainclude/\";" >>tmp-sdefault.adb
 	$(ECHO) "   function Include_Dir_Default_Name return String_Ptr is" >>tmp-sdefault.adb
 	$(ECHO) "   begin" >>tmp-sdefault.adb
 	$(ECHO) "      return Relocate_Path (S0, S1);" >>tmp-sdefault.adb
@@ -92,6 +93,10 @@ $(ADA_GEN_SUBDIR)/stamp-sdefault : $(srcdir)/version.c Makefile
 	$(ECHO) "   begin" >>tmp-sdefault.adb
 	$(ECHO) "      return Relocate_Path (S0, S4);" >>tmp-sdefault.adb
 	$(ECHO) "   end Search_Dir_Prefix;" >>tmp-sdefault.adb
+	$(ECHO) "   function Project_Dir_Prefix return String_Ptr is" >>tmp-sdefault.adb
+	$(ECHO) "   begin" >>tmp-sdefault.adb
+	$(ECHO) "      return Relocate_Path (S0, S5);" >>tmp-sdefault.adb
+	$(ECHO) "   end Project_Dir_Prefix;" >>tmp-sdefault.adb
 	$(ECHO) "end Sdefault;" >> tmp-sdefault.adb
 	$(MOVE_IF_CHANGE) tmp-sdefault.adb $(ADA_GEN_SUBDIR)/sdefault.adb
 	touch $(ADA_GEN_SUBDIR)/stamp-sdefault

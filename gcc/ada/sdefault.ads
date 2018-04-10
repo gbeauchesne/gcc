@@ -35,4 +35,5 @@ package Sdefault is
    function Object_Dir_Default_Name  return String_Ptr;
    function Target_Name              return String_Ptr;
    function Search_Dir_Prefix        return String_Ptr;
+   function Project_Dir_Prefix       return String_Ptr;
 end Sdefault;
