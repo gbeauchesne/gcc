@@ -177,6 +177,7 @@ target_libraries="target-libgcc \
 		target-libobjc \
 		target-libada \
 		${target_libiberty} \
+		target-libgnatvsn \
 		target-libgo"
 
 # these tools are built using the target libraries, and are intended to
@@ -461,7 +462,7 @@ AC_ARG_ENABLE(libada,
 ENABLE_LIBADA=$enableval,
 ENABLE_LIBADA=yes)
 if test "${ENABLE_LIBADA}" != "yes" ; then
-  noconfigdirs="$noconfigdirs gnattools"
+  noconfigdirs="$noconfigdirs target-libgnatvsn gnattools"
 fi
 
 AC_ARG_ENABLE(libssp,

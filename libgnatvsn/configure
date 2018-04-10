@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Minimal configure script for libgnatvsn.  We're only interested in
+# a few parameters.
+
+for arg in $*; do
+    case ${arg} in
+	--build=*)
+	    build=`expr ${arg} : '--build=\(.\+\)'`;;
+	--host=*)
+	    host=`expr ${arg} : '--host=\(.\+\)'`;;
+	--target=*)
+	    target=`expr ${arg} : '--target=\(.\+\)'`;;
+	--prefix=*)
+	    prefix=`expr ${arg} : '--prefix=\(.\+\)'`;;
+	--srcdir=*)
+	    srcdir=`expr ${arg} : '--srcdir=\(.\+\)'`;;
+	--libdir=*)
+	    libdir=`expr ${arg} : '--libdir=\(.\+\)'`;;
+	--with-pkgversion=*)
+	    pkgversion=`expr ${arg} : '--with-pkgversion=\(.\+\)'`;;
+	--with-bugurl=*)
+	    bugurl=`expr ${arg} : '--with-bugurl=\(.\+\)'`;;
+	*)
+	    echo "Warning: ignoring option: ${arg}"
+    esac
+done
+
+echo "build: ${build}" | tee config.log
+echo "host: ${host}" | tee -a config.log
+echo "target: ${target}" | tee -a config.log
+echo "prefix: ${prefix}" | tee -a config.log
+echo "srcdir: ${srcdir}" | tee -a config.log
+echo "libdir: ${libdir}" | tee -a config.log
+echo "pkgversion: ${pkgversion}" | tee -a config.log
+echo "bugurl: ${bugurl}" | tee -a config.log
+
+echo "Creating Makefile..." | tee -a config.log
+sed -e "s,@build@,${build},g" \
+    -e "s,@host@,${host},g" \
+    -e "s,@target@,${target},g" \
+    -e "s,@prefix@,${prefix},g" \
+    -e "s,@srcdir@,${srcdir},g" \
+    -e "s,@libdir@,${libdir},g" \
+    -e "s,@PKGVERSION@,${pkgversion},g" \
+    -e "s,@REPORT_BUGS_TO@,${bugurl},g" \
+    < ${srcdir}/Makefile.in > Makefile
