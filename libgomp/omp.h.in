@@ -40,8 +40,13 @@ typedef struct
 
 typedef struct
 {
+#if defined(__linux__)
+  unsigned char _x[8 + sizeof (void *)] 
+    __attribute__((__aligned__(sizeof (void *))));
+#else
   unsigned char _x[@OMP_NEST_LOCK_SIZE@] 
     __attribute__((__aligned__(@OMP_NEST_LOCK_ALIGN@)));
+#endif
 } omp_nest_lock_t;
 #endif
 
