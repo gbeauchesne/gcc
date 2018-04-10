@@ -155,7 +155,7 @@ init_library (void)
       init_trigraph_map ();
 
 #ifdef ENABLE_NLS
-       (void) bindtextdomain (PACKAGE, LOCALEDIR);
+       (void) bindtextdomain (PACKAGE PACKAGE_SUFFIX, LOCALEDIR);
 #endif
     }
 }

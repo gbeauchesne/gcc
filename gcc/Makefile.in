@@ -4013,8 +4013,8 @@ install-po:
 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
 	  echo $(mkinstalldirs) $(DESTDIR)$$dir; \
 	  $(mkinstalldirs) $(DESTDIR)$$dir || exit 1; \
-	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc.mo; \
-	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc.mo; \
+	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc-6.mo; \
+	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc-6.mo; \
 	done
 
 # Rule for regenerating the message template (gcc.pot).
