@@ -364,6 +364,7 @@ AM_CXXFLAGS = \
 	$(WARNINGS) \
 	-D_GNU_SOURCE \
 	-DPREFIX="\"$(prefix)\"" \
+	-DMULTIARCH_DIR="\"$(MULTIARCH_DIR)\"" \
 	-DTOOLEXECLIBDIR="\"$(toolexeclibdir)\"" \
         -DJAVA_HOME="\"$(JAVA_HOME_DIR)\"" \
         -DBOOT_CLASS_PATH="\"$(BOOT_CLASS_PATH_DIR)\"" \
