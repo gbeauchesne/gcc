@@ -267,7 +267,12 @@ procedure Gnatlink is
          Findex2 := File_Name'Last + 1;
       end if;
 
-      return File_Name (Findex1 .. Findex2 - 1);
+      declare
+         Result : String (1 .. Findex2 - Findex1);
+      begin
+         Result (1 .. Findex2 - Findex1) := File_Name (Findex1 .. Findex2 - 1);
+         return Result;
+      end;
    end Base_Name;
 
    -------------------------------
