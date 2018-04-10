@@ -36,8 +36,10 @@
 #include <bits/c++config.h>
 #include <bits/exception_defines.h>
 
+#if !(defined(__ARM_EABI__) && !defined(__ARM_PCS_VFP))
 #if ATOMIC_INT_LOCK_FREE < 2
 #  error This platform does not support exception propagation.
+#endif
 #endif
 
 extern "C++" {
