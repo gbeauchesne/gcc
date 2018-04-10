@@ -3598,6 +3598,9 @@ fi
 
 compare_exclusions="gcc/cc*-checksum\$(objext) | gcc/ada/*tools/*"
 case "$target" in
+  ia64-*linux-gnu)
+    compare_exclusions="gcc/cc*-checksum\$(objext) | gcc/ada/*tools/* | gcc/ira.o"
+    ;;
   hppa*64*-*-hpux*) ;;
   hppa*-*-hpux*) compare_exclusions="gcc/cc*-checksum\$(objext) | */libgcc/lib2funcs* | gcc/ada/*tools/*" ;;
   powerpc*-ibm-aix*) compare_exclusions="gcc/cc*-checksum\$(objext) | gcc/ada/*tools/* | *libgomp*\$(objext)" ;;
