@@ -79,5 +79,8 @@ do {						\
 #undef TARGET_INIT_LIBFUNCS
 #define TARGET_INIT_LIBFUNCS ia64_soft_fp_init_libfuncs
 
+#undef TARGET_ASM_FILE_END
+#define TARGET_ASM_FILE_END file_end_indicate_exec_stack
+
 /* Define this to be nonzero if static stack checking is supported.  */
 #define STACK_CHECK_STATIC_BUILTIN 1
