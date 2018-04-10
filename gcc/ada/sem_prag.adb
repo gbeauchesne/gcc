@@ -16306,7 +16306,16 @@ package body Sem_Prag is
             Type_Id : Node_Id;
 
          begin
-            GNAT_Pragma;
+            --  This could be a rewritten pragma Assert. If it is the case
+            --  then don't check restrictions, because they are different for
+            --  pragma Assert and were already checked.
+
+            if Nkind (Original_Node (N)) /= N_Pragma
+              or else Pragma_Name (Original_Node (N)) /= Name_Assert
+            then
+               GNAT_Pragma;
+            end if;
+
             Check_At_Least_N_Arguments (2);
             Check_At_Most_N_Arguments  (3);
             Check_Optional_Identifier (Arg1, Name_Entity);
