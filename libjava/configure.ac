@@ -70,6 +70,8 @@ AC_ARG_ENABLE(browser-plugin,
      esac],
     [browser_plugin_enabled=no]
 )
+# FIXME: don't build the plugin, this option collides with GCC plugin support
+plugin_enabled=no
 
 AC_ARG_ENABLE(gconf-peer,
   AS_HELP_STRING([--enable-gconf-peer],
