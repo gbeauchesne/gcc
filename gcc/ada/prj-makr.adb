@@ -24,6 +24,7 @@
 ------------------------------------------------------------------------------
 
 with Csets;
+with Gnatvsn;
 with Makeutl;  use Makeutl;
 with Opt;
 with Output;
@@ -115,7 +116,7 @@ package body Prj.Makr is
 
    procedure Dup2 (Old_Fd, New_Fd : File_Descriptor);
 
-   Gcc      : constant String := "gcc";
+   Gcc      : constant String := "gcc-" & Gnatvsn.Library_Version;
    Gcc_Path : String_Access := null;
 
    Non_Empty_Node : constant Project_Node_Id := 1;

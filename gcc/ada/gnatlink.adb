@@ -136,7 +136,8 @@ procedure Gnatlink is
    --  This table collects the arguments to be passed to compile the binder
    --  generated file.
 
-   Gcc : String_Access := Program_Name ("gcc", "gnatlink");
+   Gcc : String_Access
+     := Program_Name ("gcc-" & Gnatvsn.Library_Version, "gnatlink");
 
    Read_Mode : constant String := "r" & ASCII.NUL;
 
@@ -1412,7 +1413,8 @@ procedure Gnatlink is
       end if;
 
       Write_Line ("  --GCC=comp Use comp as the compiler");
-      Write_Line ("  --LINK=nam Use 'nam' for the linking rather than 'gcc'");
+      Write_Line ("  --LINK=nam Use 'nam' for the linking rather than 'gcc-"
+		 & Gnatvsn.Library_Version & "'");
       Write_Eol;
       Write_Line ("  [non-Ada-objects]  list of non Ada object files");
       Write_Line ("  [linker-options]   other options for the linker");

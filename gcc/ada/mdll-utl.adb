@@ -29,6 +29,7 @@ with Ada.Text_IO;
 with Ada.Exceptions;
 
 with GNAT.Directory_Operations;
+with Gnatvsn;
 with Osint;
 
 package body MDLL.Utl is
@@ -39,7 +40,7 @@ package body MDLL.Utl is
    Dlltool_Name  : constant String := "dlltool";
    Dlltool_Exec  : OS_Lib.String_Access;
 
-   Gcc_Name      : constant String := "gcc";
+   Gcc_Name      : constant String := "gcc-" & Gnatvsn.Library_Version;
    Gcc_Exec      : OS_Lib.String_Access;
 
    Gnatbind_Name : constant String := "gnatbind";
@@ -212,7 +213,7 @@ package body MDLL.Utl is
          end;
       end if;
 
-      Print_Command ("gcc", Arguments (1 .. A));
+      Print_Command (Gcc_Name, Arguments (1 .. A));
 
       OS_Lib.Spawn (Gcc_Exec.all, Arguments (1 .. A), Success);
 

@@ -667,9 +667,12 @@ package body Make is
    -- Compiler, Binder & Linker Data and Subprograms --
    ----------------------------------------------------
 
-   Gcc      : String_Access := Program_Name ("gcc", "gnatmake");
-   Gnatbind : String_Access := Program_Name ("gnatbind", "gnatmake");
-   Gnatlink : String_Access := Program_Name ("gnatlink", "gnatmake");
+   Gcc      : String_Access := Program_Name
+     ("gcc-" & Gnatvsn.Library_Version, "gnatmake");
+   Gnatbind : String_Access := Program_Name
+     ("gnatbind-" & Gnatvsn.Library_Version, "gnatmake");
+   Gnatlink : String_Access := Program_Name
+     ("gnatlink-" & Gnatvsn.Library_Version, "gnatmake");
    --  Default compiler, binder, linker programs
 
    Globalizer : constant String := "codepeer_globalizer";
