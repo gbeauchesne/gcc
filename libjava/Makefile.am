@@ -836,7 +836,7 @@ if CREATE_JAVA_HOME
 	$(mkinstalldirs) $(DESTDIR)$(SDK_INCLUDE_DIR)/$(OS)
 	relative() { \
 	  $(PERL) -e 'use File::Spec; \
-	    print File::Spec->abs2rel($$ARGV[0], $$ARGV[1])' $$1 $$2; \
+	    print File::Spec->abs2rel($$ARGV[0], $$ARGV[1])' $$1 $$2 | sed -r 's,(bin|lib)[^/]*/\.\./,,'; \
 	}; \
 	RELATIVE=$$(relative $(DESTDIR)$(bindir) $(DESTDIR)$(SDK_BIN_DIR)); \
 	ln -sf $$RELATIVE/`echo gij | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'` \

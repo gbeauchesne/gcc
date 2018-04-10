@@ -12552,7 +12552,7 @@ install-data-local:
 @CREATE_JAVA_HOME_TRUE@	$(mkinstalldirs) $(DESTDIR)$(SDK_INCLUDE_DIR)/$(OS)
 @CREATE_JAVA_HOME_TRUE@	relative() { \
 @CREATE_JAVA_HOME_TRUE@	  $(PERL) -e 'use File::Spec; \
-@CREATE_JAVA_HOME_TRUE@	    print File::Spec->abs2rel($$ARGV[0], $$ARGV[1])' $$1 $$2; \
+@CREATE_JAVA_HOME_TRUE@	    print File::Spec->abs2rel($$ARGV[0], $$ARGV[1])' $$1 $$2 | sed -r 's,(bin|lib)[^/]*/\.\./,,'; \
 @CREATE_JAVA_HOME_TRUE@	}; \
 @CREATE_JAVA_HOME_TRUE@	RELATIVE=$$(relative $(DESTDIR)$(bindir) $(DESTDIR)$(SDK_BIN_DIR)); \
 @CREATE_JAVA_HOME_TRUE@	ln -sf $$RELATIVE/`echo gij | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'` \
