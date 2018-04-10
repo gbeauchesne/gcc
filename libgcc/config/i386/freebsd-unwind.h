@@ -26,6 +26,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* Do code reading to identify a signal frame, and set the frame
    state data appropriately.  See unwind-dw2.c for the structs. */
 
+#ifndef inhibit_libc
+
 #include <sys/types.h>
 #include <signal.h>
 #include <unistd.h>
@@ -210,3 +212,5 @@ x86_freebsd_fallback_frame_state
   return _URC_NO_REASON;
 }
 #endif /* ifdef __x86_64__  */
+
+#endif /* ifndef inhibit_libc */
