@@ -52,7 +52,7 @@ WARN_CFLAGS = @warn_cflags@
 ADA_CFLAGS=@ADA_CFLAGS@
 
 # Variables for gnattools.
-ADAFLAGS= -gnatpg -gnata
+ADAFLAGS= -gnatn
 
 # For finding the GCC build dir, which is used far too much
 GCC_DIR=../gcc
@@ -70,28 +70,168 @@ INCLUDES_FOR_SUBDIR = -iquote . -iquote .. -iquote ../.. \
 ADA_INCLUDES_FOR_SUBDIR = -I. -I$(fsrcdir)/ada
 
 CXX_LFLAGS = \
- -B../../../$(target_noncanonical)/libstdc++-v3/src/.libs \
- -B../../../$(target_noncanonical)/libstdc++-v3/libsupc++/.libs \
- -L../../../$(target_noncanonical)/libstdc++-v3/src/.libs \
- -L../../../$(target_noncanonical)/libstdc++-v3/libsupc++/.libs
+ -B../$(target_noncanonical)/libstdc++-v3/src/.libs \
+ -B../$(target_noncanonical)/libstdc++-v3/libsupc++/.libs \
+ -L../$(target_noncanonical)/libstdc++-v3/src/.libs \
+ -L../$(target_noncanonical)/libstdc++-v3/libsupc++/.libs \
+ -L../$(target_noncanonical)/libatomic/.libs
 
-# Variables for gnattools, native
-TOOLS_FLAGS_TO_PASS_NATIVE= \
-	"CC=../../xgcc -B../../" \
-	"CXX=../../xg++ -B../../ $(CXX_LFLAGS)" \
-	"CFLAGS=$(CFLAGS) $(WARN_CFLAGS)" \
-	"LDFLAGS=$(LDFLAGS)" \
-	"ADAFLAGS=$(ADAFLAGS)" \
-	"ADA_CFLAGS=$(ADA_CFLAGS)" \
-	"INCLUDES=$(INCLUDES_FOR_SUBDIR)" \
-	"ADA_INCLUDES=-I- -I../rts $(ADA_INCLUDES_FOR_SUBDIR)"\
-	"exeext=$(exeext)" \
-	"fsrcdir=$(fsrcdir)" \
-	"srcdir=$(fsrcdir)" \
-	"GNATMAKE=../../gnatmake" \
-	"GNATLINK=../../gnatlink" \
-	"GNATBIND=../../gnatbind" \
-	"TOOLSCASE=native"
+CFLAGS=-O2 -Wall
+ADA_CFLAGS=-O2 -gnatn
+ADA_INCLUDES=-nostdinc -I- -I. -I../gcc/ada/rts \
+     -I../$(target_noncanonical)/libgnatvsn -I../$(target_noncanonical)/libgnatprj
+LIB_VERSION=$(strip $(shell grep ' Library_Version :' \
+              ../$(target_noncanonical)/libgnatvsn/gnatvsn.ads | sed -e 's/.*"\(.*\)".*/\1/'))
+SHARED_ADA_LIBS := -L../gcc/ada/rts -lgnat-$(LIB_VERSION)
+SHARED_ADA_LIBS += -L../$(target_noncanonical)/libgnatvsn -lgnatvsn
+SHARED_ADA_LIBS += -L../$(target_noncanonical)/libgnatprj -lgnatprj
+STATIC_ADA_LIBS := ../gcc/ada/rts/libgnat.a
+STATIC_GCC_LIBS := ../gcc/libcommon-target.a ../gcc/libcommon.a ../libcpp/libcpp.a \
+../libbacktrace/.libs/libbacktrace.a ../libiberty/libiberty.a
+
+# We will use the just-built compiler to compile and link everything.
+GCC=../gcc/xgcc -B../gcc/ -no-pie
+GXX=../gcc/xg++ -B../gcc/ -no-pie
+
+# File lists
+# ----------
+
+# File associations set by configure
+EXTRA_GNATTOOLS = @EXTRA_GNATTOOLS@
+TOOLS_TARGET_PAIRS = @TOOLS_TARGET_PAIRS@
+
+# Stage 1 builds xgcc and gnatbind; we can use them to build
+# gnatmake-static and gnatlink-static, then use gnatmake-static and
+# gnatlink-static to build the other tools.  The reason we first build
+# statically-linked versions of gnatmake and gnatlink is so we can run
+# them with confidence on all build platforms, without LD_LIBRARY_PATH
+# or some such variable.
+
+# The tools we will build using gnatmake-static and gnatlink-static.
+TOOLS := gnat gnatbind gnatchop gnatclean gnatfind gnatkr gnatls gnatlink
+TOOLS += gnatmake gnatname gnatprep gnatxref
+
+# Since we don't have gnatmake, we must specify the full list of
+# object files necessary to build gnatmake and gnatlink.
+GNATLINK_OBJS = \
+gnatlink.o \
+indepsw.o \
+validsw.o \
+link.o
+
+GNATMAKE_OBJS = \
+aspects.o \
+errout.o \
+fname-sf.o \
+gnatmake.o \
+make.o \
+makeusg.o \
+mlib-prj.o \
+osint-m.o \
+restrict.o \
+sem_aux.o \
+usage.o \
+validsw.o \
+link.o \
+$(EXTRA_GNATMAKE_OBJS)
+
+EXTRA_TOOLS_OBJS = \
+bcheck.o \
+binde.o \
+bindgen.o \
+bindusg.o \
+clean.o \
+gprep.o \
+makegpr.o \
+osint-b.o \
+osint-l.o \
+prep.o \
+prj-makr.o \
+prj-pp.o \
+switch-b.o \
+vms_cmds.o \
+vms_conv.o \
+vms_data.o \
+xr_tabls.o \
+xref_lib.o
+
+OBJECTS = $(GNATLINK_OBJS) $(GNATMAKE_OBJS) $(EXTRA_TOOLS_OBJS)
+
+# Makefile targets
+# ----------------
+
+.PHONY: gnattools gnattools-native gnattools-cross regnattools
+gnattools: @default_gnattools_target@
+
+BODIES := $(foreach f,$(OBJECTS),$(wildcard $(patsubst %.o,@srcdir@/../gcc/ada/%.adb,$(f))))
+SPECS  := $(foreach f,$(OBJECTS),$(wildcard $(patsubst %.o,@srcdir@/../gcc/ada/%.ads,$(f))))
+
+$(notdir $(SPECS) $(BODIES)): stamp-gnattools-sources
+
+stamp-gnattools-sources:
+	for file in $(BODIES) $(SPECS); do \
+	   $(LN_S) -f $$file .; \
+	done
+	rm -f sdefault.adb; $(LN_S) ../gcc/ada/sdefault.adb .
+	$(foreach PAIR,$(TOOLS_TARGET_PAIRS), \
+	          rm -f $(word 1,$(subst <, ,$(PAIR)));\
+	          $(LN_S) @srcdir@/../gcc/ada/$(word 2,$(subst <, ,$(PAIR))) \
+	                  $(word 1,$(subst <, ,$(PAIR)));)
+	touch $@
+
+gnattools-native: ../gcc/ada/rts/libgnat-$(LIB_VERSION).so
+gnattools-native: ../$(target_noncanonical)/libgnatvsn/libgnatvsn.so
+gnattools-native: stamp-gnattools-sources
+gnattools-native: $(TOOLS)
+	cp -lpf $(TOOLS) ../gcc
+
+$(TOOLS) gnatcmd: | gnatmake-static gnatlink-static
+
+vpath %.c @srcdir@/../gcc/ada:@srcdir@/../gcc
+vpath %.h @srcdir@/../gcc/ada
+
+# gnatlink
+
+gnatlink-static: $(GNATLINK_OBJS) b_gnatl.o
+	$(GXX) -o $@ $^ \
+	  ../$(target_noncanonical)/libgnatprj/libgnatprj.a \
+	  ../$(target_noncanonical)/libgnatvsn/libgnatvsn.a \
+	  ../gcc/ada/rts/libgnat.a $(STATIC_GCC_LIBS) $(CXX_LFLAGS) $(LDFLAGS)
+
+gnatlink: $(GNATLINK_OBJS) b_gnatl.o
+	$(GXX) -o $@ $^ $(SHARED_ADA_LIBS) $(STATIC_GCC_LIBS) $(CXX_LFLAGS) $(LDFLAGS)
+
+b_gnatl.adb: $(GNATLINK_OBJS)
+	../gcc/gnatbind -o $@ $(ADA_INCLUDES) gnatlink.ali
+
+# gnatmake
+
+gnatmake-static: $(GNATMAKE_OBJS) b_gnatm.o
+	$(GXX) -o $@ $(ADA_CFLAGS) $^ \
+	  ../$(target_noncanonical)/libgnatprj/libgnatprj.a \
+	  ../$(target_noncanonical)/libgnatvsn/libgnatvsn.a \
+	  $(STATIC_ADA_LIBS) $(STATIC_GCC_LIBS) $(CXX_LFLAGS) $(LDFLAGS)
+
+gnatmake: $(GNATMAKE_OBJS) b_gnatm.o
+	$(GXX) -o $@ $(ADA_CFLAGS) $^ $(SHARED_ADA_LIBS) $(STATIC_GCC_LIBS) $(CXX_LFLAGS) $(LDFLAGS)
+
+b_gnatm.adb: $(GNATMAKE_OBJS)
+	../gcc/gnatbind -o $@ $(ADA_INCLUDES) gnatmake.ali
+
+# Other tools
+gnat: gnatcmd
+	cp -lp $< $@
+
+gnatbind gnatchop gnatclean gnatcmd gnatfind gnatkr gnatls gnatname gnatprep \
+gnatxref: link.o
+	if [ ! -f $@.adb ] ; then $(LN_S) ../../src/gcc/ada/$@.ad[bs] .; fi
+	./gnatmake-static -c -b $@ $(ADA_CFLAGS) $(ADA_INCLUDES) \
+	   --GCC="$(GCC)" \
+	   --GNATBIND=../gcc/gnatbind
+	./gnatlink-static -o $@ $@.ali $^ \
+	   $(ADA_INCLUDES) $(SHARED_ADA_LIBS) $(STATIC_GCC_LIBS) $(CXX_LFLAGS) $(LDFLAGS) \
+	   --GCC="$(GXX) $(ADA_INCLUDES)"
+
 
 # Variables for regnattools
 TOOLS_FLAGS_TO_PASS_RE= \
@@ -184,20 +324,12 @@ $(GCC_DIR)/stamp-tools:
 	                $(GCC_DIR)/ada/tools/$(word 1,$(subst <, ,$(PAIR)));)
 	touch $(GCC_DIR)/stamp-tools
 
-# gnatmake/link tools cannot always be built with gnatmake/link for bootstrap 
-# reasons: gnatmake should be built with a recent compiler, a recent compiler
-# may not generate ALI files compatible with an old gnatmake so it is important
-# to be able to build gnatmake without a version of gnatmake around. Once 
-# everything has been compiled once, gnatmake can be recompiled with itself 
-# (see target regnattools) 
-gnattools-native: $(GCC_DIR)/stamp-tools $(GCC_DIR)/stamp-gnatlib-rts
-	# gnattools1
-	$(MAKE) -C $(GCC_DIR)/ada/tools -f ../Makefile \
-	  $(TOOLS_FLAGS_TO_PASS_NATIVE) \
-	  ../../gnatmake$(exeext) ../../gnatlink$(exeext)
-	# gnattools2
-	$(MAKE) -C $(GCC_DIR)/ada/tools -f ../Makefile \
-	  $(TOOLS_FLAGS_TO_PASS_NATIVE) common-tools
+%.o: %.adb
+	$(GCC) -c -o $@ $< $(ADA_CFLAGS) $(ADA_INCLUDES)
+
+%.o: %.ads
+	$(GCC) -c -o $@ $< $(ADA_CFLAGS) $(ADA_INCLUDES)
+
 
 # gnatmake/link can be built with recent gnatmake/link if they are available.
 # This is especially convenient for building cross tools or for rebuilding
