@@ -1,3 +1,340 @@
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-03-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	PR target/84574
+	* config/i386/i386.c (indirect_thunk_needed): Update comments.
+	(indirect_thunk_bnd_needed): Likewise.
+	(indirect_thunks_used): Likewise.
+	(indirect_thunks_bnd_used): Likewise.
+	(indirect_return_needed): New.
+	(indirect_return_bnd_needed): Likewise.
+	(output_indirect_thunk_function): Add a bool argument for
+	function return.
+	(output_indirect_thunk_function): Don't generate alias for
+	function return thunk.
+	(ix86_code_end): Call output_indirect_thunk_function to generate
+	function return thunks.
+	(ix86_output_function_return): Set indirect_return_bnd_needed
+	and indirect_return_needed instead of indirect_thunk_bnd_needed
+	and indirect_thunk_needed.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-02-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	PR target/84039
+	* config/i386/constraints.md (Bs): Replace
+	ix86_indirect_branch_register with
+	TARGET_INDIRECT_BRANCH_REGISTER.
+	(Bw): Likewise.
+	* config/i386/i386.md (indirect_jump): Likewise.
+	(tablejump): Likewise.
+	(*sibcall_memory): Likewise.
+	(*sibcall_value_memory): Likewise.
+	Peepholes of indirect call and jump via memory: Likewise.
+	(*sibcall_GOT_32): Disallowed for TARGET_INDIRECT_BRANCH_REGISTER.
+	(*sibcall_value_GOT_32): Likewise.
+	* config/i386/predicates.md (indirect_branch_operand): Likewise.
+	(GOT_memory_operand): Likewise.
+	(call_insn_operand): Likewise.
+	(sibcall_insn_operand): Likewise.
+	(GOT32_symbol_operand): Likewise.
+	* config/i386/i386.h (TARGET_INDIRECT_BRANCH_REGISTER): New.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-02-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386.c (ix86_output_indirect_jmp): Update comments.
+
+	2018-02-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	PR target/84530
+	* config/i386/i386-protos.h (ix86_output_indirect_jmp): Remove
+	the bool argument.
+	(ix86_output_indirect_function_return): New prototype.
+	(ix86_split_simple_return_pop_internal): Likewise.
+	* config/i386/i386.c (indirect_return_via_cx): New.
+	(indirect_return_via_cx_bnd): Likewise.
+	(indirect_thunk_name): Handle return va CX_REG.
+	(output_indirect_thunk_function): Create alias for
+	__x86_return_thunk_[re]cx and __x86_return_thunk_[re]cx_bnd.
+	(ix86_output_indirect_jmp): Remove the bool argument.
+	(ix86_output_indirect_function_return): New function.
+	(ix86_split_simple_return_pop_internal): Likewise.
+	* config/i386/i386.md (*indirect_jump): Don't pass false
+	to ix86_output_indirect_jmp.
+	(*tablejump_1): Likewise.
+	(simple_return_pop_internal): Change it to define_insn_and_split.
+	Call ix86_split_simple_return_pop_internal to split it for
+	-mfunction-return=.
+	(simple_return_indirect_internal): Call
+	ix86_output_indirect_function_return instead of
+	ix86_output_indirect_jmp.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-02-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386.c (ix86_output_function_return): Pass
+	INVALID_REGNUM, instead of -1, as invalid register number to
+	indirect_thunk_name and output_indirect_thunk.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-17  Uros Bizjak  <ubizjak@gmail.com>
+
+	* config/i386/i386.c (indirect_thunk_name): Declare regno
+	as unsigned int.  Compare regno with INVALID_REGNUM.
+	(output_indirect_thunk): Ditto.
+	(output_indirect_thunk_function): Ditto.
+	(ix86_code_end): Declare regno as unsigned int.  Use INVALID_REGNUM
+	in the call to output_indirect_thunk_function.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386.c (ix86_set_indirect_branch_type): Disallow
+	-mcmodel=large with -mindirect-branch=thunk,
+	-mindirect-branch=thunk-extern, -mfunction-return=thunk and
+	-mfunction-return=thunk-extern.
+	* doc/invoke.texi: Document -mcmodel=large is incompatible with
+	-mindirect-branch=thunk, -mindirect-branch=thunk-extern,
+	-mfunction-return=thunk and -mfunction-return=thunk-extern.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386.c (print_reg): Print the name of the full
+	integer register without '%'.
+	(ix86_print_operand): Handle 'V'.
+	 * doc/extend.texi: Document 'V' modifier.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/constraints.md (Bs): Disallow memory operand for
+	-mindirect-branch-register.
+	(Bw): Likewise.
+	* config/i386/predicates.md (indirect_branch_operand): Likewise.
+	(GOT_memory_operand): Likewise.
+	(call_insn_operand): Likewise.
+	(sibcall_insn_operand): Likewise.
+	(GOT32_symbol_operand): Likewise.
+	* config/i386/i386.md (indirect_jump): Call convert_memory_address
+	for -mindirect-branch-register.
+	(tablejump): Likewise.
+	(*sibcall_memory): Likewise.
+	(*sibcall_value_memory): Likewise.
+	Disallow peepholes of indirect call and jump via memory for
+	-mindirect-branch-register.
+	(*call_pop): Replace m with Bw.
+	(*call_value_pop): Likewise.
+	(*sibcall_pop_memory): Replace m with Bs.
+	* config/i386/i386.opt (mindirect-branch-register): New option.
+	* doc/invoke.texi: Document -mindirect-branch-register option.
+
+	Backport from mainline
+	2018-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/constraints.md (Bs): Replace
+	ix86_indirect_branch_thunk_register with
+	ix86_indirect_branch_register.
+	(Bw): Likewise.
+	* config/i386/i386.md (indirect_jump): Likewise.
+	(tablejump): Likewise.
+	(*sibcall_memory): Likewise.
+	(*sibcall_value_memory): Likewise.
+	Peepholes of indirect call and jump via memory: Likewise.
+	* config/i386/i386.opt: Likewise.
+	* config/i386/predicates.md (indirect_branch_operand): Likewise.
+	(GOT_memory_operand): Likewise.
+	(call_insn_operand): Likewise.
+	(sibcall_insn_operand): Likewise.
+	(GOT32_symbol_operand): Likewise.
+
+	Backport from mainline
+	2018-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/predicates.md (constant_call_address_operand):
+	Rewrite ix86_indirect_branch_register logic.
+	(sibcall_insn_operand): Likewise.
+
+	Backport from mainline
+	2018-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/constraints.md (Bs): Update
+	ix86_indirect_branch_register check.  Don't check
+	ix86_indirect_branch_register with GOT_memory_operand.
+	(Bw): Likewise.
+	* config/i386/predicates.md (GOT_memory_operand): Don't check
+	ix86_indirect_branch_register here.
+	(GOT32_symbol_operand): Likewise.
+
+	Backport from mainline
+	2018-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/predicates.md (indirect_branch_operand): Rewrite
+	ix86_indirect_branch_register logic.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386-protos.h (ix86_output_function_return): New.
+	* config/i386/i386.c (ix86_set_indirect_branch_type): Also
+	set function_return_type.
+	(indirect_thunk_name): Add ret_p to indicate thunk for function
+	return.
+	(output_indirect_thunk_function): Pass false to
+	indirect_thunk_name.
+	(ix86_output_indirect_branch_via_reg): Likewise.
+	(ix86_output_indirect_branch_via_push): Likewise.
+	(output_indirect_thunk_function): Create alias for function
+	return thunk if regno < 0.
+	(ix86_output_function_return): New function.
+	(ix86_handle_fndecl_attribute): Handle function_return.
+	(ix86_attribute_table): Add function_return.
+	* config/i386/i386.h (machine_function): Add
+	function_return_type.
+	* config/i386/i386.md (simple_return_internal): Use
+	ix86_output_function_return.
+	(simple_return_internal_long): Likewise.
+	* config/i386/i386.opt (mfunction-return=): New option.
+	(indirect_branch): Mention -mfunction-return=.
+	* doc/extend.texi: Document function_return function attribute.
+	* doc/invoke.texi: Document -mfunction-return= option.
+
+	Backport from mainline
+	2018-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	PR target/83839
+	* config/i386/i386.c (output_indirect_thunk_function): Use
+	ASM_OUTPUT_LABEL, instead of ASM_OUTPUT_DEF, for TARGET_MACHO
+	for  __x86.return_thunk.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2018-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386-opts.h (indirect_branch): New.
+	* config/i386/i386-protos.h (ix86_output_indirect_jmp): Likewise.
+	* config/i386/i386.c (ix86_using_red_zone): Disallow red-zone
+	with local indirect jump when converting indirect call and jump.
+	(ix86_set_indirect_branch_type): New.
+	(ix86_set_current_function): Call ix86_set_indirect_branch_type.
+	(indirectlabelno): New.
+	(indirect_thunk_needed): Likewise.
+	(indirect_thunk_bnd_needed): Likewise.
+	(indirect_thunks_used): Likewise.
+	(indirect_thunks_bnd_used): Likewise.
+	(INDIRECT_LABEL): Likewise.
+	(indirect_thunk_name): Likewise.
+	(output_indirect_thunk): Likewise.
+	(output_indirect_thunk_function): Likewise.
+	(ix86_output_indirect_branch_via_reg): Likewise.
+	(ix86_output_indirect_branch_via_push): Likewise.
+	(ix86_output_indirect_branch): Likewise.
+	(ix86_output_indirect_jmp): Likewise.
+	(ix86_code_end): Call output_indirect_thunk_function if needed.
+	(ix86_output_call_insn): Call ix86_output_indirect_branch if
+	needed.
+	(ix86_handle_fndecl_attribute): Handle indirect_branch.
+	(ix86_attribute_table): Add indirect_branch.
+	* config/i386/i386.h (machine_function): Add indirect_branch_type
+	and has_local_indirect_jump.
+	* config/i386/i386.md (indirect_jump): Set has_local_indirect_jump
+	to true.
+	(tablejump): Likewise.
+	(*indirect_jump): Use ix86_output_indirect_jmp.
+	(*tablejump_1): Likewise.
+	(simple_return_indirect_internal): Likewise.
+	* config/i386/i386.opt (mindirect-branch=): New option.
+	(indirect_branch): New.
+	(keep): Likewise.
+	(thunk): Likewise.
+	(thunk-inline): Likewise.
+	(thunk-extern): Likewise.
+	* doc/extend.texi: Document indirect_branch function attribute.
+	* doc/invoke.texi: Document -mindirect-branch= option.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	PR target/83905
+	* config/i386/i386.c (ix86_expand_prologue): Use cost reference
+	of struct ix86_frame.
+	(ix86_expand_epilogue): Likewise.  Add a local variable for
+	the reg_save_offset field in struct ix86_frame.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2017-11-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/i386.c (ix86_can_use_return_insn_p): Use reference
+	of struct ix86_frame.
+	(ix86_initial_elimination_offset): Likewise.
+	(ix86_expand_split_stack_prologue): Likewise.
+
+2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2017-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	PR target/82499
+	* config/i386/i386.h (ix86_red_zone_size): New.
+
+	2017-06-01  Bernd Edlinger  <bernd.edlinger@hotmail.de>
+
+	* config/i386/i386.c (ix86_frame): Moved to ...
+	* config/i386/i386.h (ix86_frame): Here.
+	(machine_function): Add frame.
+	* config/i386/i386.c (ix86_compute_frame_layout): Repace the
+	frame argument with &cfun->machine->frame.
+	(ix86_can_use_return_insn_p): Don't pass &frame to
+	ix86_compute_frame_layout.  Copy frame from cfun->machine->frame.
+	(ix86_can_eliminate): Likewise.
+	(ix86_expand_prologue): Likewise.
+	(ix86_expand_epilogue): Likewise.
+	(ix86_expand_split_stack_prologue): Likewise.
+
+2018-04-12  Andreas Krebbel  <krebbel@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2018-04-12  Andreas Krebbel  <krebbel@linux.vnet.ibm.com>
+
+	* config/s390/s390.c (s390_output_indirect_thunk_function): Check
+	also for flag_dwarf2_cfi_asm.
+
+2018-04-11  Uros Bizjak  <ubizjak@gmail.com>
+
+	* config/alpha/alpha.md (stack_probe_internal): Rename
+	from "probe_stack".  Update all callers.
+
+2018-04-10  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	Backport from mainline
+	2018-03-08  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	PR target/84748
+	* config/aarch64/aarch64.md (*compare_cstore<mode>_insn): Mark pattern
+	as clobbering CC_REGNUM.
+
 2018-04-06  Eric Botcazou  <ebotcazou@adacore.com>
 
 	PR target/85196
