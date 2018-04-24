@@ -35,7 +35,6 @@
 #define CPP_SPEC "%{pthread:-D_REENTRANT}"
 
 #define LINUX_TARGET_LINK_SPEC  "%{h*}		\
-   --hash-style=gnu				\
    %{static:-Bstatic}				\
    %{shared:-shared}				\
    %{symbolic:-Bsymbolic}			\
