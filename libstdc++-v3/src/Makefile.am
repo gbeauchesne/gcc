@@ -311,12 +311,10 @@ if GLIBCXX_BUILD_DEBUG
 STAMP_DEBUG = build-debug
 STAMP_INSTALL_DEBUG = install-debug
 CLEAN_DEBUG = debug
-STAMP_INSTALL_PIC = install-pic
 else
 STAMP_DEBUG =
 STAMP_INSTALL_DEBUG =
 CLEAN_DEBUG =
-STAMP_INSTALL_PIC =
 endif
 
 # Build a debug variant.
@@ -351,7 +349,6 @@ build-debug: stamp-debug
 	  mv Makefile Makefile.tmp; \
 	  sed -e 's,all-local: all-once,all-local:,' \
 	      -e 's,install-data-local: install-data-once,install-data-local:,' \
-	      -e 's,install-exec-local:.*,install-exec-local:,' \
 	      -e '/vpath/!s,src/c,src/debug/c,' \
 	  < Makefile.tmp > Makefile ; \
 	  rm -f Makefile.tmp ; \
@@ -362,8 +359,3 @@ build-debug: stamp-debug
 install-debug: build-debug
 	(cd ${debugdir} && $(MAKE) CXXFLAGS='$(DEBUG_FLAGS)' \
 	toolexeclibdir=$(glibcxx_toolexeclibdir)/debug install) ;
-
-install-exec-local: $(STAMP_INSTALL_PIC)
-$(STAMP_INSTALL_PIC):
-	$(MKDIR_P) $(DESTDIR)$(toolexeclibdir)
-	$(INSTALL_DATA) .libs/libstdc++convenience.a $(DESTDIR)$(toolexeclibdir)/libstdc++_pic.a
