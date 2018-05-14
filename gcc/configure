@@ -1030,6 +1030,7 @@ enable_plugin
 enable_host_shared
 enable_libquadmath_support
 with_linker_hash_style
+with_linker_rpath
 with_diagnostics_color
 with_diagnostics_urls
 enable_default_pie
@@ -1867,6 +1868,7 @@ Optional Packages:
   --with-system-zlib      use installed libz
   --with-linker-hash-style={sysv,gnu,both}
                           specify the linker hash style
+  --with-linker-rpath     specify the linker default RPATH
   --with-diagnostics-color={never,auto,auto-if-env,always}
                           specify the default of -fdiagnostics-color option
                           auto-if-env stands for -fdiagnostics-color=auto if
@@ -32114,6 +32116,25 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 fi
+
+
+# Specify what RPATH to use by default (none).
+
+# Check whether --with-linker-rpath was given.
+if test "${with_linker_rpath+set}" = set; then :
+  withval=$with_linker_rpath; LINKER_RPATH="$with_linker_rpath"
+else
+  LINKER_RPATH=""
+fi
+
+if test x"${LINKER_RPATH}" != x; then
+
+cat >>confdefs.h <<_ACEOF
+#define LINKER_RPATH "$LINKER_RPATH"
+_ACEOF
+
+fi
+
 
 # Specify what should be the default of -fdiagnostics-color option.
 

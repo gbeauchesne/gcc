@@ -7443,6 +7443,17 @@ if test x"${LINKER_HASH_STYLE}" != x; then
                                          [The linker hash style])
 fi
 
+# Specify what RPATH to use by default (none).
+AC_ARG_WITH([linker-rpath],
+[AC_HELP_STRING([--with-linker-rpath],
+                [specify the linker default RPATH])],
+[LINKER_RPATH="$with_linker_rpath"],
+[LINKER_RPATH=""])
+if test x"${LINKER_RPATH}" != x; then
+  AC_DEFINE_UNQUOTED(LINKER_RPATH, "$LINKER_RPATH",
+    [The linker default RPATH])
+fi
+
 # Specify what should be the default of -fdiagnostics-color option.
 AC_ARG_WITH([diagnostics-color],
 [AC_HELP_STRING([--with-diagnostics-color={never,auto,auto-if-env,always}],
