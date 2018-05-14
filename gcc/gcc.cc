@@ -2071,7 +2071,7 @@ init_spec (void)
 #endif
 
 #if defined LINK_EH_SPEC || defined LINK_BUILDID_SPEC || \
-    defined LINKER_HASH_STYLE
+    defined LINKER_HASH_STYLE || defined LINKER_RPATH
 # ifdef LINK_BUILDID_SPEC
   /* Prepend LINK_BUILDID_SPEC to whatever link_spec we had before.  */
   obstack_grow (&obstack, LINK_BUILDID_SPEC, sizeof (LINK_BUILDID_SPEC) - 1);
@@ -2087,6 +2087,16 @@ init_spec (void)
     static const char hash_style[] = "--hash-style=";
     obstack_grow (&obstack, hash_style, sizeof (hash_style) - 1);
     obstack_grow (&obstack, LINKER_HASH_STYLE, sizeof (LINKER_HASH_STYLE) - 1);
+    obstack_1grow (&obstack, ' ');
+  }
+# endif
+# ifdef LINKER_RPATH
+  /* Prepend --rpath=LINKER_RPATH to whatever link_spec we had
+     before.  */
+  {
+    static const char rpath[] = "--rpath=";
+    obstack_grow (&obstack, rpath, sizeof (rpath) - 1);
+    obstack_grow (&obstack, LINKER_RPATH, sizeof (LINKER_RPATH) - 1);
     obstack_1grow (&obstack, ' ');
   }
 # endif
