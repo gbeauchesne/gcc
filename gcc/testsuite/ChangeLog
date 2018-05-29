@@ -1,3 +1,56 @@
+2018-05-25  Steven G. Kargl  <kargl@gcc.gnu.org>
+
+	PR fortran/85895
+	Backport from trunk
+	* gfortran.dg/coarray_3.f90: Fix invalid testcase.
+	* gfortran.dg/pr85895.f90: New test.
+
+2018-05-25  Steven G. Kargl  <kargl@gcc.gnu.org>
+
+	PR fortran/85780
+	Backport from trunk
+	* gfortran.dg/pr85780.f90: New test.
+
+2018-05-25  Steven G. Kargl  <kargl@gcc.gnu.org>
+
+	PR fortran/85779
+	Backport from trunk
+	* gfortran.dg/pr85779_1.f90: New test.
+	* gfortran.dg/pr85779_2.f90: Ditto.
+	* gfortran.dg/pr85779_3.f90: Ditto.
+
+2018-05-25  Steven G. Kargl  <kargl@gcc.gnu.org>
+
+	PR fortran/85543
+	Backport from trunk
+	* gfortran.dg/pr85543.f90: New test.
+
+2018-05-24  Uros Bizjak  <ubizjak@gmail.com>
+
+	* gcc.target/i386/avx512f-vcvtusi2sd64-1.c: Update scan string.
+	* gcc.target/i386/avx512f-vcvtusi2ss64-1.c: Ditto.
+
+2017-05-17  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/82814
+	Backport from trunk
+	* gfortran.dg/submodule_31.f08: New test.
+
+2018-05-16  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/83149
+	Backport from trunk
+	* gfortran.dg/pr83149_1.f90: New test.
+	* gfortran.dg/pr83149.f90: Additional source for previous.
+	* gfortran.dg/pr83149_b.f90: New test.
+	* gfortran.dg/pr83149_a.f90: Additional source for previous.
+
+2018-16-05  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/83898
+	Backport from trunk
+	* gfortran.dg/associate_33.f03 : New test.
+
 2018-05-13  Paul Thomas  <pault@gcc.gnu.org>
 
 	PR fortran/68846
