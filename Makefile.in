@@ -33297,6 +33297,12 @@ maybe-check-libctf:
 maybe-check-libctf: check-libctf
 
 check-libctf:
+	@: $(MAKE); $(unstage)
+	@r=`${PWD_COMMAND}`; export r; \
+	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
+	$(HOST_EXPORTS) $(EXTRA_HOST_EXPORTS) \
+	(cd $(HOST_SUBDIR)/libctf && \
+	  $(MAKE) $(FLAGS_TO_PASS)  $(EXTRA_BOOTSTRAP_FLAGS) check)
 
 @endif libctf
 
@@ -33305,7 +33311,13 @@ maybe-install-libctf:
 @if libctf
 maybe-install-libctf: install-libctf
 
-install-libctf:
+install-libctf: installdirs
+	@: $(MAKE); $(unstage)
+	@r=`${PWD_COMMAND}`; export r; \
+	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
+	$(HOST_EXPORTS) \
+	(cd $(HOST_SUBDIR)/libctf && \
+	  $(MAKE) $(FLAGS_TO_PASS)  install)
 
 @endif libctf
 
@@ -33314,7 +33326,13 @@ maybe-install-strip-libctf:
 @if libctf
 maybe-install-strip-libctf: install-strip-libctf
 
-install-strip-libctf:
+install-strip-libctf: installdirs
+	@: $(MAKE); $(unstage)
+	@r=`${PWD_COMMAND}`; export r; \
+	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
+	$(HOST_EXPORTS) \
+	(cd $(HOST_SUBDIR)/libctf && \
+	  $(MAKE) $(FLAGS_TO_PASS)  install-strip)
 
 @endif libctf
 
@@ -52982,6 +53000,14 @@ all-stage4-binutils: maybe-all-stage4-libctf
 all-stageprofile-binutils: maybe-all-stageprofile-libctf
 all-stagefeedback-binutils: maybe-all-stagefeedback-libctf
 
+all-ld: maybe-all-libctf
+all-stage1-ld: maybe-all-stage1-libctf
+all-stage2-ld: maybe-all-stage2-libctf
+all-stage3-ld: maybe-all-stage3-libctf
+all-stage4-ld: maybe-all-stage4-libctf
+all-stageprofile-ld: maybe-all-stageprofile-libctf
+all-stagefeedback-ld: maybe-all-stagefeedback-libctf
+
 install-binutils: maybe-install-opcodes
 install-strip-binutils: maybe-install-strip-opcodes
 install-opcodes: maybe-install-bfd
@@ -53275,6 +53301,13 @@ configure-stage3-libctf: maybe-all-stage3-libiconv
 configure-stage4-libctf: maybe-all-stage4-libiconv
 configure-stageprofile-libctf: maybe-all-stageprofile-libiconv
 configure-stagefeedback-libctf: maybe-all-stagefeedback-libiconv
+check-libctf: maybe-all-ld
+check-stage1-libctf: maybe-all-stage1-ld
+check-stage2-libctf: maybe-all-stage2-ld
+check-stage3-libctf: maybe-all-stage3-ld
+check-stage4-libctf: maybe-all-stage4-ld
+check-stageprofile-libctf: maybe-all-stageprofile-ld
+check-stagefeedback-libctf: maybe-all-stagefeedback-ld
 configure-sim: maybe-configure-intl
 all-sim: maybe-all-intl
 all-sim: maybe-all-libiberty
