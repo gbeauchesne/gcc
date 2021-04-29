@@ -2241,14 +2241,6 @@ rtx_handle_directive (file_location loc, const char *rtx_name)
     process_rtx (x, loc);
 }
 
-/* Comparison function for the mnemonic hash table.  */
-
-static int
-htab_eq_string (const void *s1, const void *s2)
-{
-  return strcmp ((const char*)s1, (const char*)s2) == 0;
-}
-
 /* Add mnemonic STR with length LEN to the mnemonic hash table
    MNEMONIC_HTAB.  A trailing zero end character is appendend to STR
    and a permanent heap copy of STR is created.  */
