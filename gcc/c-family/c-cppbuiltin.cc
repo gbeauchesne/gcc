@@ -34,6 +34,11 @@ along with GCC; see the file COPYING3.  If not see
 #include "cppbuiltin.h"
 #include "configargs.h"
 
+/* Inject some default compilation flags which are used as the default.
+   Done by the packaging build system.  Should that be done in the headers
+   in gcc/config/<arch>/ instead?  */
+#include "distro-defaults.h"
+
 #ifndef TARGET_OS_CPP_BUILTINS
 # define TARGET_OS_CPP_BUILTINS()
 #endif
@@ -1545,6 +1550,12 @@ c_cpp_builtins (cpp_reader *pfile)
   /* For use in assembly language.  */
   builtin_define_with_value ("__REGISTER_PREFIX__", REGISTER_PREFIX, 0);
   builtin_define_with_value ("__USER_LABEL_PREFIX__", user_label_prefix, 0);
+
+#ifdef DIST_DEFAULT_FORTIFY_SOURCE
+  /* Fortify Source enabled by default for optimization levels > 0 */
+  if (optimize)
+    builtin_define_with_int_value ("_FORTIFY_SOURCE", 2);
+#endif
 
   /* Misc.  */
   if (flag_gnu89_inline)
