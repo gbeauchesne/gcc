@@ -31,7 +31,7 @@ SHLIBUNWIND_SONAME = @shlib_base_name@.so.$(SHLIBUNWIND_SOVERSION)
 
 SHLIBUNWIND_LINK = $(CC) $(LIBGCC2_CFLAGS) -shared \
 	-nodefaultlibs -Wl,-h,$(SHLIBUNWIND_SONAME) \
-	-Wl,-z,text -Wl,-z,defs -o $(SHLIB_DIR)/$(SHLIBUNWIND_SONAME).tmp \
+	-Wl,-z,text -o $(SHLIB_DIR)/$(SHLIBUNWIND_SONAME).tmp \
 	@multilib_flags@ $(SHLIB_OBJS) -lc && \
 	rm -f $(SHLIB_DIR)/$(SHLIB_SOLINK) && \
 	if [ -f $(SHLIB_DIR)/$(SHLIBUNWIND_SONAME) ]; then \
