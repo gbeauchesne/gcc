@@ -164,6 +164,18 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 			}
 		      str = reconcat (str, str, dir_separator_str,
 				      imultiarch, NULL);
+		      if (p->cplusplus && strstr (str, "/c++/"))
+			{
+			  char *suffix = strstr (str, "/c++/");
+			  *suffix++ = '\0';
+			  suffix = xstrdup (suffix);
+			  str = reconcat (str, str, dir_separator_str,
+					  imultiarch,
+					  dir_separator_str, suffix, NULL);
+			}
+		      else
+			str = reconcat (str, str, dir_separator_str,
+					imultiarch, NULL);
 		    }
 		  add_path (str, INC_SYSTEM, p->cxx_aware, false);
 		}
@@ -229,7 +241,16 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 		  free (str);
 		  continue;
 		}
-	      str = reconcat (str, str, dir_separator_str, imultiarch, NULL);
+	      if (p->cplusplus && strstr (str, "/c++/"))
+		{
+		  char *suffix = strstr (str, "/c++/");
+		  *suffix++ = '\0';
+		  suffix = xstrdup (suffix);
+		  str = reconcat (str, str, dir_separator_str, imultiarch,
+				  dir_separator_str, suffix, NULL);
+		}
+	      else
+		str = reconcat (str, str, dir_separator_str, imultiarch, NULL);
 	    }
 
 	  add_path (str, INC_SYSTEM, p->cxx_aware, false);
