@@ -927,6 +927,7 @@ AC_ARG_ENABLE(__cxa_atexit,
 [], [])
 
 # Enable C extension for decimal float if target supports it.
+# touch the file, adding decimal support for kfreebsd-amd64 in config/dfp.m4
 GCC_AC_ENABLE_DECIMAL_FLOAT([$target])
 
 dfp=`if test $enable_decimal_float != no; then echo 1; else echo 0; fi`

@@ -77,6 +77,7 @@ AC_CANONICAL_TARGET
 
 # Default decimal format
 # If you change the defaults here, be sure to change them in the GCC directory also
+# touch the file, adding decimal support for kfreebsd-amd64 in config/dfp.m4
 AC_MSG_CHECKING([for decimal floating point])
 
 GCC_AC_ENABLE_DECIMAL_FLOAT([$target])

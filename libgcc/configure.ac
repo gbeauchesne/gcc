@@ -235,6 +235,7 @@ AC_CHECK_HEADERS(inttypes.h stdint.h stdlib.h ftw.h \
 AC_HEADER_STDC
 
 # Check for decimal float support.
+# touch the file, adding decimal support for kfreebsd-amd64 in config/dfp.m4
 AC_CACHE_CHECK([whether decimal floating point is supported], [libgcc_cv_dfp],
 	       [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <fenv.h>
