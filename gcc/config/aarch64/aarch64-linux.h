@@ -36,6 +36,7 @@
 
 #define LINUX_TARGET_LINK_SPEC  "%{h*}		\
    --hash-style=gnu				\
+   %{!fsanitize=*:--as-needed}			\
    %{static:-Bstatic}				\
    %{shared:-shared}				\
    %{symbolic:-Bsymbolic}			\
