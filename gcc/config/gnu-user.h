@@ -136,22 +136,22 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define LIBASAN_EARLY_SPEC "%{!shared:libasan_preinit%O%s} " \
   "%{static-libasan:%{!shared:" \
   LD_STATIC_OPTION " --whole-archive -lasan --no-whole-archive " \
-  LD_DYNAMIC_OPTION "}}%{!static-libasan:%{!fuse-ld=gold:--push-state} --no-as-needed -lasan %{fuse-ld=gold:--as-needed;:--pop-state}}"
+  LD_DYNAMIC_OPTION "}}%{!static-libasan:--push-state --no-as-needed -lasan --pop-state}"
 #undef LIBHWASAN_EARLY_SPEC
 #define LIBHWASAN_EARLY_SPEC "%{!shared:libhwasan_preinit%O%s} " \
   "%{static-libhwasan:%{!shared:" \
   LD_STATIC_OPTION " --whole-archive -lhwasan --no-whole-archive " \
-  LD_DYNAMIC_OPTION "}}%{!static-libhwasan:%{!fuse-ld=gold:--push-state} --no-as-needed -lhwasan %{fuse-ld=gold:--as-needed;:--pop-state}}"
+  LD_DYNAMIC_OPTION "}}%{!static-libhwasan:--push-state --no-as-needed -lhwasan --pop-state}"
 #undef LIBTSAN_EARLY_SPEC
 #define LIBTSAN_EARLY_SPEC "%{!shared:libtsan_preinit%O%s} " \
   "%{static-libtsan:%{!shared:" \
   LD_STATIC_OPTION " --whole-archive -ltsan --no-whole-archive " \
-  LD_DYNAMIC_OPTION "}}%{!static-libtsan:%{!fuse-ld=gold:--push-state} --no-as-needed -ltsan %{fuse-ld=gold:--as-needed;:--pop-state}}"
+  LD_DYNAMIC_OPTION "}}%{!static-libtsan:--push-state --no-as-needed -ltsan --pop-state}"
 #undef LIBLSAN_EARLY_SPEC
 #define LIBLSAN_EARLY_SPEC "%{!shared:liblsan_preinit%O%s} " \
   "%{static-liblsan:%{!shared:" \
   LD_STATIC_OPTION " --whole-archive -llsan --no-whole-archive " \
-  LD_DYNAMIC_OPTION "}}%{!static-liblsan:%{!fuse-ld=gold:--push-state} --no-as-needed -llsan %{fuse-ld=gold:--as-needed;:--pop-state}}"
+  LD_DYNAMIC_OPTION "}}%{!static-liblsan:--push-state --no-as-needed -llsan --pop-state}"
 #endif
 
 #undef TARGET_F951_OPTIONS
