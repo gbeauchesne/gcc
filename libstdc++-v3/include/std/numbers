@@ -219,7 +219,7 @@ __glibcxx_numbers (_Float128, F128);
 __glibcxx_numbers (__gnu_cxx::__bfloat16_t, BF16);
 #endif
 
-#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128)
+#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128) && !defined(__CUDACC__)
 __glibcxx_numbers (__float128, Q);
 #endif // USE_FLOAT128
 

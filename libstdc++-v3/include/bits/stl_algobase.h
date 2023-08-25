@@ -1052,7 +1052,7 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   __size_to_integer(double __n) { return (long long)__n; }
   inline _GLIBCXX_CONSTEXPR long long
   __size_to_integer(long double __n) { return (long long)__n; }
-#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128)
+#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128) && !defined(__CUDACC__)
   __extension__ inline _GLIBCXX_CONSTEXPR long long
   __size_to_integer(__float128 __n) { return (long long)__n; }
 #endif
