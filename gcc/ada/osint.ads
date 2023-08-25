@@ -144,14 +144,10 @@ package Osint is
    --  path) in Name_Buffer, with the length in Name_Len.
 
    function Program_Name (Nam : String; Prog : String) return String_Access;
-   --  In the native compilation case, creates a string containing Nam. In the
-   --  cross compilation case, looks at the prefix of the current program being
-   --  run and prepends it to Nam. For instance if the program being run is
-   --  <target>-gnatmake and Nam is "gcc", the returned value will be a pointer
-   --  to "<target>-gcc". This function clobbers Name_Buffer and Name_Len.
-   --  Also looks at any suffix, e.g. gnatmake-4.1 -> "gcc-4.1". Prog is the
-   --  default name of the current program being executed, e.g. "gnatmake",
-   --  "gnatlink".
+   --  On Debian, always create a string containing
+   --  Sdefault.Target_Name & '-' & Nam & '-' & Gnatvsn.Library_Version.
+   --  Fail if the program base name differs from Prog,
+   --  maybe extended with the same prefix or suffix.
 
    procedure Write_Program_Name;
    --  Writes name of program as invoked to the current output (normally
