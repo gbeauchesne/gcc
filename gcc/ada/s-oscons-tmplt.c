@@ -2002,6 +2002,7 @@ CND(CLOCK_THREAD_CPUTIME_ID, "Thread CPU clock")
 
 #if defined(__linux__) || defined(__FreeBSD__) \
  || (defined(_AIX) && defined(_AIXVERSION_530)) \
+ || defined(__FreeBSD_kernel__) \
  || defined(__DragonFly__) || defined(__QNX__) \
  || defined (__vxworks)
 /** On these platforms use system provided monotonic clock instead of
