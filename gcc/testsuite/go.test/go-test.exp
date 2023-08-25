@@ -460,6 +460,14 @@ proc go-gc-tests { } {
 	    continue
 	}
 
+	# Hangs on the buildds
+	if { [istarget "aarch64*-*-*"] } {
+	    if { [file tail $test] == "pprof.go" } {
+		untested $test
+		continue
+	    }
+	}
+
 	if { [file tail $test] == "init1.go" } {
 	    # This tests whether GC runs during init, which for gccgo
 	    # it currently does not.
