@@ -23,3 +23,6 @@ MULTILIB_DIRNAMES = hs archs hs38 hs38_linux arc700 nps400
 # Aliases:
 MULTILIB_MATCHES += mcpu?arc700=mA7
 MULTILIB_MATCHES += mcpu?arc700=mARC700
+
+MULTILIB_OSDIRNAMES =
+MULTIARCH_DIRNAME = $(call if_multiarch,arc-linux-gnu)

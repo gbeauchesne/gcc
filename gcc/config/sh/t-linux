@@ -1,3 +1,11 @@
 MULTILIB_DIRNAMES=
 MULTILIB_MATCHES=
+
+ifneq (,$(findstring sh4,$(target)))
+MULTILIB_OSDIRNAMES = .:sh4-linux-gnu sh4_nofpu-linux-gnu:sh4-linux-gnu
+MULTIARCH_DIRNAME = $(call if_multiarch,sh4-linux-gnu)
+else
+MULTILIB_OSDIRNAMES = .:sh3-linux-gnu sh3_nofpu-linux-gnu:sh3-linux-gnu
+MULTIARCH_DIRNAME = $(call if_multiarch,sh3-linux-gnu)
+endif
 MULTILIB_EXCEPTIONS=m1 mb/m1 m2a
