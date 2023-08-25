@@ -1215,6 +1215,7 @@ FLAGS_TO_PASS = \
 	"prefix=$(prefix)" \
 	"local_prefix=$(local_prefix)" \
 	"gxx_include_dir=$(gcc_gxx_include_dir)" \
+	"gxx_tool_include_dir=$(gcc_gxx_tool_include_dir)" \
 	"gxx_libcxx_include_dir=$(gcc_gxx_libcxx_include_dir)" \
 	"build_tooldir=$(build_tooldir)" \
 	"gcc_tooldir=$(gcc_tooldir)" \
@@ -1881,6 +1882,14 @@ gnat_install_lib = @gnat_install_lib@
 
 # host overrides
 -include $(xmake_file)
+
+# Directory in which the compiler finds target-dependent g++ includes.
+ifneq ($(call if_multiarch,non-empty),)
+  gcc_gxx_tool_include_dir = $(libsubdir)/$(libsubdir_to_prefix)include/$(MULTIARCH_DIRNAME)/c++/$(version)
+else
+  gcc_gxx_tool_include_dir = $(gcc_gxx_include_dir)/$(target_noncanonical)
+endif
+
 
 # all-tree.def includes all the tree.def files.
 all-tree.def: s-alltree; @true
@@ -3039,7 +3048,7 @@ PREPROCESSOR_DEFINES = \
   -DFIXED_INCLUDE_DIR=\"$(libsubdir)/include-fixed\" \
   -DGPLUSPLUS_INCLUDE_DIR=\"$(gcc_gxx_include_dir)\" \
   -DGPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT=$(gcc_gxx_include_dir_add_sysroot) \
-  -DGPLUSPLUS_TOOL_INCLUDE_DIR=\"$(gcc_gxx_include_dir)/$(target_noncanonical)\" \
+  -DGPLUSPLUS_TOOL_INCLUDE_DIR=\"$(gcc_gxx_tool_include_dir)\" \
   -DGPLUSPLUS_BACKWARD_INCLUDE_DIR=\"$(gcc_gxx_include_dir)/backward\" \
   -DGPLUSPLUS_LIBCXX_INCLUDE_DIR=\"$(gcc_gxx_libcxx_include_dir)\" \
   -DGPLUSPLUS_LIBCXX_INCLUDE_DIR_ADD_SYSROOT=$(gcc_gxx_libcxx_include_dir_add_sysroot) \
