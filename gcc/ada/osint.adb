@@ -2268,50 +2268,51 @@ package body Osint is
    ------------------
 
    function Program_Name (Nam : String; Prog : String) return String_Access is
-      End_Of_Prefix   : Natural := 0;
-      Start_Of_Prefix : Positive := 1;
-      Start_Of_Suffix : Positive;
-
+      --  Most of the work is to check that the current program name
+      --  is consistent with the two static constants below.
+      Suffix : constant String  := '-' & Gnatvsn.Library_Version;
+      Prefix : Types.String_Ptr := Sdefault.Target_Name;
+      First  : Integer;
+      Result : System.OS_Lib.String_Access;
    begin
       --  Get the name of the current program being executed
-
       Find_Program_Name;
 
-      Start_Of_Suffix := Name_Len + 1;
-
-      --  Find the target prefix if any, for the cross compilation case.
-      --  For instance in "powerpc-elf-gcc" the target prefix is
-      --  "powerpc-elf-"
-      --  Ditto for suffix, e.g. in "gcc-4.1", the suffix is "-4.1"
-
-      for J in reverse 1 .. Name_Len loop
-         if Is_Directory_Separator (Name_Buffer (J))
-           or else Name_Buffer (J) = ':'
-         then
-            Start_Of_Prefix := J + 1;
-            exit;
-         end if;
-      end loop;
-
-      --  Find End_Of_Prefix
-
-      for J in Start_Of_Prefix .. Name_Len - Prog'Length + 1 loop
-         if Name_Buffer (J .. J + Prog'Length - 1) = Prog then
-            End_Of_Prefix := J - 1;
-            exit;
-         end if;
-      end loop;
-
-      if End_Of_Prefix > 1 then
-         Start_Of_Suffix := End_Of_Prefix + Prog'Length + 1;
+      --  If our version is present, skip it.
+      First := Name_Len - Suffix'Length + 1;
+      if 0 < First and then Name_Buffer (First .. Name_Len) = Suffix then
+         Name_Len := First - 1;
       end if;
 
-      --  Create the new program name
+      --  The central part must be Prog.
+      First := Name_Len - Prog'Length + 1;
+      if First <= 0 or else Name_Buffer (First .. Name_Len) /= Prog then
+         Fail ("Osint.Program_Name: must end with " & Prog
+                 & " or " & Prog & Suffix);
+      end if;
+      Name_Len := First - 1;
 
-      return new String'
-        (Name_Buffer (Start_Of_Prefix .. End_Of_Prefix)
-         & Nam
-         & Name_Buffer (Start_Of_Suffix .. Name_Len));
+      --  According to Make-generated.in, this ends with a slash.
+      Prefix.all (Prefix.all'Last) := '-';
+
+      --  If our target is present, skip it.
+      First := Name_Len - Prefix.all'Length + 1;
+      if 0 < First and then Name_Buffer (First .. Name_Len) = Prefix.all then
+         Name_Len := First - 1;
+      end if;
+
+      --  What remains must be the directory part.
+      if 0 < Name_Len
+        and then Name_Buffer (Name_Len) /= ':'
+        and then not Is_Directory_Separator (Name_Buffer (Name_Len))
+      then
+         Fail ("Osint.Program_Name: must start with " & Prog
+                 & " or " & Prefix.all & Prog);
+      end if;
+
+      Result := new String'(Prefix.all & Nam & Suffix);
+      Types.Free (Prefix);
+      return Result;
    end Program_Name;
 
    ------------------------------
