@@ -142,6 +142,11 @@ host_libs="intl libiberty opcodes bfd readline tcl tk itcl libgui zlib libbacktr
 # If --enable-gold is used, "gold" may replace "ld".
 host_tools="texinfo flex bison binutils gas ld fixincludes gcc cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools c++tools"
 
+case "${target}" in
+  hppa64-*linux*) ;;
+  *) target_libiberty="target-libiberty";;
+esac
+
 # these libraries are built for the target environment, and are built after
 # the host libraries and the host tools (which may be a cross compiler)
 # Note that libiberty is not a target library.
@@ -161,6 +166,7 @@ target_libraries="target-libgcc \
 		target-libffi \
 		target-libobjc \
 		target-libada \
+		${target_libiberty} \
 		target-libgm2 \
 		target-libgo \
 		target-libphobos \

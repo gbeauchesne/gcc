@@ -115,6 +115,7 @@ proc gnat_target_compile { source dest type options } {
     global TOOL_OPTIONS
     global gnat_target_current
     global TEST_ALWAYS_FLAGS
+    global ld_library_path
 
     # dg-require-effective-target tests must be compiled as C.
     if [ string match "*.c" $source ] then {
@@ -144,6 +145,11 @@ proc gnat_target_compile { source dest type options } {
 	# Always log so compilations can be repeated manually.
 	verbose -log "ADA_INCLUDE_PATH=$rtsdir/adainclude"
 	verbose -log "ADA_OBJECTS_PATH=$rtsdir/adainclude"
+
+	if { ! [ string match "*/libada/adalib*" $ld_library_path ] } {
+	    append ld_library_path ":$rtsdir/adalib"
+	    set_ld_library_path_env_vars
+	}
     }
 
     lappend options "compiler=$GNAT_UNDER_TEST -q -f"

@@ -79,10 +79,11 @@ ADA_RTS_DIR=$(GCC_DIR)/ada/rts$(subst /,_,$(MULTISUBDIR))
 # by recursive make invocations in gcc/ada/Makefile.in
 LIBADA_FLAGS_TO_PASS = \
         "MAKEOVERRIDES=" \
-        "LDFLAGS=$(LDFLAGS)" \
+        "LDFLAGS=$(LDFLAGS) -Wl,--no-allow-shlib-undefined \
+          -Wl,--no-copy-dt-needed-entries -Wl,--no-undefined" \
         "LN_S=$(LN_S)" \
         "SHELL=$(SHELL)" \
-        "GNATLIBFLAGS=$(GNATLIBFLAGS) $(MULTIFLAGS)" \
+        "GNATLIBFLAGS=$(GNATLIBFLAGS) $(MULTIFLAGS) -gnatn" \
         "GNATLIBCFLAGS=$(GNATLIBCFLAGS) $(MULTIFLAGS)" \
         "GNATLIBCFLAGS_FOR_C=$(GNATLIBCFLAGS_FOR_C) $(MULTIFLAGS)" \
         "PICFLAG_FOR_TARGET=$(PICFLAG)" \
