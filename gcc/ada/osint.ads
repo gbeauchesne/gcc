@@ -196,6 +196,7 @@ package Osint is
    --  information in order to locate it. If the source file cannot be opened,
    --  or Name = No_File, and all blank time stamp is returned (this is not an
    --  error situation).
+   --  Handles SOURCE_DATE_EPOCH like File_Time_Stamp functions below.
 
    function File_Stamp (Name : Path_Name_Type) return Time_Stamp_Type;
    --  Same as above for a path name
@@ -303,6 +304,11 @@ package Osint is
      (Name : Path_Name_Type;
       Attr : access File_Attributes) return Time_Stamp_Type;
    --  Return the time stamp of the file
+   --  If the SOURCE_DATE_EPOCH environment variable exists and represents
+   --  an OS_Type value, any more recent file time stamp is truncated.
+   --  This ensures that gnat1 writes deterministic .ali files even in
+   --  the presence of patched or generated sources.  See
+   --  https://reproducible-builds.org/specs/source-date-epoch.
 
    function Is_Readable_File
      (Name : C_File_Name;

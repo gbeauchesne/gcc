@@ -64,6 +64,10 @@ package body Osint is
    --  Used in Locate_File as a fake directory when Name is already an
    --  absolute path.
 
+   Source_Date_Epoch : OS_Time := Invalid_Time;
+   --  Set at startup by the Initialize procedure.
+   --  See the specification of the File_Time_Stamp functions.
+
    -------------------------------------
    -- Use of Name_Find and Name_Enter --
    -------------------------------------
@@ -1126,8 +1130,14 @@ package body Osint is
    is
       function Internal (N : C_File_Name; A : System.Address) return OS_Time;
       pragma Import (C, Internal, "__gnat_file_time_name_attr");
+      T : OS_Time := Internal (Name, Attr.all'Address);
    begin
-      return Internal (Name, Attr.all'Address);
+      if Source_Date_Epoch /= Invalid_Time and then T /= Invalid_Time
+        and then Source_Date_Epoch < T
+      then
+         T := Source_Date_Epoch;
+      end if;
+      return T;
    end File_Time_Stamp;
 
    function File_Time_Stamp
@@ -1150,6 +1160,7 @@ package body Osint is
    ----------------
 
    function File_Stamp (Name : File_Name_Type) return Time_Stamp_Type is
+      T : OS_Time;
    begin
       if Name = No_File then
          return Empty_Time_Stamp;
@@ -1161,9 +1172,13 @@ package body Osint is
       --  not exist, and OS_Time_To_GNAT_Time will convert this value to
       --  Empty_Time_Stamp. Therefore we do not need to first test whether
       --  the file actually exists, which saves a system call.
-
-      return OS_Time_To_GNAT_Time
-               (File_Time_Stamp (Name_Buffer (1 .. Name_Len)));
+      T := File_Time_Stamp (Name_Buffer (1 .. Name_Len));
+      if Source_Date_Epoch /= Invalid_Time and then T /= Invalid_Time
+        and then Source_Date_Epoch < T
+      then
+         T := Source_Date_Epoch;
+      end if;
+      return OS_Time_To_GNAT_Time (T);
    end File_Stamp;
 
    function File_Stamp (Name : Path_Name_Type) return Time_Stamp_Type is
@@ -3260,5 +3275,29 @@ begin
 
       Osint.Initialize;
    end Initialization;
+
+   Set_Source_Date_Epoch : declare
+      Env_Var : String_Access                 := Getenv ("SOURCE_DATE_EPOCH");
+      Epoch   : time_t range 0 .. time_t'Last := 0;
+      Digit   : time_t range 0 .. 9;
+   begin
+      if 0 < Env_Var.all'Length then
+         --  Calling System.Val_LLI breaks the bootstrap sequence.
+         --  First convert to time_t because OS_Time is private.
+         for C of Env_Var.all loop
+            if C not in '0' .. '9' then
+               goto Finally;
+            end if;
+            Digit := time_t (Character'Pos (C) - Character'Pos ('0'));
+            if (time_t'Last - Digit) / 10 < Epoch then
+               goto Finally;
+            end if;
+            Epoch := Epoch * 10 + Digit;
+         end loop;
+         Source_Date_Epoch := To_Ada (Epoch);
+      end if;
+      <<Finally>>
+      Free (Env_Var);
+   end Set_Source_Date_Epoch;
 
 end Osint;
