@@ -57,6 +57,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
                    %{" SPEC_32 ":-m " GNU_USER_LINK_EMULATION32 "} \
                    %{" SPEC_X32 ":-m " GNU_USER_LINK_EMULATIONX32 "} \
   --hash-style=gnu \
+  %{!fsanitize=*:--as-needed} \
   %{shared:-shared} \
   %{!shared: \
     %{!static: \

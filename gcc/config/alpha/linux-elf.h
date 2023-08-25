@@ -37,7 +37,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #define ELF_DYNAMIC_LINKER	GNU_USER_DYNAMIC_LINKER
 
-#define LINK_SPEC "-m elf64alpha --hash-style=gnu %{G*} %{relax:-relax}	\
+#define LINK_SPEC "-m elf64alpha --hash-style=gnu %{!fsanitize=*:--as-needed} %{G*} %{relax:-relax}	\
   %{O*:-O3} %{!O*:-O1}						\
   %{shared:-shared}						\
   %{!shared:							\

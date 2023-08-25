@@ -55,6 +55,7 @@ along with GCC; see the file COPYING3.  If not see
 #undef GNU_USER_TARGET_LINK_SPEC
 #define GNU_USER_TARGET_LINK_SPEC "\
   %{G*} %{EB} %{EL} %{mips*} %{shared} \
+ %{!fsanitize=*:--as-needed} \
   %{!shared: \
     %{!static: \
       %{rdynamic:-export-dynamic} \
