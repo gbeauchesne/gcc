@@ -392,6 +392,7 @@ dependencies = { module=all-libcpp; on=all-libiconv; };
 
 dependencies = { module=all-fixincludes; on=all-libiberty; };
 
+dependencies = { module=all-target-libada; on=all-gcc; };
 dependencies = { module=all-gnattools; on=all-target-libada; };
 dependencies = { module=all-gnattools; on=all-target-libstdc++-v3; };
 
