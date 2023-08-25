@@ -1957,6 +1957,12 @@
 #endif
 
 
+/* Define to 1 if you have the <sys/auxv.h> header file. */
+#ifndef USED_FOR_TARGET
+#undef HAVE_SYS_AUXV_H
+#endif
+
+
 /* Define to 1 if you have the <sys/file.h> header file. */
 #ifndef USED_FOR_TARGET
 #undef HAVE_SYS_FILE_H

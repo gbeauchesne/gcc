@@ -1339,6 +1339,7 @@ AC_HEADER_TIOCGWINSZ
 AC_CHECK_HEADERS(limits.h stddef.h string.h strings.h stdlib.h time.h iconv.h \
 		 fcntl.h ftw.h unistd.h sys/auxv.h sys/file.h sys/time.h sys/mman.h \
 		 sys/resource.h sys/param.h sys/times.h sys/stat.h sys/locking.h \
+		 sys/auxv.h \
 		 direct.h malloc.h langinfo.h ldfcn.h locale.h wchar.h)
 
 # Check for thread headers.
