@@ -709,6 +709,7 @@ gnatlib-shared-default:
 		$(GNATRTL_TASKING_OBJS) \
 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
 		libgnat$(hyphen)$(LIBRARY_VERSION).so \
+		$(MISCLIB) \
 		$(THREADSLIB)
 	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
 		libgnat$(soext)
