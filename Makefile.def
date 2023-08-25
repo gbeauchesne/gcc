@@ -396,6 +396,8 @@ dependencies = { module=all-target-libada; on=all-gcc; };
 dependencies = { module=all-gnattools; on=all-target-libada; };
 dependencies = { module=all-gnattools; on=all-target-libstdc++-v3; };
 
+dependencies = { module=all-target-libada; on=all-target-libatomic; };
+
 // Depending on the specific configuration, the LTO plugin will either use the
 // generic libiberty build or the specific build for linker plugins.
 dependencies = { module=all-lto-plugin; on=all-libiberty; };
