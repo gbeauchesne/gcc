@@ -131,7 +131,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   { return __gnu_cxx::__bfloat16_t(__builtin_fabsf(__x)); }
 #endif
 
-#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128)
+#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_FLOAT128) && !defined(__CUDACC__)
   __extension__ inline _GLIBCXX_CONSTEXPR
   __float128
   abs(__float128 __x)
