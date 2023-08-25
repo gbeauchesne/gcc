@@ -498,6 +498,20 @@ gnatlink-re: ../stamp-tools gnatmake-re
 	  --GCC="$(CC) $(ADA_INCLUDES)" --LINK="$(GCC_LINK)" $(TOOLS_LIBS)
 	$(MV)  ../../gnatlinknew$(exeext)  ../../gnatlink$(exeext)
 
+gnatbind-re: ../stamp-tools gnatmake-re gnatlink-re
+	$(GNATMAKE) -j0 -c $(ADA_INCLUDES) gnatbind --GCC="$(CC) $(ALL_ADAFLAGS)"
+	$(GNATBIND) $(ADA_INCLUDES) $(GNATBIND_FLAGS) gnatbind
+	$(GNATLINK) -v gnatbind -o ../../gnatbind$(exeext) \
+	  --GCC="$(CC) $(ADA_INCLUDES)" --LINK="$(GCC_LINK)" $(TOOLS_LIBS)
+
+# When driven by gnattools/Makefile for a native build,
+# TOOLS_ALREADY_COMPILED will list objects in the target standard Ada
+# libraries, that Make should avoid rebuilding.
+# We cannot use recursive variables to avoid an infinite loop,
+# so we must put this after definition of EXTRA_GNATMAKE_OBJS.
+GNATLINK_OBJS := $(filter-out $(TOOLS_ALREADY_COMPILED),$(GNATLINK_OBJS))
+GNATMAKE_OBJS := $(filter-out $(TOOLS_ALREADY_COMPILED),$(GNATMAKE_OBJS))
+
 # Needs to be built with CC=gcc
 # Since the RTL should be built with the latest compiler, remove the
 #  stamp target in the parent directory whenever gnat1 is rebuilt
@@ -625,7 +639,7 @@ $(RTSDIR)/s-oscons.ads: ../stamp-gnatlib1-$(RTSDIR) s-oscons-tmplt.c gsocket.h .
 	    $(OSCONS_EXTRACT) ; \
 	    ../bldtools/oscons/xoscons s-oscons)
 
-gnatlib: ../stamp-gnatlib1-$(RTSDIR) ../stamp-gnatlib2-$(RTSDIR) $(RTSDIR)/s-oscons.ads
+gnatlib: ../stamp-gnatlib1-$(RTSDIR) $(RTSDIR)/s-oscons.ads
 	test -f $(RTSDIR)/s-oscons.ads || exit 1
 # C files
 	$(MAKE) -C $(RTSDIR) \
@@ -657,18 +671,30 @@ gnatlib: ../stamp-gnatlib1-$(RTSDIR) ../stamp-gnatlib2-$(RTSDIR) $(RTSDIR)/s-osc
 		$(RANLIB_FOR_TARGET) $(RTSDIR)/libgmem$(arext)
         endif
 	$(CHMOD) a-wx $(RTSDIR)/*.ali
+# Provide .ads .adb (read-only).ali .so .a, but prevent direct use of .o.
+	$(RM) $(RTSDIR)/*.o
 	touch ../stamp-gnatlib-$(RTSDIR)
 
 # Warning: this target assumes that LIBRARY_VERSION has been set correctly.
 gnatlib-shared-default:
-	$(MAKE) $(FLAGS_TO_PASS) \
-             GNATLIBFLAGS="$(GNATLIBFLAGS)" \
-	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(PICFLAG_FOR_TARGET) -fno-lto" \
-	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C) $(PICFLAG_FOR_TARGET) -fno-lto" \
-	     MULTISUBDIR="$(MULTISUBDIR)" \
-	     THREAD_KIND="$(THREAD_KIND)" \
-	     LN_S="$(LN_S)" \
-             gnatlib
+	$(MAKE) -C $(RTSDIR) \
+		CC="`echo \"$(GCC_FOR_TARGET)\" \
+		| sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'`" \
+	        INCLUDES="$(INCLUDES_FOR_SUBDIR) -I./../.." \
+                CFLAGS="$(GNATLIBCFLAGS_FOR_C) $(PICFLAG_FOR_TARGET) -fno-lto" \
+	        FORCE_DEBUG_ADAFLAGS="$(FORCE_DEBUG_ADAFLAGS)" \
+		srcdir=$(fsrcdir) \
+	        -f ../Makefile $(LIBGNAT_OBJS)
+	$(MAKE) -C $(RTSDIR) \
+		CC="`echo \"$(GCC_FOR_TARGET)\" \
+		| sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'`" \
+	        ADA_INCLUDES="" \
+                CFLAGS="$(GNATLIBCFLAGS) $(PICFLAG_FOR_TARGET) -fno-lto" \
+	        ADAFLAGS="$(GNATLIBFLAGS) $(PICFLAG_FOR_TARGET) -fno-lto" \
+	        FORCE_DEBUG_ADAFLAGS="$(FORCE_DEBUG_ADAFLAGS)" \
+		srcdir=$(fsrcdir) \
+	        -f ../Makefile \
+	        $(GNATRTL_OBJS)
 	$(RM) $(RTSDIR)/libgna*$(soext)
 	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
 		$(PICFLAG_FOR_TARGET) \
@@ -679,8 +705,10 @@ gnatlib-shared-default:
 	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
 		$(PICFLAG_FOR_TARGET) \
 		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		$(LDFLAGS) \
 		$(GNATRTL_TASKING_OBJS) \
 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		libgnat$(hyphen)$(LIBRARY_VERSION).so \
 		$(THREADSLIB)
 	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
 		libgnat$(soext)
@@ -696,6 +724,10 @@ gnatlib-shared-default:
 	   $(addprefix $(RTSDIR)/,$(GNATRTL_TASKING_OBJS))
 	$(RANLIB_FOR_TARGET) $(RTSDIR)/libgnarl_pic$(arext)
 
+# Provide .ads .adb (read-only).ali .so .a, but prevent direct use of .o.
+	$(CHMOD) a-wx $(RTSDIR)/*.ali
+	$(RM) $(RTSDIR)/*.o
+
 gnatlib-shared-dual:
 	$(MAKE) $(FLAGS_TO_PASS) \
              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
@@ -705,11 +737,8 @@ gnatlib-shared-dual:
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
 	     LN_S="$(LN_S)" \
-             gnatlib-shared-default
-	$(MV) $(RTSDIR)/libgna*$(soext) .
-	$(MV) $(RTSDIR)/libgnat_pic$(arext) .
-	$(MV) $(RTSDIR)/libgnarl_pic$(arext) .
-	$(RM) ../stamp-gnatlib2-$(RTSDIR)
+	     gnatlib
+	$(RM) $(RTSDIR)/*.o $(RTSDIR)/*.ali
 	$(MAKE) $(FLAGS_TO_PASS) \
              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
@@ -717,10 +746,7 @@ gnatlib-shared-dual:
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
 	     LN_S="$(LN_S)" \
-	     gnatlib
-	$(MV) libgna*$(soext) $(RTSDIR)
-	$(MV) libgnat_pic$(arext) $(RTSDIR)
-	$(MV) libgnarl_pic$(arext) $(RTSDIR)
+	     gnatlib-shared-default
 
 gnatlib-shared-dual-win32:
 	$(MAKE) $(FLAGS_TO_PASS) \
@@ -731,9 +757,8 @@ gnatlib-shared-dual-win32:
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
 	     LN_S="$(LN_S)" \
-	     gnatlib-shared-win32
-	$(MV) $(RTSDIR)/libgna*$(soext) .
-	$(RM) ../stamp-gnatlib2-$(RTSDIR)
+             gnatlib
+	$(RM) $(RTSDIR)/*.o $(RTSDIR)/*.ali
 	$(MAKE) $(FLAGS_TO_PASS) \
              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
@@ -741,8 +766,7 @@ gnatlib-shared-dual-win32:
 	     MULTISUBDIR="$(MULTISUBDIR)" \
 	     THREAD_KIND="$(THREAD_KIND)" \
 	     LN_S="$(LN_S)" \
-	     gnatlib
-	$(MV) libgna*$(soext) $(RTSDIR)
+	     gnatlib-shared-win32
 
 # ??? we need to add the option to support auto-import of arrays/records to
 # the GNATLIBFLAGS when this will be supported by GNAT. At this point we will
