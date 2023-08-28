@@ -70,7 +70,6 @@
      %{rdynamic:-export-dynamic} \
      %{!shared:-dynamic-linker " GNU_USER_DYNAMIC_LINKER "}} \
    -X \
-   --hash-style=gnu \
    %{!fsanitize=*:--as-needed} \
    %{mbig-endian:-EB} %{mlittle-endian:-EL}" \
    SUBTARGET_EXTRA_LINK_SPEC
