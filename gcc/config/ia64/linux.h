@@ -58,7 +58,7 @@ do {						\
 #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-ia64.so.2"
 
 #undef LINK_SPEC
-#define LINK_SPEC " %{!fsanitize=*:--as-needed} \
+#define LINK_SPEC "\
   %{shared:-shared} \
   %{!shared: \
     %{!static: \
