@@ -72,7 +72,6 @@ along with GCC; see the file COPYING3.  If not see
 #undef SUBTARGET_LINK_SPEC
 #define SUBTARGET_LINK_SPEC \
   "%{shared:-shared} \
-   %{!fsanitize=*:--as-needed} \
    %{!static: \
      %{rdynamic:-export-dynamic} \
      -dynamic-linker " GNU_USER_DYNAMIC_LINKER "} \

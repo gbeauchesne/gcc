@@ -81,7 +81,7 @@ extern const char *host_detect_local_cpu (int argc, const char **argv);
 #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
 
 #undef  LINK_SPEC
-#define LINK_SPEC "-m elf32_sparc %{!fsanitize=*:--as-needed} %{shared:-shared} \
+#define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
   %{!mno-relax:%{!r:-relax}} \
   %{!shared: \
     %{!static: \
