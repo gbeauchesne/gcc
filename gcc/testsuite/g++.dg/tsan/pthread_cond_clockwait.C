@@ -28,6 +28,8 @@ void *fn(void *vp) {
 }
 
 int main() {
+    // pthread_cond_clockwait() was added in glibc 2.30
+#if (defined(__GLIBC_PREREQ) && __GLIBC_PREREQ(2, 30))
     pthread_mutex_lock(&mtx);
 
     pthread_t tid;
@@ -40,5 +42,6 @@ int main() {
     pthread_mutex_unlock(&mtx);
 
     pthread_join(tid, NULL);
+#endif
     return 0;
 }
