@@ -26,6 +26,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #ifndef GCC_DEFAULTS_H
 #define GCC_DEFAULTS_H
 
+#include "distro-defaults.h"
+
 /* How to start an assembler comment.  */
 #ifndef ASM_COMMENT_START
 #define ASM_COMMENT_START ";#"
