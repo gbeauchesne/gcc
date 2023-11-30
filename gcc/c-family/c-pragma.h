@@ -255,7 +255,7 @@ c_register_pragma_with_early_handler (const char *space, const char *name,
 				      pragma_handler_1arg early_handler);
 extern void c_invoke_early_pragma_handler (unsigned int);
 extern void c_pp_invoke_early_pragma_handler (unsigned int);
-
+extern void c_reset_target_pragmas ();
 
 extern void maybe_apply_pragma_weak (tree);
 extern void maybe_apply_pending_pragma_weaks (void);
@@ -263,7 +263,9 @@ extern tree maybe_apply_renaming_pragma (tree, tree);
 extern void maybe_apply_pragma_scalar_storage_order (tree);
 extern void add_to_renaming_pragma_list (tree, tree);
 
+/* These are to be implemented in each frontend that needs them.  */
 extern enum cpp_ttype pragma_lex (tree *, location_t *loc = NULL);
+extern void pragma_lex_discard_to_eol ();
 
 /* Flags for use with c_lex_with_flags.  The values here were picked
    so that 0 means to translate and join strings.  */
