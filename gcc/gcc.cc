@@ -7896,10 +7896,15 @@ do_report_bug (const char **new_argv, const int nargs,
   if (status == ATTEMPT_STATUS_SUCCESS)
     {
       const char *deb_build_options = env.get("DEB_BUILD_OPTIONS");
+      const bool gcc_dump = deb_build_options &&
+	!strstr (deb_build_options, "gcc-ice=nodump");
+      const bool gcc_apport = !env.get ("GCC_NOAPPORT") &&
+	!access ("/usr/share/apport/gcc_ice_hook", R_OK | X_OK);
 
-      fnotice (stderr, "Preprocessed source stored into %s file,"
+      if (gcc_dump || gcc_apport)
+	fnotice (stderr, "Preprocessed source stored into %s file,"
 	       " please attach this to your bugreport.\n", *out_file);
-      if (deb_build_options)
+      if (gcc_dump)
 	{
 	  char *cmd = XNEWVEC (char, 50 + strlen (*out_file));
 
@@ -7912,8 +7917,7 @@ do_report_bug (const char **new_argv, const int nargs,
 	  fflush(stderr);
 	  free(cmd);
 	}
-      if (!env.get ("GCC_NOAPPORT")
-	  && !access ("/usr/share/apport/gcc_ice_hook", R_OK | X_OK))
+      if (gcc_apport)
 	{
 	  char *cmd = XNEWVEC (char, 50 + strlen (*out_file)
 			       + strlen (new_argv[0]));
