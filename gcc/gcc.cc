@@ -2082,9 +2082,10 @@ init_spec (void)
   /* Prepend --rpath=LINKER_RPATH to whatever link_spec we had
      before.  */
   {
-    static const char rpath[] = "--rpath=";
+    static const char rpath[] = "%{!static-pie:--rpath=";
     obstack_grow (&obstack, rpath, sizeof (rpath) - 1);
     obstack_grow (&obstack, LINKER_RPATH, sizeof (LINKER_RPATH) - 1);
+    obstack_1grow (&obstack, '}');
     obstack_1grow (&obstack, ' ');
   }
 # endif
