@@ -3108,6 +3108,21 @@ access_check (const char *name, int mode)
   return access (name, mode);
 }
 
+/* Check whether DEB_BUILD_OPTIONS environment variable is set, and
+   that it does not contain the specified exclusion keyword.  */
+
+static bool
+has_deb_build_options (const char *exclude_str = nullptr)
+{
+  const char *const deb_build_options = env.get ("DEB_BUILD_OPTIONS");
+  if (!deb_build_options)
+    return false;
+
+  if (exclude_str && strstr (deb_build_options, exclude_str))
+    return false;
+  return true;
+}
+
 /* Callback for find_a_file.  Appends the file name to the directory
    path.  If the resulting file exists in the right mode, return the
    full pathname to the file.  */
@@ -3634,7 +3649,8 @@ execute (void)
 	    /* For ICEs in cc1, cc1obj, cc1plus see if it is
 	       reproducible or not.  */
 	    const char *p;
-	    const char *deb_build_options = env.get("DEB_BUILD_OPTIONS");
+	    const bool deb_build_options
+	      = has_deb_build_options ("gcc-ice=norepro");
 	    if ((flag_report_bug || deb_build_options)
 		&& WEXITSTATUS (status) == ICE_EXIT_CODE
 		&& i == 0
@@ -7895,11 +7911,14 @@ do_report_bug (const char **new_argv, const int nargs,
 
   if (status == ATTEMPT_STATUS_SUCCESS)
     {
-      const char *deb_build_options = env.get("DEB_BUILD_OPTIONS");
+      const bool gcc_dump = has_deb_build_options ("gcc-ice=nodump");
+      const bool gcc_apport = !env.get ("GCC_NOAPPORT") &&
+	!access ("/usr/share/apport/gcc_ice_hook", R_OK | X_OK);
 
-      fnotice (stderr, "Preprocessed source stored into %s file,"
+      if (gcc_dump || gcc_apport)
+	fnotice (stderr, "Preprocessed source stored into %s file,"
 	       " please attach this to your bugreport.\n", *out_file);
-      if (deb_build_options)
+      if (gcc_dump)
 	{
 	  char *cmd = XNEWVEC (char, 50 + strlen (*out_file));
 
@@ -7912,8 +7931,7 @@ do_report_bug (const char **new_argv, const int nargs,
 	  fflush(stderr);
 	  free(cmd);
 	}
-      if (!env.get ("GCC_NOAPPORT")
-	  && !access ("/usr/share/apport/gcc_ice_hook", R_OK | X_OK))
+      if (gcc_apport)
 	{
 	  char *cmd = XNEWVEC (char, 50 + strlen (*out_file)
 			       + strlen (new_argv[0]));
