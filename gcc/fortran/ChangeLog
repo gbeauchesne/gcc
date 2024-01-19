@@ -1,3 +1,55 @@
+2024-01-18  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-01-13  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/67277
+	* trans-intrinsic.cc (gfc_conv_intrinsic_ishftc): Handle optional
+	dummy argument for SIZE passed to ISHFTC.  Set default value to
+	BIT_SIZE(I) when missing.
+
+2023-12-27  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-12-17  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/97592
+	* trans-expr.cc (gfc_conv_procedure_call): For a contiguous dummy
+	with the TARGET attribute, the effective argument may still be
+	contiguous even if the actual argument is not simply-contiguous.
+	Allow packing to be decided at runtime by _gfortran_internal_pack.
+
+2023-12-10  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-12-02  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/93762
+	PR fortran/100651
+	* trans-array.cc (gfc_trans_deferred_array): Add presence check
+	for optional deferred-length character dummy arguments.
+	* trans-expr.cc (gfc_conv_missing_dummy): The character length for
+	deferred-length dummy arguments is passed by reference, so that
+	its value can be returned.  Adjust handling for optional dummies.
+
+2023-11-30  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-11-26  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/111880
+	* resolve.cc (resolve_common_vars): Do not call gfc_add_in_common
+	for symbols that are USE associated or used in a submodule.
+
+2023-11-30  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-11-30  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/112764
+	* primary.cc (gfc_variable_attr): Set TARGET attribute of associating
+	entity dependent on TARGET or POINTER attribute of selector.
+
 2023-11-04  Harald Anlauf  <anlauf@gmx.de>
 
 	Backported from master:

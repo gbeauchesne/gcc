@@ -1,3 +1,280 @@
+2024-01-16  Daniel Cederman  <cederman@gaisler.com>
+
+	* config/sparc/sparc.cc (next_active_non_empty_insn): Length 0 treated as empty
+
+2024-01-16  Daniel Cederman  <cederman@gaisler.com>
+
+	* config/sparc/sparc.cc (atomic_insn_for_leon3_p): Treat membar_storeload as atomic
+	* config/sparc/sync.md (membar_storeload): Turn into named insn
+	and add GR712RC errata workaround.
+	(membar_v8): Add GR712RC errata workaround.
+
+2024-01-16  Andreas Larsson  <andreas@gaisler.com>
+
+	* config/sparc/sync.md (*membar_storeload_leon3): Remove
+	(*membar_storeload): Enable for LEON
+
+2024-01-16  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-15  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/107201
+	* config/avr/avr.h (EXTRA_SPEC_FUNCTIONS): Add no-devlib, avr_no_devlib.
+	* config/avr/driver-avr.cc (avr_no_devlib): New function.
+	(avr_devicespecs_file): Use it to remove -nodevicelib from the
+	options for cores only.
+	* config/avr/avr-arch.h (avr_get_parch): New prototype.
+	* config/avr/avr-devices.cc (avr_get_parch): New function.
+
+2024-01-15  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	Backported from master:
+	2024-01-15  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	PR target/113156
+	* config/avr/avr.opt (-mdouble, -mlong-double): Add "Save" flag.
+	(-mbranch-cost): Set "Optimization" flag.
+
+2024-01-12  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-12  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/avr.cc (avr_handle_addr_attribute): Move "..." from
+	format string to %s argument.
+
+2024-01-11  Siddhesh Poyarekar  <siddhesh@gotplt.org>
+
+	Backported from master:
+	2023-12-20  Siddhesh Poyarekar  <siddhesh@gotplt.org>
+
+	PR tree-optimization/113012
+	* tree-object-size.cc (compute_builtin_object_size): Expand
+	comment for dynamic object sizes.
+	(collect_object_sizes_for): Always set COMPUTED bitmap for
+	dynamic object sizes.
+
+2024-01-09  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR rtl-optimization/113140
+	* reorg.cc (fill_slots_from_thread): If we are to branch after the
+	last instruction of the function, create an end label.
+
+2024-01-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/112952
+	* config/avr/avr.cc (avr_handle_addr_attribute): Also print valid
+	range when diagnosing attribute "io" and "io_low" are out of range.
+	(avr_eval_addr_attrib): Don't ICE on empty address at that place.
+	(avr_insert_attributes): Reject if attribute "address", "io" or "io_low"
+	in contexts other than static storage.
+	(avr_asm_output_aligned_decl_common): Move output of decls with
+	attribute "address", "io", and "io_low" to...
+	(avr_output_addr_attrib): ...this new function.
+	(avr_asm_asm_output_aligned_bss): Remove output for decls with
+	attribute "address", "io", and "io_low".
+	(avr_encode_section_info): Rectify handling of decls with attribute
+	"address", "io", and "io_low".
+
+2023-12-23  YunQiang Su  <syq@gcc.gnu.org>
+
+	* config/mips/driver-native.cc (host_detect_local_cpu):
+	don't add nan2008 option for -mtune=native.
+
+2023-12-23  YunQiang Su  <syq@gcc.gnu.org>
+
+	PR target/112759
+	* config/mips/driver-native.cc (host_detect_local_cpu):
+	Put the ret to the end of args of reconcat.
+
+2023-12-19  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-12-05  Richard Biener  <rguenther@suse.de>
+
+	PR sanitizer/111736
+	* asan.cc (asan_protect_global): Do not protect globals
+	in non-generic address-space.
+
+2023-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/112816
+	* config/i386/mmx.md (signbitv2sf2): Force operands[1] into a REG.
+
+2023-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/113013
+	* tree-object-size.cc (alloc_object_size): Return size_unknown if
+	corresponding argument(s) don't have integral type or have integral
+	type with higher precision than sizetype.  Don't check arg1 >= 0
+	uselessly.  Compare argument indexes against gimple_call_num_args
+	in unsigned type rather than int.  Formatting fixes.
+
+2023-12-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* doc/extend.texi (__sync_fetch_and_add, __sync_fetch_and_sub,
+	__sync_fetch_and_or, __sync_fetch_and_and, __sync_fetch_and_xor,
+	__sync_fetch_and_nand, __sync_add_and_fetch, __sync_sub_and_fetch,
+	__sync_or_and_fetch, __sync_and_and_fetch, __sync_xor_and_fetch,
+	__sync_nand_and_fetch, __sync_bool_compare_and_swap,
+	__sync_val_compare_and_swap, __sync_lock_test_and_set,
+	__sync_lock_release, __atomic_load_n, __atomic_load, __atomic_store_n,
+	__atomic_store, __atomic_exchange_n, __atomic_exchange,
+	__atomic_compare_exchange_n, __atomic_compare_exchange,
+	__atomic_add_fetch, __atomic_sub_fetch, __atomic_and_fetch,
+	__atomic_xor_fetch, __atomic_or_fetch, __atomic_nand_fetch,
+	__atomic_fetch_add, __atomic_fetch_sub, __atomic_fetch_and,
+	__atomic_fetch_xor, __atomic_fetch_or, __atomic_fetch_nand,
+	__atomic_test_and_set, __atomic_clear, __atomic_thread_fence,
+	__atomic_signal_fence, __atomic_always_lock_free,
+	__atomic_is_lock_free, __builtin_add_overflow,
+	__builtin_sadd_overflow, __builtin_saddl_overflow,
+	__builtin_saddll_overflow, __builtin_uadd_overflow,
+	__builtin_uaddl_overflow, __builtin_uaddll_overflow,
+	__builtin_sub_overflow, __builtin_ssub_overflow,
+	__builtin_ssubl_overflow, __builtin_ssubll_overflow,
+	__builtin_usub_overflow, __builtin_usubl_overflow,
+	__builtin_usubll_overflow, __builtin_mul_overflow,
+	__builtin_smul_overflow, __builtin_smull_overflow,
+	__builtin_smulll_overflow, __builtin_umul_overflow,
+	__builtin_umull_overflow, __builtin_umulll_overflow,
+	__builtin_add_overflow_p, __builtin_sub_overflow_p,
+	__builtin_mul_overflow_p, __builtin_alloca,
+	__builtin_alloca_with_align, __builtin_alloca_with_align_and_max,
+	__builtin_speculation_safe_value, __builtin_nan, __builtin_nand32,
+	__builtin_nand64, __builtin_nand128, __builtin_nanf, __builtin_nanl,
+	__builtin_nanf@var{n}, __builtin_nanf@var{n}x, __builtin_nans,
+	__builtin_nansd32, __builtin_nansd64, __builtin_nansd128,
+	__builtin_nansf, __builtin_nansl, __builtin_nansf@var{n},
+	__builtin_nansf@var{n}x, __builtin_ffs, __builtin_clz, __builtin_ctz,
+	__builtin_clrsb, __builtin_popcount, __builtin_parity,
+	__builtin_bswap16, __builtin_bswap32, __builtin_bswap64,
+	__builtin_bswap128, __builtin_extend_pointer,
+	__builtin_goacc_parlevel_id, __builtin_goacc_parlevel_size, vec_clrl,
+	vec_clrr, vec_mulh, vec_mul, vec_div, vec_dive, vec_mod,
+	__builtin_rx_mvtc): Use @var{...} around parameter names.
+	(vec_rl, vec_sl, vec_sr, vec_sra): Likewise.  Use @var{...} also
+	around A, B and R in description.
+
+2023-12-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-11-29  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/112733
+	* fold-const.cc (multiple_of_p): Pass SIGNED rather than
+	UNSIGNED for wi::multiple_of_p on widest_int arguments.
+
+2023-12-15  Haochen Jiang  <haochen.jiang@intel.com>
+
+	* config/i386/driver-i386.cc (host_detect_local_cpu): Do not
+	set Grand Ridge depending on RAO-INT.
+	* config/i386/i386.h: Remove PTA_RAOINT from PTA_GRANDRIDGE.
+	* doc/invoke.texi: Adjust documentation.
+
+2023-12-12  liuhongt  <hongtao.liu@intel.com>
+
+	PR target/112891
+	* config/i386/i386.cc (ix86_avx_u128_mode_after): Return
+	AVX_U128_ANY if callee_abi doesn't clobber all_sse_regs to
+	align with ix86_avx_u128_mode_needed.
+	(ix86_avx_u128_mode_needed): Return AVX_U128_ClEAN for
+	sibling_call.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/112845
+	* config/i386/i386.md (movabsq $(i32 << shift), r64 peephole2): FAIL
+	if the new immediate is ix86_endbr_immediate_operand.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/112837
+	* config/i386/i386.cc (ix86_elim_entry_set_got): Before checking
+	for UNSPEC_SET_GOT check that SET_SRC is UNSPEC.  Use SET_SRC and
+	SET_DEST macros instead of XEXP, rename vec variable to set.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/112816
+	* config/i386/sse.md (signbit<mode>2): Force operands[1] into a REG.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-12-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* doc/extend.texi (__builtin_darn, __builtin_darn_raw,
+	__builtin_ia32_vec_ext_v2di, __builtin_ia32_crc32qi,
+	__builtin_ia32_crc32hi, __builtin_ia32_crc32si,
+	__builtin_ia32_crc32di): Put {}s around return type with spaces in it.
+	(__builtin_rx_mvfachi, __builtin_rx_mvfacmi): Remove superfluous
+	whitespace.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-11-25  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/111408
+	* config/i386/i386.md (*jcc_bt<mode>_mask,
+	*jcc_bt<mode>_mask_1): Add (const_int 0) as expected
+	second operand of bt_comparison_operator.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-11-13  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/111967
+	* gimple-range-cache.cc (block_range_cache::set_bb_range): Grow
+	m_ssa_ranges to num_ssa_names rather than num_ssa_names + 1.
+	(block_range_cache::dump): Iterate from 1 rather than 0.  Don't use
+	ssa_name (x) unless m_ssa_ranges[x] is non-NULL.  Iterate to
+	m_ssa_ranges.length () rather than num_ssa_names.
+
+2023-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2023-11-09  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c/112339
+	* attribs.cc (attribute_ignored_p): Only return true for
+	attr_namespace_ignored_p if as is NULL.
+	(decl_attributes): Never add ignored attributes.
+
+2023-11-30  Vladimir N. Makarov  <vmakarov@redhat.com>
+
+	Backported from master:
+	2023-09-25  Vladimir N. Makarov  <vmakarov@redhat.com>
+
+	PR middle-end/111497
+	* lra-constraints.cc (lra_constraints): Copy substituted
+	equivalence.
+	* lra.cc (lra): Change comment for calling unshare_all_rtl_again.
+
 2023-11-29  Costas Argyris  <costas.argyris@gmail.com>
 
 	Backported from master:
