@@ -1,3 +1,128 @@
+2024-02-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-11-20  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/112618
+	* tree-vect-loop.cc (vect_transform_loop_stmt): For not
+	relevant and unused .MASK_CALL make sure we remove the
+	scalar stmt.
+
+2024-02-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-01-11  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/112505
+	* tree-vect-loop.cc (vectorizable_induction): Reject
+	bit-precision induction.
+
+2024-02-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-11-13  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/112495
+	* tree-data-ref.cc (runtime_alias_check_p): Reject checks
+	between different address spaces.
+
+2024-02-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-11-10  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/110221
+	* tree-vect-slp.cc (vect_schedule_slp_node): When loop
+	masking / len is applied make sure to not schedule
+	intenal defs outside of the loop.
+
+2024-02-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-01-31  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/110176
+	* match.pd (zext (bool) <= (int) 4294967295u): Make sure
+	to match INTEGER_CST only without outstanding conversion.
+
+2024-02-05  Jason Merrill  <jason@redhat.com>
+
+	Backported from master:
+	2023-06-02  Jason Merrill  <jason@redhat.com>
+
+	PR c++/95226
+	PR c++/109359
+	* varasm.cc (output_constant) [REAL_TYPE]: Check that sizes match.
+	(initializer_constant_valid_p_1): Compare float precision.
+
+2024-02-05  Xi Ruoyao  <xry111@xry111.site>
+
+	Backported from master:
+	2024-02-05  Xi Ruoyao  <xry111@xry111.site>
+
+	* config/mips/mips-msa.md (neg<mode:MSA>2): Add missing mode for
+	neg.
+
+2024-02-05  Xi Ruoyao  <xry111@xry111.site>
+
+	Backported from master:
+	2024-02-05  Xi Ruoyao  <xry111@xry111.site>
+
+	* config/mips/mips-msa.md (elmsgnbit): New define_mode_attr.
+	(neg<mode>2): Change the mode iterator from MSA to IMSA because
+	in FP arithmetic we cannot use (0 - x) for -x.
+	(neg<mode>2): New define_insn to implement FP vector negation,
+	using a bnegi instruction to negate the sign bit.
+
+2024-02-01  John David Anglin  <danglin@gcc.gnu.org>
+
+	* config/pa/pa.md (atomic_storedi_1): Fix bug in
+	alternative 1.
+
+2024-01-31  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-31  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/avr-mcus.def: Add AVR64DU28, AVR64DU32, ATA5787,
+	ATA5835, ATtiny64AUTO, ATA5700M322.
+	* doc/avr-mmcu.texi: Rebuild.
+
+2024-01-26  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	Backported from master:
+	2024-01-16  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	* config/aarch64/aarch64-cores.def (AARCH64_CORE): Add 'cobalt-100' CPU.
+	* config/aarch64/aarch64-tune.md: Regenerated.
+	* doc/invoke.texi (-mcpu): Add cobalt-100 core.
+
+2024-01-25  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-25  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/113601
+	* config/avr/avr-mcus.def (atmega3208, atmega3209): Fix data_section_start.
+
+2024-01-25  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-16  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/avr-mcus.def (avr16eb14, avr16eb20, avr16eb28, avr16eb32)
+	(avr16ea28, avr16ea32, avr16ea48, avr32ea28, avr32ea32, avr32ea48): Add.
+	* doc/avr-mmcu.texi: Regenerate.
+
+2024-01-24  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2024-01-18  Martin Jambor  <mjambor@suse.cz>
+
+	PR tree-optimization/110422
+	* tree-sra.cc (scan_function): Disqualify bases of operands of asm
+	gotos.
+
 2024-01-16  Daniel Cederman  <cederman@gaisler.com>
 
 	* config/sparc/sparc.cc (next_active_non_empty_insn): Length 0 treated as empty

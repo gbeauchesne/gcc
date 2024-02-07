@@ -14628,6 +14628,7 @@ tsubst_function_decl (tree t, tree args, tsubst_flags_t complain,
     }
   determine_visibility (r);
   if (DECL_DEFAULTED_OUTSIDE_CLASS_P (r)
+      && COMPLETE_TYPE_P (DECL_CONTEXT (r))
       && !processing_template_decl)
     defaulted_late_check (r);
 
@@ -22155,6 +22156,13 @@ instantiate_template (tree tmpl, tree orig_args, tsubst_flags_t complain)
      template, not the most general template.  */
   DECL_TI_TEMPLATE (fndecl) = tmpl;
   DECL_TI_ARGS (fndecl) = targ_ptr;
+  if (VAR_P (pattern))
+    {
+      /* Remember if the variable was declared with [].  */
+      if (TREE_CODE (TREE_TYPE (fndecl)) == ARRAY_TYPE
+	  && TYPE_DOMAIN (TREE_TYPE (fndecl)) == NULL_TREE)
+	SET_VAR_HAD_UNKNOWN_BOUND (fndecl);
+    }
 
   set_instantiating_module (fndecl);
 
