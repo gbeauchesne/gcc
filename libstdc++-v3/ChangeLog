@@ -1,3 +1,169 @@
+2024-02-16  Paul Keir  <paul.keir@uws.ac.uk>
+
+	Backported from master:
+	2024-02-12  Paul Keir  <paul.keir@uws.ac.uk>
+
+	PR libstdc++/113294
+	* include/bits/basic_string.h (basic_string::operator=): Use
+	_M_use_local_data() instead of _M_local_buf on the moved-from
+	string.
+	* testsuite/21_strings/basic_string/modifiers/constexpr.cc
+	(test_move): New test.
+
+2024-02-16  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/99117
+	* include/std/valarray (valarray::operator=(const _Expr&)):
+	Use loop to copy instead of __valarray_copy with _Array.
+	* testsuite/26_numerics/valarray/99117.cc: New test.
+
+2024-02-16  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jonathan Wakely  <jwakely@redhat.com>
+
+	* src/c++20/tzdata.zi: Import new file from 2024a release.
+	* src/c++20/tzdb.cc (tzdb_list::_Node::_S_read_leap_seconds)
+	Update expiry date for leap seconds list.
+
+2024-02-16  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/tr2/type_traits (bases, direct_bases): Use
+	__has_builtin to check if required built-ins are supported.
+
+2024-02-09  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2023-11-11  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/112467
+	* include/bits/stl_bvector.h (_M_assume_normalized): Do not use
+	statement form of assume attribute for Clang.
+
+2024-02-09  Alexandre Oliva  <oliva@adacore.com>
+
+	Backported from master:
+	2023-11-09  Alexandre Oliva  <oliva@adacore.com>
+
+	PR libstdc++/110807
+	* include/bits/stl_bvector.h (_Bit_iterator_base): Add
+	_M_assume_normalized member function.  Call it in _M_bump_up,
+	_M_bump_down, _M_incr, operator==, operator<=>, operator<, and
+	operator-.
+	(_Bit_iterator): Also call it in operator*.
+	(_Bit_const_iterator): Likewise.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-01-11  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/113258
+	* libsupc++/new_opa.cc: Prefer to use posix_memalign if
+	available.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-01-13  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/107466
+	* include/bits/random.tcc (subtract_with_carry_engine::seed):
+	Implement proposed resolution of LWG 4014.
+	* testsuite/26_numerics/random/pr60037-neg.cc: Adjust dg-error
+	line number.
+	* testsuite/26_numerics/random/subtract_with_carry_engine/cons/lwg3809.cc:
+	Check for expected result of 64-bit engine with seed that
+	doesn't fit in 32-bits.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-02  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/experimental/internet (network_v6::network): Define.
+	(network_v6::hosts): Finish implementing.
+	(network_v6::to_string): Do not concatenate std::string to
+	arbitrary std::basic_string specialization.
+	* testsuite/experimental/net/internet/network/v6/cons.cc: New
+	test.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-02  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/90276
+	* testsuite/util/pstl/test_utils.h (reverse_invoker): Do not use
+	perfect forwarding for iterator arguments.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-02  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/std/syncstream (basic_osyncstream::operator=): Remove
+	noexcept, as per LWG 3867.
+
+2024-02-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-02-02  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/std/string_view (basic_string_view(R&&)): Remove
+	constraint that traits_type must be the same, as per LWG 3857.
+	* testsuite/21_strings/basic_string_view/cons/char/range_c++20.cc:
+	Explicit conversion between different specializations should be
+	allowed.
+	* testsuite/21_strings/basic_string_view/cons/wchar_t/range_c++20.cc:
+	Likewise.
+
+2024-02-07  Hans-Peter Nilsson  <hp@axis.com>
+
+	Backported from master:
+	2023-10-13  Hans-Peter Nilsson  <hp@axis.com>
+
+	* testsuite/29_atomics/atomic/compare_exchange_padding.cc,
+	testsuite/29_atomics/atomic_flag/clear/1.cc,
+	testsuite/29_atomics/atomic_flag/cons/value_init.cc,
+	testsuite/29_atomics/atomic_flag/test_and_set/explicit.cc,
+	testsuite/29_atomics/atomic_flag/test_and_set/implicit.cc,
+	testsuite/29_atomics/atomic_ref/compare_exchange_padding.cc,
+	testsuite/29_atomics/atomic_ref/generic.cc,
+	testsuite/29_atomics/atomic_ref/integral.cc,
+	testsuite/29_atomics/atomic_ref/pointer.cc: Replace
+	dg-require-thread-fence with dg-require-atomic-cmpxchg-word.
+
+2024-02-07  Hans-Peter Nilsson  <hp@axis.com>
+
+	Backported from master:
+	2023-10-13  Hans-Peter Nilsson  <hp@axis.com>
+
+	* testsuite/lib/dg-options.exp (dg-require-atomic-cmpxchg-word):
+	New proc.
+	* testsuite/lib/libstdc++.exp (check_v3_target_atomic_cmpxchg_word):
+	Ditto.
+
+2024-02-07  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2023-09-14  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	* testsuite/29_atomics/atomic/compare_exchange_padding.cc: Likewise.
+	* testsuite/29_atomics/atomic/cons/value_init.cc: Likewise.
+	* testsuite/29_atomics/atomic_float/value_init.cc: Likewise.
+	* testsuite/29_atomics/atomic_integral/cons/value_init.cc: Likewise.
+	* testsuite/29_atomics/atomic_ref/compare_exchange_padding.cc: Likewise.
+	* testsuite/29_atomics/atomic_ref/generic.cc: Likewise.
+	* testsuite/29_atomics/atomic_ref/integral.cc: Likewise.
+	* testsuite/29_atomics/atomic_ref/pointer.cc: Likewise.
+
 2024-02-06  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 
 	Backported from master:

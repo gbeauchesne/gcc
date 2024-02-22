@@ -1,3 +1,125 @@
+2024-02-19  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	Backported from master:
+	2023-12-20  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	* gcc.target/aarch64/pr112787.c: New test.
+
+2024-02-16  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2024-02-12  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/113545
+	* g++.dg/cpp1y/constexpr-reinterpret3.C: New test.
+	* g++.dg/cpp1y/constexpr-reinterpret4.C: New test.
+
+2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/107385
+	* gcc.dg/pr107385.c: Require lra effective target.
+
+2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/107385
+	* gcc.dg/pr107385.c: New test.
+
+2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/113921
+	* gcc.target/i386/pr113921.c: New test.
+
+2024-02-13  Jason Merrill  <jason@redhat.com>
+
+	Backported from master:
+	2024-02-13  Jason Merrill  <jason@redhat.com>
+
+	PR c++/113612
+	* g++.dg/cpp1y/var-templ85.C: New test.
+
+2024-02-13  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-02-13  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/113896
+	* g++.dg/torture/pr113896.C: New testcase.
+
+2024-02-13  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2024-02-12  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	* gfortran.dg/pr109358.f90: New test.
+
+2024-02-13  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2024-02-03  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR libfortran/111022
+	* gfortran.dg/fmt_error_10.f: Show D+0 exponent.
+	* gfortran.dg/pr96436_4.f90: Show E+0 exponent.
+	* gfortran.dg/pr96436_5.f90: Show E+0 exponent.
+	* gfortran.dg/pr111022.f90: New test.
+
+2024-02-12  Senthil Kumar Selvaraj  <saaadhu@gcc.gnu.org>
+
+	Backported from master:
+	2023-06-19  Senthil Kumar Selvaraj  <saaadhu@gcc.gnu.org>
+
+	PR target/105523
+	* lib/target-supports.exp
+	(check_effective_target_keeps_null_pointer_checks): Add
+	avr.
+	* gcc.target/avr/pr105523.c: New test.
+
+2024-02-09  Alexandre Oliva  <oliva@adacore.com>
+
+	Backported from master:
+	2023-11-29  Alexandre Oliva  <oliva@adacore.com>
+
+	* g++.dg/warn/Wuse-after-free3.C: xfail on arm_eabi.
+
+2024-02-09  Alexandre Oliva  <oliva@adacore.com>
+
+	Backported from master:
+	2023-05-25  Alexandre Oliva  <oliva@adacore.com>
+
+	* gcc.dg/vect/tsvc/tsvc.h: Test for and conditionally include
+	malloc.h and sys/time.h.
+
+2024-02-09  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-02-09  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.misc-tests/options.exp: Allow other options before the
+	-quite option for cc1.
+
+2024-02-07  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	Backported from master:
+	2023-11-26  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	PR testsuite/108321
+	* g++.dg/contracts/contracts-tmpl-spec2.C: Add -fsigned-char
+	to options.
+
+2024-02-07  Alex Coplan  <alex.coplan@arm.com>
+
+	PR target/111677
+	* gcc.target/aarch64/torture/pr111677.c: New test.
+
 2024-02-06  Richard Biener  <rguenther@suse.de>
 
 	Backported from master:

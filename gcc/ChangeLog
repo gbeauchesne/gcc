@@ -1,3 +1,121 @@
+2024-02-20  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-02-18  Georg-Johann Lay  <avr@gjlay.de>
+
+	* doc/invoke.texi (AVR Options) <-mmcu>: Remove "Atmel".
+	Note on complete device support.
+
+2024-02-20  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-15  Georg-Johann Lay  <avr@gjlay.de>
+
+	* doc/invoke.texi (AVR Options) [-mskip-bug]: Add documentation.
+
+2024-02-20  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-01-11  Georg-Johann Lay  <avr@gjlay.de>
+
+	* doc/invoke.texi (AVR Options): Move -mrmw, -mn-flash, -mshort-calls
+	and -msp8 to...
+	(AVR Internal Options): ...this new @subsubsection.
+
+2024-02-19  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	Backported from master:
+	2023-12-20  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	PR target/112787
+	* tree-vect-generic.cc (type_for_widest_vector_mode): Change function to
+	use original vector type and check widest vector mode has at most the
+	same number of elements.
+	(get_compute_type): Pass original vector type rather than the element
+	type to type_for_widest_vector_mode and remove now obsolete check for
+	the number of elements.
+
+2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/113921
+	* cfgrtl.h (prepend_insn_to_edge): New declaration.
+	* cfgrtl.cc (insert_insn_on_edge): Clarify behavior in function
+	comment.
+	(prepend_insn_to_edge): New function.
+	* cfgexpand.cc (expand_asm_stmt): Use prepend_insn_to_edge instead of
+	insert_insn_on_edge.
+
+2024-02-15  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-02-15  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/113927
+	* config/avr/avr.h (AVR_HAVE_ADIW): New macro.
+	* config/avr/avr-protos.h (avr_adiw_reg_p): New proto.
+	* config/avr/avr.cc (avr_adiw_reg_p): New function.
+	(avr_conditional_register_usage) [AVR_TINY]: Don't clear ADDW_REGS.
+	Replace test_hard_reg_class (ADDW_REGS, ...) with calls to
+	* config/avr/avr.md: Same.
+	(attr "isa") <tiny, no_tiny>: Remove.
+	<adiw, no_adiw>: Add.
+	(define_insn, define_insn_and_split): When an alternative has
+	constraint "w", then set attribute "isa" to "adiw".
+	* config/avr/avr-c.cc (avr_cpu_cpp_builtins) [AVR_HAVE_ADIW]:
+	Built-in define __AVR_HAVE_ADIW__.
+	* doc/invoke.texi (AVR Options): Document it.
+
+2024-02-12  Senthil Kumar Selvaraj  <saaadhu@gcc.gnu.org>
+
+	Backported from master:
+	2023-06-19  Senthil Kumar Selvaraj  <saaadhu@gcc.gnu.org>
+
+	PR target/105523
+	* common/config/avr/avr-common.cc: Remove setting
+	of OPT_fdelete_null_pointer_checks.
+	* config/avr/avr.cc (avr_option_override): Clear
+	flag_delete_null_pointer_checks if zero_address_valid.
+	(avr_addr_space_zero_address_valid): New function.
+	(TARGET_ADDR_SPACE_ZERO_ADDRESS_VALID): Provide target
+	hook.
+
+2024-02-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-02-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/113824
+	* config/avr/avr-mcus.def (ata5797): Move from avr5 to avr4.
+	* doc/avr-mmcu.texi: Rebuild.
+
+2024-02-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-02-08  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/gen-avr-mmcu-specs.cc (print_mcu) <*cpp_mcu>: Spec always
+	defines __AVR_PM_BASE_ADDRESS__ if the core has it.
+
+2024-02-07  Alex Coplan  <alex.coplan@arm.com>
+
+	PR target/111677
+	* config/aarch64/aarch64.cc (aarch64_reg_save_mode): Use
+	V16QImode for the full 16-byte FPR saves in the vector PCS case.
+	(aarch64_gen_storewb_pair): Handle V16QImode.
+	(aarch64_gen_loadwb_pair): Likewise.
+	(aarch64_gen_load_pair): Likewise.
+	* config/aarch64/aarch64.md (loadwb_pair<TX:mode>_<P:mode>):
+	Rename to ...
+	(loadwb_pair<TX_V16QI:mode>_<P:mode>): ... this, extending to
+	V16QImode.
+	(storewb_pair<TX:mode>_<P:mode>): Rename to ...
+	(storewb_pair<TX_V16QI:mode>_<P:mode>): ... this, extending to
+	V16QImode.
+	* config/aarch64/iterators.md (TX_V16QI): New.
+
 2024-02-06  Richard Biener  <rguenther@suse.de>
 
 	Backported from master:
