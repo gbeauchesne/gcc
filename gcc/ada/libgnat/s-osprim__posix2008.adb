@@ -39,14 +39,6 @@ package body System.OS_Primitives is
 
    subtype int is System.CRTL.int;
 
-   --  ??? These definitions are duplicated from System.OS_Interface because
-   --  we don't want to depend on any package. Consider removing these
-   --  declarations in System.OS_Interface and move these ones to the spec.
-
-   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
-                      return Integer;
-   pragma Import (C, nanosleep, "nanosleep");
-
    -----------
    -- Clock --
    -----------

@@ -36,6 +36,13 @@ procedure Timed_Delay
   (Time : Duration;
    Mode : Integer)
 is
+
+   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
+                      return Integer
+     with Import,
+          Convention => C,
+          External_Name => "nanosleep";
+
    Request    : aliased C_Time.timespec;
    Remaind    : aliased C_Time.timespec;
    Rel_Time   : Duration;
