@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 --  This package provides various routines for conversion between Ada and Unix
---  time models - Time, Duration, struct tm and struct timespec.
+--  time models - Time, Duration and struct tm.
 
 with Interfaces.C;
 
@@ -66,22 +66,6 @@ package Ada.Calendar.Conversions is
    --  depending on whether binder flag "-y" was used. Raises Time_Error if
    --  the input values are out of the defined ranges or if tm_sec equals 60
    --  and the instance in time is not a leap second occurrence.
-
-   function To_Duration
-     (tv_sec  : Interfaces.C.long;
-      tv_nsec : Interfaces.C.long) return Duration;
-   --  Convert an elapsed time value expressed in Unix-like fields of struct
-   --  timespec into a Duration value. The expected ranges are:
-
-   --     tv_sec   -  seconds
-   --     tv_nsec  -  nanoseconds
-
-   procedure To_Struct_Timespec
-     (D       : Duration;
-      tv_sec  : out Interfaces.C.long;
-      tv_nsec : out Interfaces.C.long);
-   --  Convert a Duration value into the constituents of struct timespec.
-   --  Formal tv_sec denotes seconds and tv_nsecs denotes nanoseconds.
 
    procedure To_Struct_Tm
      (T       : Time;
