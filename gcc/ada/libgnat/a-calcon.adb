@@ -69,39 +69,6 @@ package body Ada.Calendar.Conversions is
           (Year, Month, Day, Hour, Minute, Second, DST);
    end To_Ada_Time;
 
-   -----------------
-   -- To_Duration --
-   -----------------
-
-   function To_Duration
-     (tv_sec  : long;
-      tv_nsec : long) return Duration
-   is
-      Secs      : constant Long_Integer := Long_Integer (tv_sec);
-      Nano_Secs : constant Long_Integer := Long_Integer (tv_nsec);
-   begin
-      return Conversion_Operations.To_Duration (Secs, Nano_Secs);
-   end To_Duration;
-
-   ------------------------
-   -- To_Struct_Timespec --
-   ------------------------
-
-   procedure To_Struct_Timespec
-     (D       : Duration;
-      tv_sec  : out long;
-      tv_nsec : out long)
-   is
-      Secs      : Long_Integer;
-      Nano_Secs : Long_Integer;
-
-   begin
-      Conversion_Operations.To_Struct_Timespec (D, Secs, Nano_Secs);
-
-      tv_sec  := long (Secs);
-      tv_nsec := long (Nano_Secs);
-   end To_Struct_Timespec;
-
    ------------------
    -- To_Struct_Tm --
    ------------------

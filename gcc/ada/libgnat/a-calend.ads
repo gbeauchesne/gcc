@@ -303,17 +303,6 @@ private
          tm_isdst : Integer) return Time;
       --  Struct tm to Ada Epoch conversion
 
-      function To_Duration
-        (tv_sec  : Long_Integer;
-         tv_nsec : Long_Integer) return Duration;
-      --  Struct timespec to Duration conversion
-
-      procedure To_Struct_Timespec
-        (D       : Duration;
-         tv_sec  : out Long_Integer;
-         tv_nsec : out Long_Integer);
-      --  Duration to struct timespec conversion
-
       procedure To_Struct_Tm
         (T       : Time;
          tm_year : out Integer;
