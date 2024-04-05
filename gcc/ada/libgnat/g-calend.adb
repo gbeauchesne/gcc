@@ -29,11 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces.C.Extensions;
-
 package body GNAT.Calendar is
    use Ada.Calendar;
-   use Interfaces;
 
    -----------------
    -- Day_In_Year --
@@ -327,61 +324,6 @@ package body GNAT.Calendar is
            Is_Historic  => False,
            Time_Zone    => 0);
    end Time_Of_At_Locale;
-
-   -----------------
-   -- To_Duration --
-   -----------------
-
-   function To_Duration (T : not null access timeval) return Duration is
-
-      procedure timeval_to_duration
-        (T    : not null access timeval;
-         sec  : not null access C.Extensions.long_long;
-         usec : not null access C.long);
-      pragma Import (C, timeval_to_duration, "__gnat_timeval_to_duration");
-
-      Micro : constant := 10**6;
-      sec   : aliased C.Extensions.long_long;
-      usec  : aliased C.long;
-
-   begin
-      timeval_to_duration (T, sec'Access, usec'Access);
-      pragma Annotate (CodePeer, Modified, sec);
-      pragma Annotate (CodePeer, Modified, usec);
-
-      return Duration (sec) + Duration (usec) / Micro;
-   end To_Duration;
-
-   ----------------
-   -- To_Timeval --
-   ----------------
-
-   function To_Timeval (D : Duration) return timeval is
-
-      procedure duration_to_timeval
-        (Sec  : C.Extensions.long_long;
-         Usec : C.long;
-         T : not null access timeval);
-      pragma Import (C, duration_to_timeval, "__gnat_duration_to_timeval");
-
-      Micro  : constant := 10**6;
-      Result : aliased timeval;
-      sec    : C.Extensions.long_long;
-      usec   : C.long;
-
-   begin
-      if D = 0.0 then
-         sec  := 0;
-         usec := 0;
-      else
-         sec  := C.Extensions.long_long (D - 0.5);
-         usec := C.long ((D - Duration (sec)) * Micro - 0.5);
-      end if;
-
-      duration_to_timeval (sec, usec, Result'Access);
-
-      return Result;
-   end To_Timeval;
 
    ------------------
    -- Week_In_Year --
