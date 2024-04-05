@@ -674,8 +674,6 @@ Machine-specific implementations are available in some cases.
 
 Extends the facilities provided by ``Ada.Calendar`` to include handling
 of days of the week, an extended ``Split`` and ``Time_Of`` capability.
-Also provides conversion of ``Ada.Calendar.Time`` values to and from the
-C ``timeval`` format.
 
 .. _`GNAT.Calendar.Time_IO_(g-catiio.ads)`:
 
