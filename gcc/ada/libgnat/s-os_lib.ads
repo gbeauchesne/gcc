@@ -165,21 +165,7 @@ package System.OS_Lib is
    -- Time_t Stuff --
    ------------------
 
-   --  Note: Do not use time_t in the compiler and host-based tools; instead
-   --  use OS_Time.
-
-   subtype time_t is Long_Long_Integer;
-   --  C time_t can be either long or long long, so we choose the Ada
-   --  equivalent of the latter because eventually that will be the
-   --  type used out of necessity. This may affect some user code on 32-bit
-   --  targets that have not yet migrated to the Posix 2008 standard,
-   --  particularly pre version 5 32-bit Linux. Do not change this
-   --  declaration without coordinating it with conversions in Ada.Calendar.
-
-   function To_C (Time : OS_Time) return time_t;
-   --  Convert OS_Time to C time_t type
-
-   function To_Ada (Time : time_t) return OS_Time;
+   function To_Ada (Time : Long_Long_Integer) return OS_Time;
    --  Convert C time_t type to OS_Time
 
    ----------------
@@ -1119,7 +1105,6 @@ private
    pragma Import (Intrinsic, ">");
    pragma Import (Intrinsic, "<=");
    pragma Import (Intrinsic, ">=");
-   pragma Inline (To_C);
    pragma Inline (To_Ada);
 
    type Process_Id is new Integer;
