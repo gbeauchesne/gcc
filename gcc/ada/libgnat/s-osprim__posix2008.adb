@@ -31,9 +31,10 @@
 
 --  This version is for POSIX.1-2008-like operating systems
 
+with System.C_Time;
 with System.CRTL;
 with System.OS_Constants;
-with System.Parameters;
+
 package body System.OS_Primitives is
 
    subtype int is System.CRTL.int;
@@ -42,16 +43,8 @@ package body System.OS_Primitives is
    --  we don't want to depend on any package. Consider removing these
    --  declarations in System.OS_Interface and move these ones to the spec.
 
-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
-
-   type timespec is record
-      tv_sec  : time_t;
-      tv_nsec : Long_Integer;
-   end record;
-   pragma Convention (C, timespec);
-
-   function nanosleep (rqtp, rmtp : not null access timespec) return Integer;
+   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
+                      return Integer;
    pragma Import (C, nanosleep, "nanosleep");
 
    -----------
@@ -59,7 +52,7 @@ package body System.OS_Primitives is
    -----------
 
    function Clock return Duration is
-      TS     : aliased timespec;
+      TS     : aliased C_Time.timespec;
       Result : int;
 
       type clockid_t is new int;
@@ -68,41 +61,14 @@ package body System.OS_Primitives is
 
       function clock_gettime
         (clock_id : clockid_t;
-         tp       : access timespec) return int;
+         tp       : access C_Time.timespec) return int;
       pragma Import (C, clock_gettime, "clock_gettime");
 
    begin
       Result := clock_gettime (CLOCK_REALTIME, TS'Unchecked_Access);
       pragma Assert (Result = 0);
-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
+      return C_Time.To_Duration (TS);
    end Clock;
-
-   -----------------
-   -- To_Timespec --
-   -----------------
-
-   function To_Timespec (D : Duration) return timespec;
-
-   function To_Timespec (D : Duration) return timespec is
-      S : time_t;
-      F : Duration;
-
-   begin
-      S := time_t (Long_Long_Integer (D));
-      F := D - Duration (S);
-
-      --  If F has negative value due to a round-up, adjust for positive F
-      --  value.
-
-      if F < 0.0 then
-         S := S - 1;
-         F := F + 1.0;
-      end if;
-
-      return
-        timespec'(tv_sec  => S,
-                  tv_nsec => Long_Integer (Long_Long_Integer (F * 10#1#E9)));
-   end To_Timespec;
 
    -----------------
    -- Timed_Delay --

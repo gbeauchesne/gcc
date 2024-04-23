@@ -42,7 +42,7 @@ with Ada.Unchecked_Conversion;
 
 with Interfaces.C;
 
-with System.Parameters;
+with System.C_Time;
 
 package System.OS_Interface is
    pragma Preelaborate;
@@ -188,22 +188,14 @@ package System.OS_Interface is
    -- Time --
    ----------
 
-   type timespec is private;
-
-   function nanosleep (rqtp, rmtp : access timespec) return int;
+   function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
    pragma Import (C, nanosleep);
 
    type clockid_t is new int;
 
    function Clock_Gettime
-     (Clock_Id : clockid_t; Tp : access timespec) return int;
+     (Clock_Id : clockid_t; Tp : access C_Time.timespec) return int;
    pragma Import (C, Clock_Gettime);
-
-   function To_Duration (TS : timespec) return Duration;
-   pragma Inline (To_Duration);
-
-   function To_Timespec (D : Duration) return timespec;
-   pragma Inline (To_Timespec);
 
    -------------------------
    -- Priority Scheduling --
@@ -354,7 +346,7 @@ package System.OS_Interface is
    function pthread_cond_timedwait
      (cond    : access pthread_cond_t;
       mutex   : access pthread_mutex_t;
-      abstime : access timespec) return int;
+      abstime : access C_Time.timespec) return int;
    pragma Inline (pthread_cond_timedwait);
    --  DCE_THREADS has a nonstandard pthread_cond_timedwait
 
@@ -445,15 +437,6 @@ private
    pragma Convention (C, sigset_t);
 
    type pid_t is new int;
-
-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
-
-   type timespec is record
-      tv_sec  : time_t;
-      tv_nsec : long;
-   end record;
-   pragma Convention (C, timespec);
 
    CLOCK_REALTIME : constant clockid_t := 1;
 

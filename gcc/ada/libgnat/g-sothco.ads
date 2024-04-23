@@ -34,7 +34,7 @@
 
 with Ada.Unchecked_Conversion;
 with Interfaces.C.Strings;
-with System.Parameters;
+with System.C_Time;
 
 package GNAT.Sockets.Thin_Common is
 
@@ -44,31 +44,13 @@ package GNAT.Sockets.Thin_Common is
    Success : constant C.int :=  0;
    Failure : constant C.int := -1;
 
-   type time_t is
-     range -2 ** (System.Parameters.time_t_bits - 1)
-        .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
-   for time_t'Size use System.Parameters.time_t_bits;
-   pragma Convention (C, time_t);
-
-   type suseconds_t is
-     range -2 ** (8 * SOSC.SIZEOF_tv_usec - 1)
-         .. 2 ** (8 * SOSC.SIZEOF_tv_usec - 1) - 1;
-   for suseconds_t'Size use 8 * SOSC.SIZEOF_tv_usec;
-   pragma Convention (C, suseconds_t);
-
-   type Timeval is record
-      Tv_Sec  : time_t;
-      Tv_Usec : suseconds_t;
-   end record;
-   pragma Convention (C, Timeval);
-
-   type Timeval_Access is access all Timeval;
+   type Timeval_Access is access all System.C_Time.timeval;
    pragma Convention (C, Timeval_Access);
 
    type socklen_t is mod 2 ** (8 * SOSC.SIZEOF_socklen_t);
    for socklen_t'Size use (8 * SOSC.SIZEOF_socklen_t);
 
-   Immediat : constant Timeval := (0, 0);
+   Immediat : System.C_Time.timeval renames System.C_Time.Timeval_Zero;
 
    -------------------------------------------
    -- Mapping tables to low level constants --

@@ -36,6 +36,7 @@
 
 with Interfaces.C;
 
+with System.C_Time;
 with System.Multiprocessors;
 with System.Tasking.Debug;
 with System.Interrupt_Management;
@@ -759,12 +760,12 @@ package body System.Task_Primitives.Operations is
    ---------------------
 
    function Monotonic_Clock return Duration is
-      TS     : aliased timespec;
+      TS     : aliased C_Time.timespec;
       Result : Interfaces.C.int;
    begin
       Result := clock_gettime (OSC.CLOCK_RT_Ada, TS'Unchecked_Access);
       pragma Assert (Result = 0);
-      return To_Duration (TS);
+      return C_Time.To_Duration (TS);
    end Monotonic_Clock;
 
    -------------------
@@ -772,13 +773,13 @@ package body System.Task_Primitives.Operations is
    -------------------
 
    function RT_Resolution return Duration is
-      TS     : aliased timespec;
+      TS     : aliased C_Time.timespec;
       Result : Interfaces.C.int;
    begin
       Result := clock_getres (OSC.CLOCK_REALTIME, TS'Unchecked_Access);
       pragma Assert (Result = 0);
 
-      return To_Duration (TS);
+      return C_Time.To_Duration (TS);
    end RT_Resolution;
 
    -----------
@@ -1173,7 +1174,7 @@ package body System.Task_Primitives.Operations is
       Base_Time  : constant Duration := Monotonic_Clock;
       Check_Time : Duration := Base_Time;
       Abs_Time   : Duration;
-      Request    : aliased timespec;
+      Request    : aliased C_Time.timespec;
       Result     : Interfaces.C.int;
 
    begin
@@ -1187,7 +1188,7 @@ package body System.Task_Primitives.Operations is
          else Duration'Min (Check_Time + Max_Sensible_Delay, Time));
 
       if Abs_Time > Check_Time then
-         Request := To_Timespec (Abs_Time);
+         Request := C_Time.To_Timespec (Abs_Time);
          loop
             exit when Self_ID.Pending_ATC_Level < Self_ID.ATC_Nesting_Level;
 
@@ -1228,7 +1229,7 @@ package body System.Task_Primitives.Operations is
       Base_Time  : constant Duration := Monotonic_Clock;
       Check_Time : Duration := Base_Time;
       Abs_Time   : Duration;
-      Request    : aliased timespec;
+      Request    : aliased C_Time.timespec;
       Result     : Interfaces.C.int;
       Yielded    : Boolean := False;
 
@@ -1241,7 +1242,7 @@ package body System.Task_Primitives.Operations is
          else Duration'Min (Check_Time + Max_Sensible_Delay, Time));
 
       if Abs_Time > Check_Time then
-         Request := To_Timespec (Abs_Time);
+         Request := C_Time.To_Timespec (Abs_Time);
          Self_ID.Common.State := Delay_Sleep;
 
          pragma Assert (Check_Sleep (Delay_Sleep));
