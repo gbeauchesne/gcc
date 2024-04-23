@@ -40,38 +40,6 @@ with Interfaces.C; use Interfaces.C;
 
 package body System.OS_Interface is
 
-   -----------------
-   -- To_Duration --
-   -----------------
-
-   function To_Duration (TS : timespec) return Duration is
-   begin
-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
-   end To_Duration;
-
-   -----------------
-   -- To_Timespec --
-   -----------------
-
-   function To_Timespec (D : Duration) return timespec is
-      S : time_t;
-      F : Duration;
-
-   begin
-      S := time_t (Long_Long_Integer (D));
-      F := D - Duration (S);
-
-      --  If F has negative value due to a round-up, adjust for positive F
-      --  value.
-      if F < 0.0 then
-         S := S - 1;
-         F := F + 1.0;
-      end if;
-
-      return timespec'(tv_sec => S,
-                       tv_nsec => long (Long_Long_Integer (F * 10#1#E9)));
-   end To_Timespec;
-
    -------------------------
    -- POSIX.1c  Section 3 --
    -------------------------
@@ -298,12 +266,12 @@ package body System.OS_Interface is
    function pthread_cond_timedwait
      (cond    : access pthread_cond_t;
       mutex   : access pthread_mutex_t;
-      abstime : access timespec) return int
+      abstime : access C_Time.timespec) return int
    is
       function pthread_cond_timedwait_base
         (cond    : access pthread_cond_t;
          mutex   : access pthread_mutex_t;
-         abstime : access timespec) return int;
+         abstime : access C_Time.timespec) return int;
       pragma Import (C, pthread_cond_timedwait_base, "pthread_cond_timedwait");
 
    begin

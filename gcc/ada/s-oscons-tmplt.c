@@ -1740,9 +1740,9 @@ CND(IPV6_V6ONLY, "Restricted to IPv6 communications only")
    --  Sizes (in bytes) of the components of struct timeval
 */
 #define SIZEOF_tv_sec (sizeof tv.tv_sec)
-CND(SIZEOF_tv_sec, "tv_sec")
+CND(SIZEOF_tv_sec, "tv_sec, time_t")
 #define SIZEOF_tv_usec (sizeof tv.tv_usec)
-CND(SIZEOF_tv_usec, "tv_usec")
+CND(SIZEOF_tv_usec, "tv_usec, suseconds_t")
 /*
 
    --  Maximum allowed value for tv_sec
@@ -1764,6 +1764,17 @@ CND(SIZEOF_tv_usec, "tv_usec")
 #endif
 CNS(MAX_tv_sec, "")
 }
+
+{
+  struct timespec ts;
+/*
+   --  Sizes (in bytes) of the components of struct timespec.
+   --  The tv_sec field is the same than in struct timeval.
+*/
+#define SIZEOF_tv_nsec (sizeof (ts.tv_nsec))
+CND(SIZEOF_tv_nsec, "tv_nsec, long except on x32");
+}
+
 /*
 
    --  Sizes of various data types
