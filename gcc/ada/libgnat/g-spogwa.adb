@@ -42,7 +42,9 @@ is
       writefds  : access FD_Set_Type;
       exceptfds : access FD_Set_Type;
       timeout   : access System.C_Time.timeval) return Integer
-     with Import => True, Convention => Stdcall, External_Name => "select";
+     with Import => True, Convention => Stdcall,
+       External_Name => (if System.OS_Constants.Glibc_Use_Time_Bits64
+         then "__select64" else "select");
 
    Timeout_V : aliased System.C_Time.timeval;
    Timeout_A : access System.C_Time.timeval;

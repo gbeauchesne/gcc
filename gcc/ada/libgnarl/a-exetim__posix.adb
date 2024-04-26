@@ -35,6 +35,7 @@ with Ada.Task_Identification;  use Ada.Task_Identification;
 with Ada.Unchecked_Conversion;
 
 with System.C_Time;
+with System.OS_Constants;
 with System.Tasking;
 with System.OS_Interface; use System.OS_Interface;
 with System.Task_Primitives.Operations; use System.Task_Primitives.Operations;
@@ -115,7 +116,9 @@ package body Ada.Execution_Time is
         (clock_id : Interfaces.C.int;
          tp       : access System.C_Time.timespec)
          return int;
-      pragma Import (C, clock_gettime, "clock_gettime");
+      pragma Import (C, clock_gettime,
+        (if System.OS_Constants.Glibc_Use_Time_Bits64
+         then "__clock_gettime64" else "clock_gettime"));
       --  Function from the POSIX.1b Realtime Extensions library
 
       function pthread_getcpuclockid
