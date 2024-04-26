@@ -229,12 +229,14 @@ package System.OS_Interface is
 
    function clock_gettime
      (clock_id : clockid_t; tp : access C_Time.timespec) return int;
-   pragma Import (C, clock_gettime, "clock_gettime");
+   pragma Import (C, clock_gettime, (if OS_Constants.Glibc_Use_Time_Bits64
+     then "__clock_gettime64" else "clock_gettime"));
 
    function clock_getres
      (clock_id : clockid_t;
       res      : access C_Time.timespec) return int;
-   pragma Import (C, clock_getres, "clock_getres");
+   pragma Import (C, clock_getres, (if OS_Constants.Glibc_Use_Time_Bits64
+     then "__clock_getres64" else "clock_getres"));
 
    function sysconf (name : int) return long;
    pragma Import (C, sysconf);
@@ -445,7 +447,9 @@ package System.OS_Interface is
      (cond    : access pthread_cond_t;
       mutex   : access pthread_mutex_t;
       abstime : access C_Time.timespec) return int;
-   pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
+   pragma Import (C, pthread_cond_timedwait,
+     (if OS_Constants.Glibc_Use_Time_Bits64 then "__pthread_cond_timedwait64"
+      else "pthread_cond_timedwait"));
 
    --------------------------
    -- POSIX.1c  Section 13 --

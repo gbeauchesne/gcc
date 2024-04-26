@@ -41,7 +41,8 @@ is
                       return Integer
      with Import,
           Convention => C,
-          External_Name => "nanosleep";
+          External_Name => (if OS_Constants.Glibc_Use_Time_Bits64
+            then "__nanosleep64" else "nanosleep");
 
    Request    : aliased C_Time.timespec;
    Remaind    : aliased C_Time.timespec;

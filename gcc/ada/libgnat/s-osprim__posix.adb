@@ -31,6 +31,7 @@
 
 --  This version is for POSIX-like operating systems
 with System.C_Time;
+with System.OS_Constants;
 
 package body System.OS_Primitives is
 
@@ -47,7 +48,8 @@ package body System.OS_Primitives is
       function gettimeofday
         (Tv : access C_Time.timeval;
          Tz : System.Address := System.Null_Address) return Integer;
-      pragma Import (C, gettimeofday, "gettimeofday");
+      pragma Import (C, gettimeofday, (if OS_Constants.Glibc_Use_Time_Bits64
+        then "__gettimeofday64" else "gettimeofday"));
 
    begin
       --  The return codes for gettimeofday are as follows (from man pages):

@@ -1777,6 +1777,22 @@ CND(SIZEOF_tv_nsec, "tv_nsec, long except on x32");
 
 /*
 
+   --  Functions with time_t suseconds_t timeval timespec parameters like
+   --    clock_get{res,time} gettimeofday nanosleep
+   --    pthread_cond_{,timed}wait select
+   --  must be imported from the GNU C library with
+   --    External_Name => (if Glibc_Use_Time_Bits64 then "__foo64" else "foo")
+   --  The test is safe in files that do not require GNU specifically.
+
+*/
+#ifdef __USE_TIME_BITS64
+  C("Glibc_Use_Time_Bits64", Boolean, "True", "Y2038 Glibc transition")
+#else
+  C("Glibc_Use_Time_Bits64", Boolean, "False", "Y2038 Glibc transition")
+#endif
+
+/*
+
    --  Sizes of various data types
 */
 

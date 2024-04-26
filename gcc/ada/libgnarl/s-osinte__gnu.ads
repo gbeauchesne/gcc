@@ -39,6 +39,7 @@
 --  Preelaborate. This package is designed to be a bottom-level (leaf) package
 
 with Interfaces.C;
+with System.OS_Constants;
 with System.C_Time;
 with Ada.Unchecked_Conversion;
 
@@ -208,7 +209,8 @@ package System.OS_Interface is
    --  Indicates whether time slicing is supported (i.e SCHED_RR is supported)
 
    function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
-   pragma Import (C, nanosleep, "nanosleep");
+   pragma Import (C, nanosleep, (if OS_Constants.Glibc_Use_Time_Bits64
+     then "__nanosleep64" else "nanosleep"));
 
    type clockid_t is new int;
    CLOCK_REALTIME : constant clockid_t := 0;
@@ -218,12 +220,14 @@ package System.OS_Interface is
      (clock_id : clockid_t;
       tp       : access C_Time.timespec)
       return int;
-   pragma Import (C, clock_gettime, "clock_gettime");
+   pragma Import (C, clock_gettime, (if OS_Constants.Glibc_Use_Time_Bits64
+     then "__clock_gettime64" else "clock_gettime"));
 
    function clock_getres
      (clock_id : clockid_t;
       res      : access C_Time.timespec) return int;
-   pragma Import (C, clock_getres, "clock_getres");
+   pragma Import (C, clock_getres, (if OS_Constants.Glibc_Use_Time_Bits64
+     then "__clock_getres64" else "clock_getres"));
 
    --  From: /usr/include/unistd.h
    function sysconf (name : int) return long;
@@ -477,7 +481,9 @@ package System.OS_Interface is
      (cond    : access pthread_cond_t;
       mutex   : access pthread_mutex_t;
       abstime : access C_Time.timespec) return int;
-   pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
+   pragma Import (C, pthread_cond_timedwait,
+     (if OS_Constants.Glibc_Use_Time_Bits64 then "__pthread_cond_timedwait64"
+      else "pthread_cond_timedwait"));
 
    Relative_Timed_Wait : constant Boolean := False;
    --  pthread_cond_timedwait requires an absolute delay time
