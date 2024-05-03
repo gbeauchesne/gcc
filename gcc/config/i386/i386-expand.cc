@@ -429,6 +429,23 @@ ix86_expand_move (machine_mode mode, rtx operands[])
 
     default:
       break;
+
+    case SUBREG:
+      /* As not all values in XFmode are representable in real_value,
+	 we might be called with unfoldable SUBREGs of constants.  */
+      if (mode == XFmode
+	  && CONSTANT_P (SUBREG_REG (op1))
+	  && can_create_pseudo_p ())
+	{
+	  machine_mode imode = GET_MODE (SUBREG_REG (op1));
+	  rtx r = force_const_mem (imode, SUBREG_REG (op1));
+	  if (r)
+	    r = validize_mem (r);
+	  else
+	    r = force_reg (imode, SUBREG_REG (op1));
+	  op1 = simplify_gen_subreg (mode, r, imode, SUBREG_BYTE (op1));
+	}
+      break;
     }
 
   if ((flag_pic || MACHOPIC_INDIRECT)
@@ -4565,7 +4582,7 @@ ix86_expand_int_sse_cmp (rtx dest, enum rtx_code code, rtx cop0, rtx cop1,
 		  rtx elt = CONST_VECTOR_ELT (cop1, i);
 		  if (!CONST_INT_P (elt))
 		    break;
-		  if (code == GE)
+		  if (code == LE)
 		    {
 		      /* For LE punt if some element is signed maximum.  */
 		      if ((INTVAL (elt) & (GET_MODE_MASK (eltmode) >> 1))

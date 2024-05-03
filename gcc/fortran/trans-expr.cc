@@ -2875,11 +2875,13 @@ conv_inquiry (gfc_se * se, gfc_ref * ref, gfc_expr *expr, gfc_typespec *ts)
     case INQUIRY_KIND:
       res = build_int_cst (gfc_typenode_for_spec (&expr->ts),
 			   ts->kind);
+      se->string_length = NULL_TREE;
       break;
 
     case INQUIRY_LEN:
       res = fold_convert (gfc_typenode_for_spec (&expr->ts),
 			  se->string_length);
+      se->string_length = NULL_TREE;
       break;
 
     default:
@@ -7050,8 +7052,10 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
 	 with an interface indicating an optional argument.  When we call
 	 an intrinsic subroutine, however, fsym is NULL, but we might still
 	 have an optional argument, so we proceed to the substitution
-	 just in case.  */
-      if (e && (fsym == NULL || fsym->attr.optional))
+	 just in case.  Arguments passed to bind(c) procedures via CFI
+	 descriptors are handled elsewhere.  */
+      if (e && (fsym == NULL || fsym->attr.optional)
+	  && !(sym->attr.is_bind_c && is_CFI_desc (fsym, NULL)))
 	{
 	  /* If an optional argument is itself an optional dummy argument,
 	     check its presence and substitute a null if absent.  This is
@@ -9362,7 +9366,7 @@ gfc_conv_structure (gfc_se * se, gfc_expr * expr, int init)
   cm = expr->ts.u.derived->components;
 
   for (c = gfc_constructor_first (expr->value.constructor);
-       c; c = gfc_constructor_next (c), cm = cm->next)
+       c && cm; c = gfc_constructor_next (c), cm = cm->next)
     {
       /* Skip absent members in default initializers and allocatable
 	 components.  Although the latter have a default initializer

@@ -1,3 +1,187 @@
+2024-04-26  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	Backported from master:
+	2023-07-12  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	PR fortran/102003
+	* expr.cc (find_inquiry_ref): Replace len of pdt_string by
+	constant.
+	(simplify_ref_chain): Ensure input to find_inquiry_ref is
+	NULL.
+	(gfc_match_init_expr): Prevent PDT analysis for function calls.
+	(gfc_pdt_find_component_copy_initializer): Get the initializer
+	value for given component.
+	* gfortran.h (gfc_pdt_find_component_copy_initializer): New
+	function.
+	* simplify.cc (gfc_simplify_len): Replace len() of PDT with pdt
+	component ref or constant.
+
+2024-04-06  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-28  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/114474
+	* primary.cc (gfc_variable_attr): Catch variables used in structure
+	constructors within DATA statements that are still tagged with a
+	temporary type BT_PROCEDURE from match_actual_arg and which have the
+	target attribute, and fix their typespec.
+
+2024-04-02  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-06  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/103707
+	PR fortran/106987
+	* arith.cc (is_hard_arith_error): New helper function to determine
+	whether an arithmetic error is "hard" or not.
+	(check_result): Use it.
+	(gfc_arith_divide): Set "Division by zero" only for regular
+	numerators of real and complex divisions.
+	(reduce_unary): Use is_hard_arith_error to determine whether a hard
+	or (recoverable) soft error was encountered.  Terminate immediately
+	on hard error, otherwise remember code of first soft error.
+	(reduce_binary_ac): Likewise.
+	(reduce_binary_ca): Likewise.
+	(reduce_binary_aa): Likewise.
+
+2024-04-02  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-02-09  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/113799
+	* arith.cc (reduce_unary): Remember any overflow encountered during
+	reduction of unary arithmetic operations on array constructors and
+	continue, and return error status, but terminate on serious errors.
+
+2024-04-02  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-05-17  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/95374
+	PR fortran/104352
+	* decl.cc (add_init_expr_to_sym): Set shape of initializer also for
+	zero-sized arrays, so that bounds violations can be detected later.
+
+2024-03-31  Mikael Morin  <mikael@gcc.gnu.org>
+
+	Backported from master:
+	2024-03-22  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/107426
+	* gfortran.h (gfc_save_module_list, gfc_restore_old_module_list):
+	New declarations.
+	* module.cc (old_module_list_tail): New global variable.
+	(gfc_save_module_list, gfc_restore_old_module_list): New functions.
+	(gfc_use_modules): Set module_list and old_module_list_tail.
+	* parse.cc (next_statement): Save module_list before doing any work.
+	(reject_statement): Restore module_list to its saved value.
+
+2024-03-29  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-02-13  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/113866
+	* trans-expr.cc (gfc_conv_procedure_call): When passing an optional
+	dummy argument to an optional dummy argument of a bind(c) procedure
+	and the dummy argument is passed via a CFI descriptor, no special
+	presence check and passing of a default NULL pointer is needed.
+
+2024-03-29  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-29  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/50410
+	* trans-expr.cc (gfc_conv_structure): Check for NULL pointer.
+
+2024-03-28  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2023-05-23  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/103716
+	* resolve.cc (gfc_resolve_ref): Conversion of array_ref into an
+	element should be done for all characters without a len expr,
+	not just deferred lens, and for integer expressions.
+	* trans-expr.cc (conv_inquiry): For len and kind inquiry refs,
+	set the se string_length to NULL_TREE.
+
+2024-03-23  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/101135
+	* trans-array.cc (gfc_get_dataptr_offset): Check for optional
+	arguments being present before dereferencing data pointer.
+
+2024-03-23  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/55978
+	* interface.cc (gfc_compare_actual_formal): Skip size check for
+	NULL() actual without MOLD argument.
+
+2024-03-23  Harald Anlauf  <anlauf@gmx.de>
+
+	* trans-types.cc (gfc_get_nodesc_array_type): Clear used gmp
+	variables.
+
+2024-03-19  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-13  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/114001
+	* expr.cc (gfc_is_simply_contiguous): Adjust logic so that CLASS
+	symbols are also handled.
+
+2024-03-19  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-18  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/103715
+	* frontend-passes.cc (check_externals_expr): Prevent invalid read
+	in case of mismatch of external subroutine with function.
+
+2024-03-15  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-12  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/110826
+	* array.cc (gfc_array_dimen_size): When walking the ref chain of an
+	array and the ultimate component is a procedure pointer, do not try
+	to figure out its dimension even if it is a array-valued function.
+
+2024-03-15  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2023-12-05  Harald Anlauf  <anlauf@gmx.de>
+		    Tobias Burnus   <tobias@codesourcery.com>
+
+	PR fortran/100988
+	* gfortran.h (IS_PROC_POINTER): New macro.
+	* trans-types.cc (gfc_sym_type): Use macro in determination if the
+	restrict qualifier can be used for a dummy variable.  Fix logic to
+	allow the restrict qualifier also for optional arguments, and to
+	not apply it to pointer or proc_pointer arguments.
+
+2024-03-15  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-03-01  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/104819
+	* check.cc (gfc_check_null): Handle nested NULL()s.
+	(is_c_interoperable): Check for MOLD argument of NULL() as part of
+	the interoperability check.
+	* interface.cc (gfc_compare_actual_formal): Extend checks for NULL()
+	actual arguments for presence of MOLD argument when required by
+	Interp J3/22-146.
+
 2024-03-06  Harald Anlauf  <anlauf@gmx.de>
 
 	Backported from master:

@@ -3478,6 +3478,10 @@ vect_analyze_slp (vec_info *vinfo, unsigned max_tree_size)
       for (unsigned i = 0; i < bb_vinfo->roots.length (); ++i)
 	{
 	  vect_location = bb_vinfo->roots[i].roots[0]->stmt;
+	  /* Apply patterns.  */
+	  for (unsigned j = 0; j < bb_vinfo->roots[i].stmts.length (); ++j)
+	    bb_vinfo->roots[i].stmts[j]
+	      = vect_stmt_to_vectorize (bb_vinfo->roots[i].stmts[j]);
 	  if (vect_build_slp_instance (bb_vinfo, bb_vinfo->roots[i].kind,
 				       bb_vinfo->roots[i].stmts,
 				       bb_vinfo->roots[i].roots,
@@ -8777,12 +8781,6 @@ vect_schedule_slp_node (vec_info *vinfo,
   int i;
   slp_tree child;
 
-  /* For existing vectors there's nothing to do.  */
-  if (SLP_TREE_VEC_DEFS (node).exists ())
-    return;
-
-  gcc_assert (SLP_TREE_VEC_STMTS (node).is_empty ());
-
   /* Vectorize externals and constants.  */
   if (SLP_TREE_DEF_TYPE (node) == vect_constant_def
       || SLP_TREE_DEF_TYPE (node) == vect_external_def)
@@ -8793,9 +8791,17 @@ vect_schedule_slp_node (vec_info *vinfo,
       if (!SLP_TREE_VECTYPE (node))
 	return;
 
-      vect_create_constant_vectors (vinfo, node);
+      /* There are two reasons vector defs might already exist.  The first
+	 is that we are vectorizing an existing vector def.  The second is
+	 when performing BB vectorization shared constant/external nodes
+	 are not split apart during partitioning so during the code-gen
+	 DFS walk we can end up visiting them twice.  */
+      if (! SLP_TREE_VEC_DEFS (node).exists ())
+	vect_create_constant_vectors (vinfo, node);
       return;
     }
+
+  gcc_assert (SLP_TREE_VEC_DEFS (node).is_empty ());
 
   stmt_vec_info stmt_info = SLP_TREE_REPRESENTATIVE (node);
 

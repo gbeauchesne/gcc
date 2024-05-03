@@ -10917,7 +10917,8 @@ find_template_parameter_info::found (tree parm)
 {
   if (TREE_CODE (parm) == TREE_LIST)
     parm = TREE_VALUE (parm);
-  if (TREE_CODE (parm) == TYPE_DECL)
+  if (TREE_CODE (parm) == TYPE_DECL
+      || TREE_CODE (parm) == TEMPLATE_DECL)
     parm = TREE_TYPE (parm);
   else
     parm = DECL_INITIAL (parm);
@@ -21783,7 +21784,8 @@ tsubst_copy_and_build (tree t,
 
     case REQUIRES_EXPR:
       {
-	tree r = tsubst_requires_expr (t, args, tf_none, in_decl);
+	complain &= ~tf_warning_or_error;
+	tree r = tsubst_requires_expr (t, args, complain, in_decl);
 	RETURN (r);
       }
 

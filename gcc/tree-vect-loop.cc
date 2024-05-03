@@ -7065,17 +7065,18 @@ vectorizable_reduction (loop_vec_info loop_vinfo,
 		  < GET_MODE_SIZE (SCALAR_TYPE_MODE (TREE_TYPE (vectype_op[i]))))))
 	vectype_in = vectype_op[i];
 
-      if (op.code == COND_EXPR)
+      /* Record how the non-reduction-def value of COND_EXPR is defined.
+	 ???  For a chain of multiple CONDs we'd have to match them up all.  */
+      if (op.code == COND_EXPR && reduc_chain_length == 1)
 	{
-	  /* Record how the non-reduction-def value of COND_EXPR is defined.  */
 	  if (dt == vect_constant_def)
 	    {
 	      cond_reduc_dt = dt;
 	      cond_reduc_val = op.ops[i];
 	    }
-	  if (dt == vect_induction_def
-	      && def_stmt_info
-	      && is_nonwrapping_integer_induction (def_stmt_info, loop))
+	  else if (dt == vect_induction_def
+		   && def_stmt_info
+		   && is_nonwrapping_integer_induction (def_stmt_info, loop))
 	    {
 	      cond_reduc_dt = dt;
 	      cond_stmt_vinfo = def_stmt_info;
@@ -8730,7 +8731,7 @@ vect_peel_nonlinear_iv_init (gimple_seq* stmts, tree init_expr,
 	wi::to_mpz (skipn, exp, UNSIGNED);
 	mpz_ui_pow_ui (mod, 2, TYPE_PRECISION (type));
 	mpz_powm (res, base, exp, mod);
-	begin = wi::from_mpz (type, res, TYPE_SIGN (type));
+	begin = wi::from_mpz (utype, res, true);
 	tree mult_expr = wide_int_to_tree (utype, begin);
 	init_expr = gimple_build (stmts, MULT_EXPR, utype,
 				  init_expr, mult_expr);
@@ -10606,9 +10607,7 @@ find_in_mapping (tree t, void *context)
    corresponding dr_vec_info need to be reconnected to the EPILOGUE's
    stmt_vec_infos, their statements need to point to their corresponding copy,
    if they are gather loads or scatter stores then their reference needs to be
-   updated to point to its corresponding copy and finally we set
-   'base_misaligned' to false as we have already peeled for alignment in the
-   prologue of the main loop.  */
+   updated to point to its corresponding copy.  */
 
 static void
 update_epilogue_loop_vinfo (class loop *epilogue, tree advance)
@@ -10749,10 +10748,6 @@ update_epilogue_loop_vinfo (class loop *epilogue, tree advance)
 	}
       DR_STMT (dr) = STMT_VINFO_STMT (stmt_vinfo);
       stmt_vinfo->dr_aux.stmt = stmt_vinfo;
-      /* The vector size of the epilogue is smaller than that of the main loop
-	 so the alignment is either the same or lower. This means the dr will
-	 thus by definition be aligned.  */
-      STMT_VINFO_DR_INFO (stmt_vinfo)->base_misaligned = false;
     }
 
   epilogue_vinfo->shared->datarefs_copy.release ();

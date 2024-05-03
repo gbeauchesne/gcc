@@ -649,7 +649,7 @@ gen_vsetvl_pat (rtx_insn *rinsn, const vector_insn_info &info,
       && fault_first_load_p (info.get_insn ()->rtl ()))
     new_info.set_avl_info (
       avl_info (get_avl (info.get_insn ()->rtl ()), nullptr));
-  if (vsetvl_insn_p (rinsn) || vlmax_avl_p (info.get_avl ()))
+  if (vsetvl_insn_p (rinsn))
     {
       rtx dest = get_vl (rinsn);
       new_pat = gen_vsetvl_pat (VSETVL_NORMAL, new_info, vl ? vl : dest);
@@ -1196,6 +1196,10 @@ extract_single_source (set_info *set)
     return nullptr;
   for (const set_info *set : sets)
     {
+      /* Skip first set, this can prevent us run into infinite recursive
+	 checking if first set is come from itself.  */
+      if (set == *sets.begin ())
+	continue;
       /* If there is a head or end insn, we conservative return
 	 NULL so that VSETVL PASS will insert vsetvl directly.  */
       if (set->insn ()->is_artificial ())
