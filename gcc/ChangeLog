@@ -1,3 +1,391 @@
+2024-05-14  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/113907
+	* ipa-prop.h (ipa_jump_functions_equivalent_p): Declare.
+	(values_equal_for_ipcp_p): Likewise.
+	* ipa-prop.cc (ipa_agg_pass_through_jf_equivalent_p): New function.
+	(ipa_agg_jump_functions_equivalent_p): Likewise.
+	(ipa_jump_functions_equivalent_p): Likewise.
+	* ipa-cp.cc (values_equal_for_ipcp_p): Make function public.
+	* ipa-icf-gimple.cc: Include alloc-pool.h, symbol-summary.h, sreal.h,
+	ipa-cp.h and ipa-prop.h.
+	(func_checker::compare_gimple_call): Comapre jump functions.
+
+2024-05-14  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2024-04-08  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/113359
+	* ipa-icf-gimple.h (func_checker): New members
+	safe_for_total_scalarization_p, m_total_scalarization_limit_known_p
+	and m_total_scalarization_limit.
+	(func_checker::func_checker): Initialize new member variables.
+	* ipa-icf-gimple.cc: Include tree-sra.h.
+	(func_checker::func_checker): Initialize new member variables.
+	(func_checker::safe_for_total_scalarization_p): New function.
+	(func_checker::compare_operand): Use the new function.
+	* tree-sra.h (sra_get_max_scalarization_size): Declare.
+	(sra_total_scalarization_would_copy_same_data_p): Likewise.
+	* tree-sra.cc (prepare_iteration_over_array_elts): New function.
+	(class sra_padding_collecting): New.
+	(sra_padding_collecting::record_padding): Likewise.
+	(scalarizable_type_p): Rename to totally_scalarizable_type_p.  Add
+	ability to record padding when requested.
+	(totally_scalarize_subtree): Split out gathering information necessary
+	to iterate over array elements to prepare_iteration_over_array_elts.
+	Fix errornous early exit.
+	(analyze_all_variable_accesses): Adjust the call to
+	totally_scalarizable_type_p.  Move determining of total scalariation
+	size limit...
+	(sra_get_max_scalarization_size): ...here.
+	(check_ts_and_push_padding_to_vec): New function.
+	(sra_total_scalarization_would_copy_same_data_p): Likewise.
+
+2024-05-13  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-02-19  Richard Biener  <rguenther@suse.de>
+
+	PR rtl-optimization/54052
+	* rtl-ssa/blocks.cc (function_info::place_phis): Filter
+	local defs by LR_OUT.
+
+2024-05-09  David Malcolm  <dmalcolm@redhat.com>
+
+	PR middle-end/114348
+	* diagnostic.cc (output_format): New variable.
+	(fnotice): Bail out if the user requested one of the
+	machine-readable diagnostic output formats on stderr.
+	(diagnostic_output_format_init): Set output_format.
+
+2024-05-09  David Malcolm  <dmalcolm@redhat.com>
+
+	PR middle-end/112684
+	* toplev.cc (toplev::main): Don't ICE in
+	-fdiagnostics-generate-patch when exiting after options,
+	since no edit context will have been created.
+
+2024-05-09  David Malcolm  <dmalcolm@redhat.com>
+
+	PR driver/111700
+	* input.cc (file_cache::add_file): Update leading comment to
+	clarify that it can fail.
+	(file_cache::lookup_or_add_file): Likewise.
+	(get_source_file_content): Gracefully handle lookup_or_add_file
+	failing.
+
+2024-05-09  Vladimir N. Makarov  <vmakarov@redhat.com>
+
+	PR rtl-optimization/114415
+	* sched-deps.cc (add_insn_mem_dependence): Add memory check for mem argument.
+	(sched_analyze_1): Treat stack pointer modification as memory read.
+	(sched_analyze_2, sched_analyze_insn): Add memory guard for processing pending_read_mems.
+	* sched-int.h (deps_desc): Add comment to pending_read_mems.
+
+2024-05-09  Andrew MacLeod  <amacleod@redhat.com>
+
+	PR tree-optimization/111009
+	* range-op.cc (operator_addr_expr::op1_range): Be more restrictive.
+	* value-range.h (contains_zero_p): New.
+
+2024-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-05-08  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/114965
+	* tree-ssa-reassoc.cc (optimize_range_tests_to_bit_test): Don't try to
+	optimize away exp - lowi subtraction from shift count unless entry
+	test is emitted or unless r.upper_bound () is smaller than prec.
+
+2024-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-05-07  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/114907
+	* expr.cc (convert_mode_scalar): Use trunc_optab rather than
+	sext_optab for HF->BF conversions.
+	* optabs-libfuncs.cc (gen_trunc_conv_libfunc): Likewise.
+
+2024-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-05-07  Jakub Jelinek  <jakub@redhat.com>
+
+	PR sanitizer/114956
+	* tree-inline.cc: Include asan.h.
+	(copy_bb): Remove also .ASAN_MARK calls if id->dst_fn has asan/hwasan
+	sanitization disabled.
+
+2024-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/114876
+	* gimple-ssa-sprintf.cc (format_character): For min == 0 && max == 0,
+	set max, likely and unlikely members to 1 rather than 0.  Remove
+	useless res.knownrange = true;.  Formatting fixes.
+
+2024-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-04-25  Jakub Jelinek  <jakub@redhat.com>
+
+	PR fortran/114825
+	* tree-nested.cc (get_debug_decl): New function.
+	(get_nonlocal_debug_decl): Use it.
+	(get_local_debug_decl): Likewise.
+
+2024-05-08  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-03-19  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114375
+	* tree-vect-slp.cc (vect_build_slp_tree_2): Compute the
+	load permutation for masked loads but reject it when any
+	such is necessary.
+	* tree-vect-stmts.cc (vectorizable_load): Reject masked
+	VMAT_ELEMENTWISE and VMAT_STRIDED_SLP as those are not
+	supported.
+
+2024-05-08  Alex Coplan  <alex.coplan@arm.com>
+
+	Backported from master:
+	2024-05-03  Alex Coplan  <alex.coplan@arm.com>
+
+	PR rtl-optimization/114924
+	* cfgrtl.cc (duplicate_insn_chain): When updating MEM_EXPRs,
+	don't strip (e.g.) ARRAY_REFs from the final MEM_EXPR.
+
+2024-05-08  Richard Ball  <richard.ball@arm.com>
+
+	Backported from master:
+	2024-02-01  Richard Ball  <richard.ball@arm.com>
+
+	PR tree-optimization/111268
+	* tree-vect-slp.cc (vectorizable_slp_permutation_1):
+	Add variable-length check for vector input arguments
+	to a function.
+
+2024-05-08  Roger Sayle  <roger@nextmovesoftware.com>
+
+	Backported from master:
+	2023-08-03  Roger Sayle  <roger@nextmovesoftware.com>
+
+	PR target/110792
+	* config/i386/i386.md (<any_rotate>ti3): For rotations by 64 bits
+	place operand in a register before gen_<insn>64ti2_doubleword.
+	(<any_rotate>di3): Likewise, for rotations by 32 bits, place
+	operand in a register before gen_<insn>32di2_doubleword.
+	(<any_rotate>32di2_doubleword): Constrain operand to be in register.
+	(<any_rotate>64ti2_doubleword): Likewise.
+
+2024-05-08  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-11-28  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/112732
+	* tree.cc (build_opaque_vector_type): Reset TYPE_ALIAS_SET
+	of the newly built type.
+
+2024-05-08  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-11-20  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/112281
+	* tree-loop-distribution.cc
+	(loop_distribution::pg_add_dependence_edges): For = in the
+	innermost common loop record a partition conflict.
+
+2024-05-08  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2023-12-13  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/112991
+	PR tree-optimization/112961
+	* tree-ssa-sccvn.h (do_rpo_vn): Add skip_entry_phis argument.
+	* tree-ssa-sccvn.cc (do_rpo_vn): Likewise.
+	(do_rpo_vn_1): Likewise, merge with auto-processing.
+	(run_rpo_vn): Adjust.
+	(pass_fre::execute): Likewise.
+	* tree-if-conv.cc (tree_if_conversion): Revert last change.
+	Value-number latch block but disable value-numbering of
+	entry PHIs.
+	* tree-ssa-uninit.cc (execute_early_warn_uninitialized): Adjust.
+
+2024-05-08  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-03-20  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/113396
+	* tree-dfa.cc (get_ref_base_and_extent): Use index range
+	bounds only if they fit within the address-range constraints
+	of offset_int.
+
+2024-05-07  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-02-28  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/113831
+	PR tree-optimization/114121
+	* tree-ssa-sccvn.h (vn_reference_s::offset,
+	vn_reference_s::max_size): New fields.
+	(vn_reference_insert_pieces): Adjust prototype.
+	* tree-ssa-pre.cc (phi_translate_1): Preserve offset/max_size.
+	* tree-ssa-sccvn.cc (vn_reference_eq): Compare offset and
+	size, allow using "don't know" state.
+	(vn_walk_cb_data::finish): Pass along offset/max_size.
+	(vn_reference_lookup_or_insert_for_pieces): Take offset and
+	max_size as argument and use it.
+	(vn_reference_lookup_3): Properly adjust offset and max_size
+	according to the adjusted ao_ref.
+	(vn_reference_lookup_pieces): Initialize offset and max_size.
+	(vn_reference_lookup): Likewise.
+	(vn_reference_lookup_call): Likewise.
+	(vn_reference_insert): Likewise.
+	(visit_reference_op_call): Likewise.
+	(vn_reference_insert_pieces): Take offset and max_size
+	as argument and use it.
+
+2024-05-07  Kito Cheng  <kito.cheng@sifive.com>
+
+	PR target/114747
+	* config/riscv/riscv-vsetvl.cc (local_eliminate_vsetvl_insn):
+	Check target vsetvl_discard_result and source vsetvli has same
+	SEW and LMUL.
+
+2024-05-06  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-05-06  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR ipa/92606
+	* config/avr/avr.cc (avr_option_override): Set
+	flag_ipa_icf_variables = 0.
+
+2024-05-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-23  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114799
+	* tree-vect-slp.cc (vect_get_and_check_slp_defs): Properly
+	update ->any_pattern when swapping operands.
+
+2024-05-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-24  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114787
+	* tree-cfg.cc (remove_edge_and_dominated_blocks): When
+	removing a loop backedge clear niter info and when removing
+	the last backedge of a loop mark that loop for removal.
+
+2024-05-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-30  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/114734
+	* internal-fn.cc (expand_call_mem_ref): Use
+	get_gimple_for_ssa_name to get at the def stmt of the address
+	argument to honor SSA coalescing constraints.
+
+2024-05-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-03-06  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114246
+	* tree-ssa-dse.cc (increment_start_addr): Strip useless
+	type conversions from the adjusted address.
+
+2024-05-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-01-31  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/113630
+	* tree-ssa-pre.cc (compute_avail): Avoid registering a
+	reference with a representation with not matching base
+	access size.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-17  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114749
+	* tree-vect-loop.cc (vect_analyze_loop_2): Reset
+	LOOP_VINFO_USING_PARTIAL_VECTORS_P when re-trying without SLP.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-16  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114736
+	* tree-vect-slp.cc (vect_optimize_slp_pass::is_cfg_latch_edge):
+	Do not consider VEC_PERM_EXPRs as PHI use.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-15  Richard Biener  <rguenther@suse.de>
+
+	PR gcov-profile/114715
+	* gimplify.cc (gimplify_switch_expr): Set the location of the
+	GIMPLE switch.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-09  Richard Biener  <rguenther@suse.de>
+
+	PR lto/114655
+	* lto-wrapper.cc (merge_flto_options): Add force argument.
+	(merge_and_complain): Do not force here.
+	(run_gcc): But here to make the link-time -flto option override
+	any compile-time one.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-16  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114733
+	* tree-vect-loop.cc (vectorizable_nonlinear_induction): Reject
+	neg induction vectorization of single element vectors.
+
+2024-05-03  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2024-04-04  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/114485
+	* tree-vect-loop-manip.cc (vect_can_peel_nonlinear_iv_p):
+	vect_step_op_neg isn't OK for partial vectors but only
+	for unknown niter.
+
+2024-05-03  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	Backported from master:
+	2023-10-20  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	PR tree-optimization/111882
+	* tree-if-conv.cc (get_bitfield_rep): Return NULL_TREE for bitfields
+	with non-constant offsets.
+
 2024-05-02  Richard Biener  <rguenther@suse.de>
 
 	Backported from master:
