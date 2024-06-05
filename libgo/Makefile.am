@@ -1368,7 +1368,9 @@ mostlyclean-local:
 	find . -name '*-testsum' -print | xargs rm -f
 	find . -name '*-testlog' -print | xargs rm -f
 
-CLEANFILES = *.go *.c s-* libgo.sum libgo.log runtime.inc
+CLEANFILES = *.go *.c s-* libgo.sum libgo.log runtime.inc \
+	*.dep */*.dep */*/*.dep */*/*/*.dep */*/*.dep */*/*/*/*.dep \
+	*/*/*/*/*/*.dep
 
 clean-local:
 	find . -name '*.la' -print | xargs $(LIBTOOL) --mode=clean rm -f
