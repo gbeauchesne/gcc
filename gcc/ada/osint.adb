@@ -64,6 +64,10 @@ package body Osint is
    --  Used in Locate_File as a fake directory when Name is already an
    --  absolute path.
 
+   Source_Date_Epoch : OS_Time := Invalid_Time;
+   --  Set at startup by the Initialize procedure.
+   --  See the specification of the File_Time_Stamp functions.
+
    -------------------------------------
    -- Use of Name_Find and Name_Enter --
    -------------------------------------
@@ -1126,8 +1130,14 @@ package body Osint is
    is
       function Internal (N : C_File_Name; A : System.Address) return OS_Time;
       pragma Import (C, Internal, "__gnat_file_time_name_attr");
+      T : OS_Time := Internal (Name, Attr.all'Address);
    begin
-      return Internal (Name, Attr.all'Address);
+      if Source_Date_Epoch /= Invalid_Time and then T /= Invalid_Time
+        and then Source_Date_Epoch < T
+      then
+         T := Source_Date_Epoch;
+      end if;
+      return T;
    end File_Time_Stamp;
 
    function File_Time_Stamp
@@ -1150,6 +1160,7 @@ package body Osint is
    ----------------
 
    function File_Stamp (Name : File_Name_Type) return Time_Stamp_Type is
+      T : OS_Time;
    begin
       if Name = No_File then
          return Empty_Time_Stamp;
@@ -1161,9 +1172,13 @@ package body Osint is
       --  not exist, and OS_Time_To_GNAT_Time will convert this value to
       --  Empty_Time_Stamp. Therefore we do not need to first test whether
       --  the file actually exists, which saves a system call.
-
-      return OS_Time_To_GNAT_Time
-               (File_Time_Stamp (Name_Buffer (1 .. Name_Len)));
+      T := File_Time_Stamp (Name_Buffer (1 .. Name_Len));
+      if Source_Date_Epoch /= Invalid_Time and then T /= Invalid_Time
+        and then Source_Date_Epoch < T
+      then
+         T := Source_Date_Epoch;
+      end if;
+      return OS_Time_To_GNAT_Time (T);
    end File_Stamp;
 
    function File_Stamp (Name : Path_Name_Type) return Time_Stamp_Type is
@@ -3260,5 +3275,35 @@ begin
 
       Osint.Initialize;
    end Initialization;
+
+   --  When the SOURCE_DATE_EPOCH the environment variable is not empty,
+   --  only contains decimal digits and represents a value lower than 2**63,
+   --  set Source_Date_Epoch to this value.
+   Set_Source_Date_Epoch : declare
+      Env_Var : String_Access := Getenv ("SOURCE_DATE_EPOCH");
+      Epoch   : Long_Long_Integer range 0 .. Long_Long_Integer'Last := 0;
+      Index   : Integer range Env_Var.all'First .. Env_Var.all'Last + 1
+                := Env_Var.all'First;
+      Digit   : Long_Long_Integer;
+   begin
+      if Index <= Env_Var.all'Last then
+         --  Calling System.Val_LLI breaks the bootstrap sequence.
+         loop
+            Digit := Character'Pos (Env_Var.all (Index)) - Character'Pos ('0');
+            exit when Digit not in 0 .. 9;
+            exit when Long_Long_Integer'Last - Digit < Epoch;
+            Epoch := Epoch + Digit;
+            if Index = Env_Var.all'Last then
+               Source_Date_Epoch := To_Ada (Epoch);
+               exit;
+            end if;
+            Index := Index + 1;
+            --  The division is computed once at build time.
+            exit when Long_Long_Integer'Last / 10 < Epoch;
+            Epoch := Epoch * 10;
+         end loop;
+      end if;
+      Free (Env_Var);
+   end Set_Source_Date_Epoch;
 
 end Osint;
