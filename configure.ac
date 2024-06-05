@@ -4219,6 +4219,7 @@ compare_exclusions="$compare_exclusions | gcc/m2/gm2version*"
 compare_exclusions="$compare_exclusions | gcc/cobol/parse\$(objext)"
 case "$target" in
   hppa*64*-*-hpux*) ;;
+  mipsel-*linux-gnu) compare_exclusions="$compare_exclusions | gcc/rust/rust-macro-builtins.o | gcc/rust/rust-session-manager.o | gcc/rust/rust-cfg-parser.o | gcc/rust/rust-lex.o" ;;
   powerpc*-ibm-aix*) compare_exclusions="$compare_exclusions | *libgomp*\$(objext)" ;;
 esac
 AC_SUBST(compare_exclusions)
