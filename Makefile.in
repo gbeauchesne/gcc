@@ -68678,6 +68678,9 @@ configure-m4: stage_last
 @endif gcc-bootstrap
 
 @if gcc-bootstrap
+@unless target-libatomic-bootstrap
+all-target-libada: maybe-all-target-libatomic
+@endunless target-libatomic-bootstrap
 @unless target-zlib-bootstrap
 configure-target-fastjar: maybe-configure-target-zlib
 @endunless target-zlib-bootstrap
@@ -68713,6 +68716,7 @@ configure-target-libgo: maybe-all-target-libbacktrace
 @unless gcc-bootstrap
 all-target-libada: maybe-all-gcc
 all-gnattools: maybe-all-target-libstdc++-v3
+all-target-libada: maybe-all-target-libatomic
 configure-libcc1: maybe-configure-gcc
 all-libcc1: maybe-all-gcc
 all-c++tools: maybe-all-gcc
