@@ -75,16 +75,23 @@ CXX_LFLAGS = \
  -L../../../$(target_noncanonical)/libstdc++-v3/src/.libs \
  -L../../../$(target_noncanonical)/libstdc++-v3/libsupc++/.libs
 
+rtsdir := $(abspath ../gcc/ada/rts)
+
 # Variables for gnattools, native
 TOOLS_FLAGS_TO_PASS_NATIVE= \
 	"CC=../../xgcc -B../../" \
 	"CXX=../../xg++ -B../../ $(CXX_LFLAGS)" \
 	"CFLAGS=$(CFLAGS) $(WARN_CFLAGS)" \
-	"LDFLAGS=$(LDFLAGS)" \
-	"ADAFLAGS=$(ADAFLAGS)" \
+	"LDFLAGS=$(LDFLAGS) -Wl,--no-allow-shlib-undefined \
+	  -Wl,--no-copy-dt-needed-entries -Wl,--no-undefined" \
+	"ADAFLAGS=$(ADAFLAGS) -gnatn" \
 	"ADA_CFLAGS=$(ADA_CFLAGS)" \
 	"INCLUDES=$(INCLUDES_FOR_SUBDIR)" \
-	"ADA_INCLUDES=-I- -I../rts $(ADA_INCLUDES_FOR_SUBDIR)"\
+	"ADA_INCLUDES=-I- -nostdinc -I$(rtsdir) $(ADA_INCLUDES_FOR_SUBDIR)" \
+	"TOOLS_ALREADY_COMPILED=$(foreach d, $(rtsdir), \
+	  $(patsubst $(d)/%.ali,%.o, $(wildcard $(d)/*.ali)))" \
+	'LIBGNAT=$(rtsdir)/libgnat-$$(LIB_VERSION).so' \
+	"GNATBIND_FLAGS=-nostdlib -x" \
 	"exeext=$(exeext)" \
 	"fsrcdir=$(fsrcdir)" \
 	"srcdir=$(fsrcdir)" \
@@ -194,6 +201,10 @@ $(GCC_DIR)/stamp-tools:
 # to be able to build gnatmake without a version of gnatmake around. Once 
 # everything has been compiled once, gnatmake can be recompiled with itself 
 # (see target regnattools) 
+gnattools-native: export LD_LIBRARY_PATH := \
+  $(if $(LD_LIBRARY_PATH),$(LD_LIBRARY_PATH):)$(rtsdir)
+# Useful even for 1st pass, as ../../gnatmake may already be
+# dynamically linked in case this target has already been invoked.
 gnattools-native: $(GCC_DIR)/stamp-tools $(GCC_DIR)/stamp-gnatlib-rts
 	# gnattools1
 	$(MAKE) -C $(GCC_DIR)/ada/tools -f ../Makefile \
@@ -202,6 +213,13 @@ gnattools-native: $(GCC_DIR)/stamp-tools $(GCC_DIR)/stamp-gnatlib-rts
 	# gnattools2
 	$(MAKE) -C $(GCC_DIR)/ada/tools -f ../Makefile \
 	  $(TOOLS_FLAGS_TO_PASS_NATIVE) common-tools
+# The hard-coded object lists for gnatbind/make/link contain unneeded
+# objects. Use the fresh tools to recompute dependencies.
+# A separate Make run avoids race conditions between gnatmakes
+# building the same object for common-tools and gnat*-re.
+# (parallelism is already forbidden between gnat*-re targets)
+	$(MAKE) -C $(GCC_DIR)/ada/tools -f ../Makefile \
+	  $(TOOLS_FLAGS_TO_PASS_NATIVE) gnatbind-re gnatmake-re gnatlink-re
 
 # gnatmake/link can be built with recent gnatmake/link if they are available.
 # This is especially convenient for building cross tools or for rebuilding
