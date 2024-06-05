@@ -16,9 +16,9 @@
 # along with GCC; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-MULTIOSDIR_lp64d := ../lib64$(call if_multiarch,:loongarch64-linux-gnu)
-MULTIOSDIR_lp64f := ../lib64/f32$(call if_multiarch,:loongarch64-linux-gnuf32)
-MULTIOSDIR_lp64s := ../lib64/sf$(call if_multiarch,:loongarch64-linux-gnusf)
+MULTIOSDIR_lp64d := ../lib$(call if_multiarch,:loongarch64-linux-gnu)
+MULTIOSDIR_lp64f := ../lib/f32$(call if_multiarch,:loongarch64-linux-gnuf32)
+MULTIOSDIR_lp64s := ../lib/sf$(call if_multiarch,:loongarch64-linux-gnusf)
 
 # Don't define MULTILIB_OSDIRNAMES if multilib is disabled.
 ifeq ($(filter LA_DISABLE_MULTILIB,$(tm_defines)),)
