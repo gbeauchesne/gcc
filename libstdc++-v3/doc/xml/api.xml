@@ -40,6 +40,11 @@
 </para>
 
 <para>
+  <ulink url="user/index.html">The source-level documentation for this release can be viewed offline.
+  </ulink>
+</para>
+
+<para>
   The API documentation, rendered into HTML, can be viewed online
   <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/">for each GCC release</link>
   and
