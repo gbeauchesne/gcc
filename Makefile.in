@@ -68711,6 +68711,7 @@ configure-target-libgo: maybe-all-target-libbacktrace
 @endif gcc-bootstrap
 
 @unless gcc-bootstrap
+all-target-libada: maybe-all-gcc
 all-gnattools: maybe-all-target-libstdc++-v3
 configure-libcc1: maybe-configure-gcc
 all-libcc1: maybe-all-gcc
