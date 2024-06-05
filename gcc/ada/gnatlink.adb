@@ -1294,7 +1294,9 @@ procedure Gnatlink is
                                          > Run_Path_Opt'Length
                              and then
                                Linker_Options.Table (J)
-                                 (1 .. Run_Path_Opt'Length) =
+                                 (Linker_Options.Table (J)'First ..
+                                  Linker_Options.Table (J)'First
+                                  + Run_Path_Opt'Length - 1) =
                                                   Run_Path_Opt
                            then
                               --  We have found an already specified
@@ -1892,7 +1894,9 @@ begin
             if Linker_Options.Table (J).all = "-Xlinker"
               and then J < Linker_Options.Last
               and then Linker_Options.Table (J + 1)'Length > 8
-              and then Linker_Options.Table (J + 1) (1 .. 8) = "--stack="
+              and then Linker_Options.Table (J + 1)
+                      (Linker_Options.Table (J + 1)'First ..
+                       Linker_Options.Table (J + 1)'First + 7) = "--stack="
             then
                if Stack_Op then
                   Linker_Options.Table (J .. Linker_Options.Last - 2) :=
@@ -1938,11 +1942,15 @@ begin
             --  pragma Linker_Options set in the NT runtime.
 
             if (Linker_Options.Table (J)'Length > 17
-                and then Linker_Options.Table (J) (1 .. 17) =
+                and then Linker_Options.Table (J)
+                        (Linker_Options.Table (J)'First ..
+                         Linker_Options.Table (J)'First + 16) =
                   "-Xlinker --stack=")
               or else
                 (Linker_Options.Table (J)'Length > 12
-                 and then Linker_Options.Table (J) (1 .. 12) =
+                 and then Linker_Options.Table (J)
+                         (Linker_Options.Table (J)'First ..
+                          Linker_Options.Table (J)'First + 11) =
                        "-Wl,--stack=")
             then
                if Stack_Op then
