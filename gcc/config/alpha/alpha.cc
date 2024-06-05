@@ -9482,7 +9482,7 @@ alpha_file_start (void)
     fputs ("\t.set nomacro\n", asm_out_file);
   if (TARGET_SUPPORT_ARCH | TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)
     {
-      const char *arch;
+      const char *arch = NULL;
 
       if (alpha_cpu == PROCESSOR_EV6 || TARGET_FIX || TARGET_CIX)
 	arch = "ev6";
@@ -9492,10 +9492,9 @@ alpha_file_start (void)
 	arch = "ev56";
       else if (alpha_cpu == PROCESSOR_EV5)
 	arch = "ev5";
-      else
-	arch = "ev4";
 
-      fprintf (asm_out_file, "\t.arch %s\n", arch);
+      if (arch)
+        fprintf (asm_out_file, "\t.arch %s\n", arch);
     }
 }
 
