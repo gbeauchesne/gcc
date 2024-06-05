@@ -384,6 +384,10 @@ alpha_option_override (void)
   int line_size = 0, l1_size = 0, l2_size = 0;
   int i;
 
+  /* If not -ffinite-math-only, enable -mieee*/
+  if (!flag_finite_math_only)
+    target_flags |= MASK_IEEE|MASK_IEEE_CONFORMANT;
+
 #ifdef SUBTARGET_OVERRIDE_OPTIONS
   SUBTARGET_OVERRIDE_OPTIONS;
 #endif
