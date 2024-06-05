@@ -2,7 +2,7 @@
 # or soft-float.
 ifeq (,$(filter $(with_cpu),$(SOFT_FLOAT_CPUS))$(findstring soft,$(with_float)))
 ifneq (,$(findstring powerpc64,$(target)))
-MULTILIB_OSDIRNAMES := .=../lib64$(call if_multiarch,:powerpc64-linux-gnu)
+MULTILIB_OSDIRNAMES := .=../lib$(call if_multiarch,:powerpc64-linux-gnu)
 else
 MULTIARCH_DIRNAME := $(call if_multiarch,powerpc-linux-gnu)
 endif
