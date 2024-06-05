@@ -3147,23 +3147,14 @@ access_check (const char *name, int mode)
   return access (name, mode);
 }
 
-/* Check whether options line contains the specified variable, and
-   optionally set to the supplied value */
+/* Check whether option variable is set to the supplied value */
 
 static bool
-check_options (const char *options, const char *var = nullptr,
-	       const char *val = nullptr)
+check_option_var (const char *var_found, size_t var_len, const char *val)
 {
-  if (!var)
-    return false;
-
-  const char *const var_found = strstr (options, var);
-  if (!var_found)
-    return false;
-
   if (val)
     {
-      if (var_found[strlen (var)] != '=')
+      if (var_found[var_len] != '=')
 	return false;
 
       const char *var_end = strchr (var_found, ' ');
@@ -3181,9 +3172,33 @@ check_options (const char *options, const char *var = nullptr,
     }
   else
     {
-      const char c1 = var_found[strlen (var)];
+      const char c1 = var_found[var_len];
       if (c1 == ' ' || c1 == '\0')
 	return true;
+    }
+  return false;
+}
+
+/* Check whether options line contains the specified variable, and
+   optionally set to the supplied value */
+
+static bool
+check_options (const char *options, const char *var = nullptr,
+	       const char *val = nullptr)
+{
+  if (!var)
+    return false;
+
+  const size_t var_len = strlen (var);
+  while (options)
+    {
+      const char *const var_found = strstr (options, var);
+      if (!var_found)
+	break;
+
+      if (check_option_var (var_found, var_len, val))
+	return true;
+      options = strchr (var_found + var_len, ' ');
     }
   return false;
 }
