@@ -10,6 +10,12 @@
 
 int main()
 {
+  // Various fmax and fmin function implementations mishandle sNaN arguments
+  // This is fixed for glibc >= 2.25. See PR libc/20947
+#if (defined(__GLIBC_PREREQ) && !__GLIBC_PREREQ(2, 25))
+  return 0;
+#endif
+
   double a = __builtin_nans ("");
 
   if (issignaling (fmin (a, a)))
