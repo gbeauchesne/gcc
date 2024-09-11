@@ -15027,9 +15027,19 @@ ix86_dirflag_mode_needed (rtx_insn *insn)
 static bool
 ix86_check_avx_upper_register (const_rtx exp)
 {
-  return (SSE_REG_P (exp)
-	  && !EXT_REX_SSE_REG_P (exp)
-	  && GET_MODE_BITSIZE (GET_MODE (exp)) > 128);
+  /* construct_container may return a parallel with expr_list
+     which contains the real reg and mode  */
+  subrtx_iterator::array_type array;
+  FOR_EACH_SUBRTX (iter, array, exp, NONCONST)
+    {
+      const_rtx x = *iter;
+      if (SSE_REG_P (x)
+	  && !EXT_REX_SSE_REG_P (x)
+	  && GET_MODE_BITSIZE (GET_MODE (x)) > 128)
+	return true;
+    }
+
+  return false;
 }
 
 /* Check if a 256bit or 512bit AVX register is referenced in stores.   */
@@ -15037,7 +15047,9 @@ ix86_check_avx_upper_register (const_rtx exp)
 static void
 ix86_check_avx_upper_stores (rtx dest, const_rtx, void *data)
 {
-  if (ix86_check_avx_upper_register (dest))
+  if (SSE_REG_P (dest)
+      && !EXT_REX_SSE_REG_P (dest)
+      && GET_MODE_BITSIZE (GET_MODE (dest)) > 128)
     {
       bool *used = (bool *) data;
       *used = true;
@@ -15096,14 +15108,14 @@ ix86_avx_u128_mode_needed (rtx_insn *insn)
       return AVX_U128_CLEAN;
     }
 
-  subrtx_iterator::array_type array;
-
   rtx set = single_set (insn);
   if (set)
     {
       rtx dest = SET_DEST (set);
       rtx src = SET_SRC (set);
-      if (ix86_check_avx_upper_register (dest))
+      if (SSE_REG_P (dest)
+	  && !EXT_REX_SSE_REG_P (dest)
+	  && GET_MODE_BITSIZE (GET_MODE (dest)) > 128)
 	{
 	  /* This is an YMM/ZMM load.  Return AVX_U128_DIRTY if the
 	     source isn't zero.  */
@@ -15114,9 +15126,8 @@ ix86_avx_u128_mode_needed (rtx_insn *insn)
 	}
       else
 	{
-	  FOR_EACH_SUBRTX (iter, array, src, NONCONST)
-	    if (ix86_check_avx_upper_register (*iter))
-	      return AVX_U128_DIRTY;
+	  if (ix86_check_avx_upper_register (src))
+	    return AVX_U128_DIRTY;
 	}
 
       /* This isn't YMM/ZMM load/store.  */
@@ -15127,9 +15138,8 @@ ix86_avx_u128_mode_needed (rtx_insn *insn)
      Hardware changes state only when a 256bit register is written to,
      but we need to prevent the compiler from moving optimal insertion
      point above eventual read from 256bit or 512 bit register.  */
-  FOR_EACH_SUBRTX (iter, array, PATTERN (insn), NONCONST)
-    if (ix86_check_avx_upper_register (*iter))
-      return AVX_U128_DIRTY;
+  if (ix86_check_avx_upper_register (PATTERN (insn)))
+    return AVX_U128_DIRTY;
 
   return AVX_U128_ANY;
 }
@@ -23444,150 +23454,6 @@ ix86_split_stlf_stall_load ()
     }
 }
 
-/* When a hot loop can be fit into one cacheline,
-   force align the loop without considering the max skip.  */
-static void
-ix86_align_loops ()
-{
-  basic_block bb;
-
-  /* Don't do this when we don't know cache line size.  */
-  if (ix86_cost->prefetch_block == 0)
-    return;
-
-  loop_optimizer_init (AVOID_CFG_MODIFICATIONS);
-  profile_count count_threshold = cfun->cfg->count_max / param_align_threshold;
-  FOR_EACH_BB_FN (bb, cfun)
-    {
-      rtx_insn *label = BB_HEAD (bb);
-      bool has_fallthru = 0;
-      edge e;
-      edge_iterator ei;
-
-      if (!LABEL_P (label))
-	continue;
-
-      profile_count fallthru_count = profile_count::zero ();
-      profile_count branch_count = profile_count::zero ();
-
-      FOR_EACH_EDGE (e, ei, bb->preds)
-	{
-	  if (e->flags & EDGE_FALLTHRU)
-	    has_fallthru = 1, fallthru_count += e->count ();
-	  else
-	    branch_count += e->count ();
-	}
-
-      if (!fallthru_count.initialized_p () || !branch_count.initialized_p ())
-	continue;
-
-      if (bb->loop_father
-	  && bb->loop_father->latch != EXIT_BLOCK_PTR_FOR_FN (cfun)
-	  && (has_fallthru
-	      ? (!(single_succ_p (bb)
-		   && single_succ (bb) == EXIT_BLOCK_PTR_FOR_FN (cfun))
-		 && optimize_bb_for_speed_p (bb)
-		 && branch_count + fallthru_count > count_threshold
-		 && (branch_count > fallthru_count * param_align_loop_iterations))
-	      /* In case there'no fallthru for the loop.
-		 Nops inserted won't be executed.  */
-	      : (branch_count > count_threshold
-		 || (bb->count > bb->prev_bb->count * 10
-		     && (bb->prev_bb->count
-			 <= ENTRY_BLOCK_PTR_FOR_FN (cfun)->count / 2)))))
-	{
-	  rtx_insn* insn, *end_insn;
-	  HOST_WIDE_INT size = 0;
-	  bool padding_p = true;
-	  basic_block tbb = bb;
-	  unsigned cond_branch_num = 0;
-	  bool detect_tight_loop_p = false;
-
-	  for (unsigned int i = 0; i != bb->loop_father->num_nodes;
-	       i++, tbb = tbb->next_bb)
-	    {
-	      /* Only handle continuous cfg layout. */
-	      if (bb->loop_father != tbb->loop_father)
-		{
-		  padding_p = false;
-		  break;
-		}
-
-	      FOR_BB_INSNS (tbb, insn)
-		{
-		  if (!NONDEBUG_INSN_P (insn))
-		    continue;
-		  size += ix86_min_insn_size (insn);
-
-		  /* We don't know size of inline asm.
-		     Don't align loop for call.  */
-		  if (asm_noperands (PATTERN (insn)) >= 0
-		      || CALL_P (insn))
-		    {
-		      size = -1;
-		      break;
-		    }
-		}
-
-	      if (size == -1 || size > ix86_cost->prefetch_block)
-		{
-		  padding_p = false;
-		  break;
-		}
-
-	      FOR_EACH_EDGE (e, ei, tbb->succs)
-		{
-		  /* It could be part of the loop.  */
-		  if (e->dest == bb)
-		    {
-		      detect_tight_loop_p = true;
-		      break;
-		    }
-		}
-
-	      if (detect_tight_loop_p)
-		break;
-
-	      end_insn = BB_END (tbb);
-	      if (JUMP_P (end_insn))
-		{
-		  /* For decoded icache:
-		     1. Up to two branches are allowed per Way.
-		     2. A non-conditional branch is the last micro-op in a Way.
-		  */
-		  if (onlyjump_p (end_insn)
-		      && (any_uncondjump_p (end_insn)
-			  || single_succ_p (tbb)))
-		    {
-		      padding_p = false;
-		      break;
-		    }
-		  else if (++cond_branch_num >= 2)
-		    {
-		      padding_p = false;
-		      break;
-		    }
-		}
-
-	    }
-
-	  if (padding_p && detect_tight_loop_p)
-	    {
-	      emit_insn_before (gen_max_skip_align (GEN_INT (ceil_log2 (size)),
-						    GEN_INT (0)), label);
-	      /* End of function.  */
-	      if (!tbb || tbb == EXIT_BLOCK_PTR_FOR_FN (cfun))
-		break;
-	      /* Skip bb which already fits into one cacheline.  */
-	      bb = tbb;
-	    }
-	}
-    }
-
-  loop_optimizer_finalize ();
-  free_dominance_info (CDI_DOMINATORS);
-}
-
 /* Implement machine specific optimizations.  We implement padding of returns
    for K8 CPUs and pass to avoid 4 jumps in the single 16 byte window.  */
 static void
@@ -23611,8 +23477,6 @@ ix86_reorg (void)
 #ifdef ASM_OUTPUT_MAX_SKIP_ALIGN
       if (TARGET_FOUR_JUMP_LIMIT)
 	ix86_avoid_jump_mispredicts ();
-
-      ix86_align_loops ();
 #endif
     }
 }
