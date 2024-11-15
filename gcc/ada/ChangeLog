@@ -1,3 +1,41 @@
+2024-11-12  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/117328
+	* exp_aggr.adb (Two_Pass_Aggregate_Expansion): Use a type sized
+	from the index type to compute the length.  Simplify and remove
+	useless calls to New_Copy_Tree for this computation.
+
+2024-11-12  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/113868
+	* par-ch6.adb (P_Subprogram) <Scan_Body_Or_Expression_Function>:
+	Add delta aggregate alongside the other forms of aggregates.
+
+2024-11-04  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/113036
+	* freeze.adb (Freeze_Expression): Deal with freezing actions coming
+	from within nested internal loops present in spec expressions.
+
+2024-11-04  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* freeze.adb (Freeze_Expression): Also attach pending freeze nodes
+	to the parent in the case of an internal block in a spec expression.
+
+2024-11-04  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* checks.adb (Selected_Length_Checks.Get_E_Length): For a
+	component of a record with discriminants and if the expression is
+	a selected component, try to build an actual subtype from its
+	prefix instead of from the discriminal.
+
+2024-10-25  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/116551
+	* gcc-interface/trans.cc (node_is_atomic) <N_Identifier>: Return
+	false if the type of the entity is an unconstrained array type.
+	(node_is_volatile_full_access) <N_Identifier>: Likewise.
+
 2024-10-14  Steve Baird  <baird@adacore.com>
 
 	PR ada/114593

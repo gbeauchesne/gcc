@@ -1,3 +1,163 @@
+2024-11-12  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/bits/unicode.h (_Utf_iterator::_M_read_utf16): Add
+	parentheses.
+
+2024-11-12  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/117520
+	* include/std/text_encoding (aliases_view:_Iterator::operator+=):
+	Fix typos that caused == to be used instead of =.
+	(aliases_view::_Iterator): Fix friend declaration.
+	* testsuite/std/text_encoding/members.cc: Adjust expected
+	behaviour of invalid subscript. Add tests for other erroneous
+	operations on iterators.
+
+2024-11-11  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2024-11-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/bits/hashtable_policy.h (_Insert_base::try_emplace):
+	Do not define for C++11 and C++14.
+	* include/debug/map.h (try_emplace): Use feature test macro.
+	* include/debug/unordered_map (try_emplace): Likewise.
+	* testsuite/17_intro/names.cc: Define try_emplace before C++17.
+
+2024-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR libstdc++/117406
+	* testsuite/26_numerics/headers/cmath/117406.cc: Use
+	std::numeric_limits<int>::max() instead of INT_MAX.
+
+2024-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	PR libstdc++/117406
+	* include/c_global/cmath (std::ilogb(_Float16), std::llrint(_Float16),
+	std::llround(_Float16), std::lrint(_Float16), std::lround(_Float16)):
+	Don't cast __builtin_* return to _Float16.
+	(std::ilogb(__gnu_cxx::__bfloat16_t),
+	std::llrint(__gnu_cxx::__bfloat16_t),
+	std::llround(__gnu_cxx::__bfloat16_t),
+	std::lrint(__gnu_cxx::__bfloat16_t),
+	std::lround(__gnu_cxx::__bfloat16_t)): Don't cast __builtin_* return to
+	__gnu_cxx::__bfloat16_t.
+	* testsuite/26_numerics/headers/cmath/117406.cc: New test.
+
+2024-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-10-29  Jakub Jelinek  <jakub@redhat.com>
+
+	PR libstdc++/117321
+	* include/c_global/cmath (nextafter(_Float16, _Float16)): Use
+	if consteval rather than if (std::__is_constant_evaluated()) around
+	the __builtin_nextafterf16 call.
+	(nextafter(__gnu_cxx::__bfloat16_t, __gnu_cxx::__bfloat16_t)): Use
+	if consteval rather than if (std::__is_constant_evaluated()) around
+	the __builtin_nextafterf16b call.
+	* testsuite/26_numerics/headers/cmath/117321.cc: New test.
+
+2024-10-22  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-10-05  Patrick Palka  <ppalka@redhat.com>
+
+	* include/bits/ranges_base.h (__distance_fn::operator()):
+	Adjust iterator/sentinel overloads as per LWG 3664.
+	* testsuite/24_iterators/range_operations/distance.cc:
+	Test LWG 3664 example.
+
+2024-10-22  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-10-04  Patrick Palka  <ppalka@redhat.com>
+
+	* include/std/ranges (single_view::empty): Define as per LWG 4035.
+	(iota_view::empty): Define as per LWG 4001.
+	(lazy_split_view::_OuterIter::value_type): Remove default
+	constructor and make other constructor private as per LWG 4013.
+	(common_view::begin): Disable non-const overload for simple
+	views as per LWG 4012.
+	(common_view::end): Likewise.
+	(adjacent_view::base): Define as per LWG 3848.
+	(adjacent_transform_view::base): Likewise.
+	(chunk_view::_InnerIter::iter_move): Define as per LWG 3851.
+	(chunk_view::_InnerIter::itep_swap): Likewise.
+	(slide_view::base): Define as per LWG 3848.
+	(repeat_view): Adjust deduction guide as per LWG 4053.
+	(_Repeat::operator()): Adjust single-parameter overload as per
+	LWG 4054.
+	* testsuite/std/ranges/adaptors/adjacent/1.cc: Verify existence
+	of base member function.
+	* testsuite/std/ranges/adaptors/adjacent_transform/1.cc: Likewise.
+	* testsuite/std/ranges/adaptors/chunk/1.cc: Test LWG 3851 example.
+	* testsuite/std/ranges/adaptors/slide/1.cc: Verify existence of
+	base member function.
+	* testsuite/std/ranges/iota/iota_view.cc: Test LWG 4001 example.
+	* testsuite/std/ranges/repeat/1.cc: Test LWG 4053/4054 examples.
+
+2024-10-22  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-08-22  Patrick Palka  <ppalka@redhat.com>
+
+	* testsuite/25_algorithms/contains/1.cc: Verify value of
+	__cpp_lib_ranges_contains.
+	* testsuite/25_algorithms/find_last/1.cc: Verify value of
+	__cpp_lib_ranges_find_last.
+	* testsuite/25_algorithms/iota/1.cc: Verify value of
+	__cpp_lib_ranges_iota.
+
+2024-10-22  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-08-22  Patrick Palka  <ppalka@redhat.com>
+
+	* include/bits/iterator_concepts.h (indirectly_unary_invocable):
+	Relax as per P2997R1.
+	(indirectly_regular_unary_invocable): Likewise.
+	(indirect_unary_predicate): Likewise.
+	(indirect_binary_predicate): Likewise.
+	(indirect_equivalence_relation): Likewise.
+	(indirect_strict_weak_order): Likewise.
+	* include/bits/version.def (ranges): Update value for C++26.
+	* include/bits/version.h: Regenerate.
+	* testsuite/24_iterators/indirect_callable/p2997r1.cc: New test.
+	* testsuite/std/ranges/version_c++23.cc: Remove.
+	* testsuite/std/ranges/headers/ranges/synopsis.cc: Refine the
+	__cpp_lib_ranges checks.
+
+2024-10-22  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-08-22  Patrick Palka  <ppalka@redhat.com>
+
+	* include/bits/iterator_concepts.h (__detail::__indirect_value):
+	Define.
+	(__indirect_value_t): Define as per P2609R3.
+	(iter_common_reference_t): Adjust as per P2609R3.
+	(indirectly_unary_invocable): Likewise.
+	(indirectly_regular_unary_invocable): Likewise.
+	(indirect_unary_predicate): Likewise.
+	(indirect_binary_predicate): Likewise.
+	(indirect_equivalence_relation): Likewise.
+	(indirect_strict_weak_order): Likewise.
+	(__detail::__projected::__type): Define member aliases
+	__projected_Iter and __projected_Proj providing the
+	template arguments of the current specialization.
+	* include/bits/version.def (ranges): Update value.
+	* include/bits/version.h: Regenerate.
+	* testsuite/24_iterators/indirect_callable/p2609r3.cc: New test.
+	* testsuite/std/ranges/version_c++23.cc: Update expected value
+	of __cpp_lib_ranges macro.
+
 2024-10-16  Jonathan Wakely  <jwakely@redhat.com>
 
 	Backported from master:

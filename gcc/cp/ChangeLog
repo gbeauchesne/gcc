@@ -1,3 +1,56 @@
+2024-11-06  Simon Martin  <simon@nasilyan.com>
+
+	Backported from master:
+	2024-11-05  Simon Martin  <simon@nasilyan.com>
+
+	PR c++/117158
+	* typeck.cc (cp_build_array_ref): Only wrap array expression
+	into a SAVE_EXPR at template instantiation time.
+
+2024-11-05  Patrick Palka  <ppalka@redhat.com>
+
+	PR c++/101463
+	* pt.cc (type_unification_real): Avoid checking dependence of
+	a substituted default template argument if we can assume it's
+	non-dependent.
+
+2024-11-05  Jason Merrill  <jason@redhat.com>
+
+	Backported from master:
+	2024-11-05  Jason Merrill  <jason@redhat.com>
+
+	PR c++/116634
+	* init.cc (can_init_array_with_p): Allow PR59465 case with
+	permerror.
+
+2024-10-25  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2024-10-24  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/117259
+	* typeck.cc (get_member_function_from_ptrfunc): Use force_target_expr
+	rather than save_expr for instance_ptr and function.  Don't call it
+	for TREE_CONSTANT.
+
+2024-10-22  Jason Merrill  <jason@redhat.com>
+
+	Backported from master:
+	2024-10-22  Jason Merrill  <jason@redhat.com>
+
+	PR c++/117107
+	PR c++/92687
+	* decl.cc (lookup_decomp_type): Handle null table.
+
+2024-10-22  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	Backported from master:
+	2024-05-24  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	PR c++/116929
+	* tree.cc (no_linkage_check): Anonymous types can't be accessed
+	in a different TU.
+
 2024-10-17  Patrick Palka  <ppalka@redhat.com>
 
 	Backported from master:

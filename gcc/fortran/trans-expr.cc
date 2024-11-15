@@ -1723,10 +1723,12 @@ gfc_trans_class_init_assign (gfc_code *code)
 {
   stmtblock_t block;
   tree tmp;
+  bool cmp_flag = true;
   gfc_se dst,src,memsz;
   gfc_expr *lhs, *rhs, *sz;
   gfc_component *cmp;
   gfc_symbol *sym;
+  gfc_ref *ref;
 
   gfc_start_block (&block);
 
@@ -1744,24 +1746,25 @@ gfc_trans_class_init_assign (gfc_code *code)
   rhs->rank = 0;
 
   /* Check def_init for initializers.  If this is an INTENT(OUT) dummy with all
-     default initializer components NULL, return NULL_TREE and use the passed
-     value as required by F2018(8.5.10).  */
+     default initializer components NULL, use the passed value even though
+     F2018(8.5.10) asserts that it should considered to be undefined. This is
+     needed for consistency with other brands.  */
   sym = code->expr1->expr_type == EXPR_VARIABLE ? code->expr1->symtree->n.sym
 						: NULL;
   if (code->op != EXEC_ALLOCATE
       && sym && sym->attr.dummy
       && sym->attr.intent == INTENT_OUT)
     {
-      if (!lhs->ref && lhs->symtree->n.sym->attr.dummy)
+      ref = rhs->ref;
+      while (ref && ref->next)
+	ref = ref->next;
+      cmp = ref->u.c.component->ts.u.derived->components;
+      for (; cmp; cmp = cmp->next)
 	{
-	  cmp = rhs->ref->next->u.c.component->ts.u.derived->components;
-	  for (; cmp; cmp = cmp->next)
-	    {
-	      if (cmp->initializer)
-		break;
-	      else if (!cmp->next)
-		return NULL_TREE;
-	    }
+	  if (cmp->initializer)
+	    break;
+	  else if (!cmp->next)
+	    cmp_flag = false;
 	}
     }
 
@@ -1775,7 +1778,7 @@ gfc_trans_class_init_assign (gfc_code *code)
       gfc_add_full_array_ref (lhs, tmparr);
       tmp = gfc_trans_class_array_init_assign (rhs, lhs, code->expr1);
     }
-  else
+  else if (cmp_flag)
     {
       /* Scalar initialization needs the _data component.  */
       gfc_add_data_component (lhs);
@@ -1805,6 +1808,8 @@ gfc_trans_class_init_assign (gfc_code *code)
 			    tmp, build_empty_stmt (input_location));
 	}
     }
+  else
+    tmp = build_empty_stmt (input_location);
 
   if (code->expr1->symtree->n.sym->attr.dummy
       && (code->expr1->symtree->n.sym->attr.optional
@@ -4424,12 +4429,15 @@ gfc_get_interface_mapping_charlen (gfc_interface_mapping * mapping,
 
 static tree
 gfc_get_interface_mapping_array (stmtblock_t * block, gfc_symbol * sym,
-				 gfc_packed packed, tree data)
+				 gfc_packed packed, tree data, tree len)
 {
   tree type;
   tree var;
 
-  type = gfc_typenode_for_spec (&sym->ts);
+  if (len != NULL_TREE && (TREE_CONSTANT (len) || VAR_P (len)))
+    type = gfc_get_character_type_len (sym->ts.kind, len);
+  else
+    type = gfc_typenode_for_spec (&sym->ts);
   type = gfc_get_nodesc_array_type (type, sym->as, packed,
 				    !sym->attr.target && !sym->attr.pointer
 				    && !sym->attr.proc_pointer);
@@ -4576,7 +4584,8 @@ gfc_add_interface_mapping (gfc_interface_mapping * mapping,
      convert it to a boundless character type.  */
   else if (!sym->attr.dimension && sym->ts.type == BT_CHARACTER)
     {
-      tmp = gfc_get_character_type_len (sym->ts.kind, NULL);
+      se->string_length = gfc_evaluate_now (se->string_length, &se->pre);
+      tmp = gfc_get_character_type_len (sym->ts.kind, se->string_length);
       tmp = build_pointer_type (tmp);
       if (sym->attr.pointer)
         value = build_fold_indirect_ref_loc (input_location,
@@ -4595,7 +4604,7 @@ gfc_add_interface_mapping (gfc_interface_mapping * mapping,
   /* For character(*), use the actual argument's descriptor.  */
   else if (sym->ts.type == BT_CHARACTER && !new_sym->ts.u.cl->length)
     value = build_fold_indirect_ref_loc (input_location,
-				     se->expr);
+					 se->expr);
 
   /* If the argument is an array descriptor, use it to determine
      information about the actual argument's shape.  */
@@ -4609,7 +4618,8 @@ gfc_add_interface_mapping (gfc_interface_mapping * mapping,
       /* Create the replacement variable.  */
       tmp = gfc_conv_descriptor_data_get (desc);
       value = gfc_get_interface_mapping_array (&se->pre, sym,
-					       PACKED_NO, tmp);
+					       PACKED_NO, tmp,
+					       se->string_length);
 
       /* Use DESC to work out the upper bounds, strides and offset.  */
       gfc_set_interface_mapping_bounds (&se->pre, TREE_TYPE (value), desc);
@@ -4617,7 +4627,8 @@ gfc_add_interface_mapping (gfc_interface_mapping * mapping,
   else
     /* Otherwise we have a packed array.  */
     value = gfc_get_interface_mapping_array (&se->pre, sym,
-					     PACKED_FULL, se->expr);
+					     PACKED_FULL, se->expr,
+					     se->string_length);
 
   new_sym->backend_decl = value;
 }
