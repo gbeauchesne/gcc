@@ -69,8 +69,6 @@ FROM SymbolTable IMPORT NulSym,
                         PutDoesNeedExportList, PutDoesNotNeedExportList,
                         DoesNotNeedExportList,
                         MakeProcedure,
-                        PutFunction, PutParam, PutVarParam,
-                        GetNthParam,
                         IsProcedure, IsConstString,
                         MakePointer, PutPointer,
                         MakeRecord, PutFieldRecord,
@@ -82,6 +80,9 @@ FROM SymbolTable IMPORT NulSym,
                         PutProcedureBuiltin, PutProcedureInline,
                         GetSymName,
                         ResolveImports, PutDeclared,
+                        ProcedureKind,
+                        PutProcedureDeclaredTok, GetProcedureDeclaredTok,
+                        PutProcedureDefined, GetProcedureDefined,
                         MakeError, MakeErrorS,
                         DisplayTrees ;
 
@@ -931,14 +932,20 @@ BEGIN
    ProcSym := RequestSym (tokno, name) ;
    IF IsUnknown (ProcSym)
    THEN
-      (*
-         May have been compiled in DEF or IMP module, remember that IMP maybe
-         compiled before corresponding DEF module.
-      *)
+      (* A procedure may be created in a definition or implementation module, remember
+         that an implementation module maybe compiled before the corresponding
+         definition module.
+
+         The procedure can also be created during a forward declaration.
+         We record the forward declaration as the token of creation and adjust this
+         later when we see the proper procedure declaration.  Likwwise when the forward
+         keyword is seen we assign the procedure forward token location.  *)
       ProcSym := MakeProcedure (tokno, name)
    ELSIF IsProcedure (ProcSym)
    THEN
-      (* declared in the other module, we record declaration here as well *)
+      (* Declared in the other module or it could have been declared by a forward decl,
+         we overwrite the declaration to tokno.  The forward location is assigned in
+         EndBuildForward.  *)
       PutDeclared (tokno, ProcSym)
    ELSE
       MetaError1 ('expecting a procedure name and symbol {%1Ea} has been declared as a {%1d}', ProcSym) ;
@@ -957,10 +964,21 @@ BEGIN
          PutProcedureBuiltin (ProcSym, builtin)
       END
    END ;
-   PushT (ProcSym) ;
+   PushTtok (ProcSym, tokno) ;
    StartScope (ProcSym) ;
-   IF NOT CompilingDefinitionModule ()
+   IF CompilingDefinitionModule ()
    THEN
+      IF GetProcedureDefined (ProcSym, DefProcedure)
+      THEN
+         MetaErrorT1 (GetProcedureDeclaredTok (ProcSym, DefProcedure),
+                      'first declaration of procedure {%1Ea} in the definition module', ProcSym) ;
+         MetaErrorT1 (tokno,
+                      'duplicate declaration of procedure {%1Ea} in the definition module', ProcSym)
+      ELSE
+         PutProcedureDeclaredTok (ProcSym, DefProcedure, tokno) ;
+         PutProcedureDefined (ProcSym, DefProcedure)
+      END
+   ELSE
       EnterBlock (name)
    END
 END StartBuildProcedure ;
@@ -990,15 +1008,16 @@ END StartBuildProcedure ;
 
 PROCEDURE EndBuildProcedure ;
 VAR
+   tok,
    start, end: CARDINAL ;
    ProcSym   : CARDINAL ;
    NameEnd,
    NameStart : Name ;
 BEGIN
    PopTtok(NameEnd, end) ;
-   PopT(ProcSym) ;
+   PopTtok(ProcSym, tok) ;
    PopTtok(NameStart, start) ;
-   IF NameEnd#NameStart
+   IF NameEnd # NameStart
    THEN
       IF end # UnknownTokenNo
       THEN
@@ -1014,9 +1033,58 @@ BEGIN
       END
    END ;
    EndScope ;
+   IF GetProcedureDefined (ProcSym, ProperProcedure)
+   THEN
+      MetaErrorT1 (GetProcedureDeclaredTok (ProcSym, ProperProcedure),
+                   'first proper declaration of procedure {%1Ea}', ProcSym) ;
+      MetaErrorT1 (tok, 'procedure {%1Ea} has already been declared', ProcSym)
+   ELSE
+      PutProcedureDeclaredTok (ProcSym, ProperProcedure, tok)
+   END ;
    Assert (NOT CompilingDefinitionModule()) ;
    LeaveBlock
 END EndBuildProcedure ;
+
+
+(*
+   EndBuildForward - Ends building a forward procedure declaration.
+
+                     The Stack:
+
+                     (This procedure is not defined in definition module)
+
+                     Entry                 Exit
+
+              Ptr ->
+                     +------------+
+                     | ProcSym    |
+                     |------------|
+                     | NameStart  |
+                     |------------|
+                                           Empty
+*)
+
+PROCEDURE EndBuildForward ;
+VAR
+   ProcSym: CARDINAL ;
+   tok    : CARDINAL ;
+BEGIN
+   ProcSym := OperandT (1) ;
+   tok := OperandTok (1) ;
+   IF GetProcedureDefined (ProcSym, ForwardProcedure)
+   THEN
+      MetaErrorT1 (GetProcedureDeclaredTok (ProcSym, ForwardProcedure),
+                   'first forward declaration of {%1Ea}', ProcSym) ;
+      MetaErrorT1 (tok, 'forward declaration of procedure {%1Ea} has already occurred', ProcSym)
+   ELSE
+      PutProcedureDeclaredTok (ProcSym, ForwardProcedure, tok) ;
+      PutProcedureDefined (ProcSym, ForwardProcedure)
+   END ;
+   PopN (2) ;
+   EndScope ;
+   Assert (NOT CompilingDefinitionModule ()) ;
+   LeaveBlock
+END EndBuildForward ;
 
 
 (*

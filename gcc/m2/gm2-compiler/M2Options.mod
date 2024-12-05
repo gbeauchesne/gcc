@@ -30,7 +30,7 @@ FROM M2Printf IMPORT printf0, printf1, fprintf1 ;
 FROM FIO IMPORT StdErr ;
 FROM libc IMPORT exit, printf ;
 FROM Debug IMPORT Halt ;
-FROM m2linemap IMPORT location_t ;
+FROM gcctypes IMPORT location_t ;
 FROM m2configure IMPORT FullPathCPP, TargetIEEEQuadDefault ;
 FROM M2Error IMPORT InternalError ;
 FROM FormatStrings IMPORT Sprintf1 ;
@@ -617,7 +617,7 @@ END SetCheckAll ;
                   TRUE is returned.
 *)
 
-PROCEDURE SetAutoInit (value: BOOLEAN) ;
+PROCEDURE SetAutoInit (value: BOOLEAN) : BOOLEAN ;
 BEGIN
    AutoInit := value ;
    RETURN TRUE
@@ -1097,6 +1097,7 @@ END SetQuadDebugging ;
 
 (*
    SetCompilerDebugging - turn on internal compiler debugging.
+                          Enabled via the command line option -fd.
 *)
 
 PROCEDURE SetCompilerDebugging (value: BOOLEAN) ;
@@ -2005,16 +2006,6 @@ PROCEDURE GetDumpDecl () : BOOLEAN ;
 BEGIN
    RETURN DumpDecl
 END GetDumpDecl ;
-
-
-(*
-   GetDumpLangGimple - return TRUE if the gimple flag is set from SetM2Dump.
-*)
-
-PROCEDURE GetDumpGimple () : BOOLEAN ;
-BEGIN
-   RETURN DumpGimple
-END GetDumpGimple ;
 
 
 BEGIN
