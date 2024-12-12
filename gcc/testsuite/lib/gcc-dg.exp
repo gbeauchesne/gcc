@@ -769,6 +769,31 @@ proc gcc-dg-frontend-supports-ctf { target_compile trivial } {
     return 0
 }
 
+# Check if linker has CTF support
+proc gcc-dg-linker-supports-ctf { target_compile trivial } {
+    global srcdir subdir
+
+    set comp_output [$target_compile \
+	    "$srcdir/$subdir/$trivial" "trivial.exe" executable \
+	    "additional_flags=-gctf"]
+    if { ! [string match \
+	    "*was built without support for CTF*" \
+	    $comp_output] } {
+	remove-build-file "trivial.exe"
+	return 1
+    }
+    return 0
+}
+
+# Check if CTF is supported (frontend and linker)
+proc gcc-dg-supports-ctf { target_compile trivial } {
+    if {[gcc-dg-frontend-supports-ctf $target_compile $trivial] &&
+	[gcc-dg-linker-supports-ctf $target_compile $trivial]} {
+	return 1
+    }
+    return 0
+}
+
 # Check if the target system supports the debug format
 proc gcc-dg-target-supports-debug-format { target_compile trivial type } {
     global srcdir subdir
@@ -791,7 +816,7 @@ proc gcc-dg-debug-runtest { target_compile trivial opt_opts testcases } {
 	    if [expr [gcc-dg-target-supports-debug-format \
 		      $target_compile $trivial $type]] {
 		if { $type == "-gctf" } {
-		    if [expr [gcc-dg-frontend-supports-ctf \
+		    if [expr [gcc-dg-supports-ctf \
 			      $target_compile $trivial]] {
 			# At this time, running tests with various opt levels or
 			# ctf debug info levels does not add value.
