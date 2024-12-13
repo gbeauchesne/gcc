@@ -19,7 +19,8 @@
 // { dg-require-gthreads {} }
 // { dg-additional-options "-pthread" { target pthread } }
 // { dg-additional-options "-static" { target static } }
-// { dg-additional-options "-Wl,--whole-archive -lpthread -Wl,--no-whole-archive" { target { ! glibc_2_27_or_later } } }
+// { dg-additional-options "-Wl,--whole-archive -lpthread -Wl,--no-whole-archive" { target { { static } && { ! glibc_2_27_or_later } } } }
+// { dg-prune-output "in function `sem_open':" }
 
 #include <thread>
 
