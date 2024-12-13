@@ -13544,6 +13544,18 @@ proc check_effective_target_glibc { } {
     }]
 }
 
+# Returns 1 if the target is using glibc >= 2.24, 0 otherwise.
+
+proc check_effective_target_glibc_2_24_or_later { } {
+    return [check_no_compiler_messages glibc_object assembly {
+  #include <stdlib.h>
+	#if !(defined(__GLIBC__) && defined(__GLIBC_MINOR__) \
+              && __GLIBC_PREREQ(2,24))
+	#error undefined
+	#endif
+    }]
+}
+
 # Returns 1 if the target is using glibc >= 2.27, 0 otherwise.
 
 proc check_effective_target_glibc_2_27_or_later { } {
