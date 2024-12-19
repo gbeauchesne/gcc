@@ -1393,6 +1393,7 @@ if test -n "$plugin_option"; then
     $AR $plugin_option rc conftest.a conftest.c
     if test "$?" != 0; then
       AC_MSG_WARN([Failed: $AR $plugin_option rc])
+      plugin_option=""
     else
       AR="$AR $plugin_option"
     fi
@@ -1411,7 +1412,16 @@ AC_CHECK_TOOL(RANLIB, ranlib, :)
 test -z "$RANLIB" && RANLIB=:
 if test -n "$plugin_option" && test "$RANLIB" != ":"; then
   if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
-    RANLIB="$RANLIB $plugin_option"
+    touch conftest.c
+    $AR $plugin_option rc conftest.a conftest.c
+    $RANLIB $plugin_option conftest.a
+    if test "$?" != 0; then
+      AC_MSG_WARN([Failed: $RANLIB $plugin_option])
+      plugin_option=""
+    else
+      RANLIB="$RANLIB $plugin_option"
+    fi
+    rm -f conftest.*
   fi
 fi
 _LT_DECL([], [RANLIB], [1],
