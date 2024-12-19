@@ -7202,6 +7202,7 @@ if test -n "$plugin_option"; then
     if test "$?" != 0; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Failed: $AR $plugin_option rc" >&5
 $as_echo "$as_me: WARNING: Failed: $AR $plugin_option rc" >&2;}
+      plugin_option=""
     else
       AR="$AR $plugin_option"
     fi
@@ -7414,7 +7415,17 @@ fi
 test -z "$RANLIB" && RANLIB=:
 if test -n "$plugin_option" && test "$RANLIB" != ":"; then
   if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
-    RANLIB="$RANLIB $plugin_option"
+    touch conftest.c
+    $AR $plugin_option rc conftest.a conftest.c
+    $RANLIB $plugin_option conftest.a
+    if test "$?" != 0; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Failed: $RANLIB $plugin_option" >&5
+$as_echo "$as_me: WARNING: Failed: $RANLIB $plugin_option" >&2;}
+      plugin_option=""
+    else
+      RANLIB="$RANLIB $plugin_option"
+    fi
+    rm -f conftest.*
   fi
 fi
 
