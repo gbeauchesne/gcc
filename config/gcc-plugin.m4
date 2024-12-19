@@ -155,10 +155,19 @@ AC_CHECK_TOOL(AR, ar)
 if test "${AR}" = "" ; then
   AC_MSG_ERROR([Required archive tool 'ar' not found on PATH.])
 fi
+AC_CHECK_TOOL(RANLIB, ranlib)
+if test "${RANLIB}" = "" ; then
+  AC_MSG_ERROR([Required indexer tool 'ranlib' not found on PATH.])
+fi
 touch conftest.c
 ${AR} $plugin_option rc conftest.a conftest.c
 if test "$?" != 0; then
   AC_MSG_WARN([Failed: $AR $plugin_option rc])
+  plugin_option=
+fi
+${RANLIB} $plugin_option conftest.a
+if test "$?" != 0; then
+  AC_MSG_WARN([Failed: $RANLIB $plugin_option])
   plugin_option=
 fi
 rm -f conftest.*
