@@ -1,3 +1,61 @@
+2024-12-22  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-12  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117797
+	* trans-array.cc (class_array_element_size): New function.
+	(gfc_get_array_span): Refactor, using class_array_element_size
+	to return the span for descriptors that are the _data component
+	of a class expression and then class dummy references. Revert
+	the conditions to those before r15-5083 tidying up using 'sym'.
+
+2024-12-17  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-15  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117897
+	* trans-expr.cc (gfc_trans_assignment_1): RHS pointer function
+	results must not be finalized.
+
+2024-12-15  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117730
+	PR fortran/84674
+	* class.cc (add_proc_comp): If the present typebound procedure
+	component is abstract, unconditionally check the replacement.
+	Only reject a non_overridable if it has no overridden procedure
+	and the component is already present in the vtype.
+
+2024-12-06  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2024-08-06  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/109105
+	* resolve.cc (CHECK_INTERFACES): New helper macro.
+	(resolve_operator): Replace use of snprintf with
+	gfc_error.
+
+2024-12-06  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	Backported from master:
+	2024-11-29  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	PR fortran/117843
+	* trans-io.cc (gfc_trans_transfer): Add default case.
+
+2024-12-06  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-11-28  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/117791
+	* trans-io.cc (gfc_trans_transfer): When an array index depends on
+	a function evaluation or an expression, do not use optimized array
+	I/O of an array section and fall back to normal scalarization.
+
 2024-12-02  Harald Anlauf  <anlauf@gmx.de>
 
 	Backported from master:

@@ -1,3 +1,128 @@
+2024-12-23  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2024-12-19  Patrick Palka  <ppalka@redhat.com>
+
+	PR c++/118069
+	* hwint.h (add_sat_hwi): New function.
+	(mul_sat_hwi): Likewise.
+
+2024-12-23  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Revert:
+	2024-12-19  Christophe Lyon  <christophe.lyon@linaro.org>
+		    Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/114801
+	* config/arm/arm-mve-builtins.cc
+	(function_expander::add_input_operand): Handle CONST_INT
+	predicates.
+
+2024-12-19  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2024-12-13  Christophe Lyon  <christophe.lyon@linaro.org>
+		    Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/114801
+	* config/arm/arm-mve-builtins.cc
+	(function_expander::add_input_operand): Handle CONST_INT
+	predicates.
+
+2024-12-19  Andrew Carlotti  <andrew.carlotti@arm.com>
+
+	* tree-assume.cc: Fix comment typos.
+
+2024-12-18  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	Backported from master:
+	2024-12-10  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	PR target/117675
+	* config/arm/arm.cc (arm_ldrd_legitimate_address): New function.
+	* config/arm/arm-protos.h (arm_ldrd_legitimate_address): New prototype.
+	* config/arm/constraints.md: Add new Uo constraint.
+	* config/arm/predicates.md (arm_ldrd_memory_operand): Add new predicate.
+	* config/arm/sync.md (arm_atomic_loaddi2_ldrd): Use
+	arm_ldrd_memory_operand and Uo.
+
+2024-12-16  Heiko Eißfeldt  <heiko@hexco.de>
+
+	Backported from master:
+	2024-12-14  Heiko Eißfeldt  <heiko@hexco.de>
+
+	* doc/install.texi (Configuration): Fix typos in documentation
+	for --enable-host-pie.
+
+2024-12-13  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2024-12-09  Marek Polacek  <polacek@redhat.com>
+
+	PR driver/117942
+	* opts-common.cc (decode_cmdline_options_to_array): Also detect
+	--diagnostics-plain-output.
+
+2024-12-13  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2024-12-10  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/117880
+	* fold-const.cc (operand_compare::operand_equal_p) <case tcc_unary>:
+	Use OP_SAME_WITH_NULL instead of OP_SAME.
+
+2024-12-09  Juergen Christ  <jchrist@linux.ibm.com>
+
+	Backported from master:
+	2024-12-09  Juergen Christ  <jchrist@linux.ibm.com>
+
+	* config/s390/s390.cc (s390_canonicalize_comparison): Add
+	missing UNSPEC_CC_TO_INT case.
+
+2024-12-09  Simon Martin  <simon@nasilyan.com>
+
+	Backported from master:
+	2024-12-09  Simon Martin  <simon@nasilyan.com>
+
+	PR c++/117845
+	* tree-eh.cc (honor_protect_cleanup_actions): Support empty
+	finally sequences.
+
+2024-12-08  Uros Bizjak  <ubizjak@gmail.com>
+
+	Backported from master:
+	2024-12-06  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR target/117926
+	* config/i386/mmx.md (UNSPEC_3DNOW): New unspec.
+	(mmx_addv2sf3): Tag insn with UNSPEC_3DNOW tag.
+	(*mmx_addv2sf3): Ditto.
+	(mmx_sub2vsf3): Ditto.
+	(mmx_subrv2sf3): Ditto.
+	(*mmx_subv2sf3): Ditto.
+	(mmx_mulv2sf3): Ditto.
+	(mmx_<smaxmin:code>v2sf3): Ditto.
+	(*mmx_<smaxmin:code>v2sf3): Ditto.
+	(mmx_ieee_<ieee_maxmin>v2sf3): Ditto.
+	(mmx_eqv2sf3): Ditto.
+	(*mmx_eqv2sf3): Ditto.
+	(mmx_gtv2sf3): Ditto.
+	(mmx_gev2sf3): Ditto.
+	(mmx_fix_truncv2sfv2si2): Ditto.
+	(mmx_floatv2siv2sf2): Ditto.
+
+2024-12-05  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2024-12-05  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR target/64242
+	* config/avr/avr.md (nonlocal_goto): Don't restore
+	hard_frame_pointer_rtx directly, but copy it to local
+	register, and only set hard_frame_pointer_rtx from it
+	after emit_stack_restore().
+
 2024-12-03  Tamar Christina  <tamar.christina@arm.com>
 
 	Backported from master:

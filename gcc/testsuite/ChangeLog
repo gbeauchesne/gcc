@@ -1,3 +1,207 @@
+2024-12-23  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Revert:
+	2024-12-23  Christophe Lyon  <christophe.lyon@linaro.org>
+		    Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/114801
+	* gcc.target/arm/mve/pr108443.c: Update predicate constant.
+	* gcc.target/arm/mve/pr108443-run.c: Likewise.
+	* gcc.target/arm/mve/pr114801.c: New test.
+
+2024-12-22  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-12-22  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/103298
+	* gcc.target/arm/pr43920-2.c: Change to assembler pattern
+	"(cmp|mov|orr|and)(eq|ne)" for the check. Remove size check.
+
+2024-12-22  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-12  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117797
+	* gfortran.dg/pr117797.f90: New test.
+
+2024-12-19  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2024-12-13  Christophe Lyon  <christophe.lyon@linaro.org>
+		    Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/114801
+	* gcc.target/arm/mve/pr108443.c: Update predicate constant.
+	* gcc.target/arm/mve/pr108443-run.c: Likewise.
+	* gcc.target/arm/mve/pr114801.c: New test.
+
+2024-12-19  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-12-19  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.target/arm/memset-inline-4.c: Only check assembler output.
+	* gcc.target/arm/memset-inline-5.c: Likewise.
+	* gcc.target/arm/memset-inline-6.c: Likewise.
+	* gcc.target/arm/memset-inline-8.c: Likewise.
+	* gcc.target/arm/memset-inline-9.c: Likewise.
+	* gcc.target/arm/memset-inline-4-exe.c: New test.
+	* gcc.target/arm/memset-inline-5-exe.c: Likewise.
+	* gcc.target/arm/memset-inline-6-exe.c: Likewise.
+	* gcc.target/arm/memset-inline-8-exe.c: Likewise.
+	* gcc.target/arm/memset-inline-9-exe.c: Likewise.
+
+2024-12-18  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	Backported from master:
+	2024-12-10  Wilco Dijkstra  <wilco.dijkstra@arm.com>
+
+	PR target/117675
+	* gcc.target/arm/pr117675.c: Add new test.
+
+2024-12-17  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-12-17  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* g++.dg/torture/pr81812.C: Add xfail for thumb1.
+
+2024-12-17  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-15  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117897
+	* gfortran.dg/finalize_59.f90: New test.
+
+2024-12-15  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/117730
+	PR fortran/84674
+	* gfortran.dg/pr117730_a.f90: New test.
+	* gfortran.dg/pr117730_b.f90: New test.
+	* gfortran.dg/pr84674.f90: New test.
+
+2024-12-14  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	Backported from master:
+	2024-12-10  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	PR modula2/117120
+	* gm2/pim/pass/forloopnulchar.mod: New test.
+	* gm2/pim/pass/nulcharcase.mod: New test.
+	* gm2/pim/pass/nulcharvar.mod: New test.
+
+2024-12-13  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2024-12-10  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/117880
+	* g++.dg/warn/Wduplicated-branches8.C: New test.
+
+2024-12-13  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	Backported from master:
+	2024-12-09  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	PR modula2/115328
+	* gm2/pim/fail/forward.mod: Move to...
+	* gm2/pim/pass/forward.mod: ...here.
+
+2024-12-12  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/matrix1.adb: New test.
+
+2024-12-12  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-12-12  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.target/arm/thumb-ifcvt.c: Use -mtune=cortex-m4.
+
+2024-12-12  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2024-12-12  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.target/arm/thumb2-slow-flash-data-3.c: Added argument to
+	fn1 to avoid compile error.
+
+2024-12-11  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-10  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/117819
+	* gfortran.dg/pr117819.f90: New test.
+
+2024-12-09  Juergen Christ  <jchrist@linux.ibm.com>
+
+	Backported from master:
+	2024-12-09  Juergen Christ  <jchrist@linux.ibm.com>
+
+	* gcc.target/s390/ccusage.c: New test.
+
+2024-12-09  Simon Martin  <simon@nasilyan.com>
+
+	Backported from master:
+	2024-12-09  Simon Martin  <simon@nasilyan.com>
+
+	PR c++/117845
+	* g++.dg/asan/pr117845-2.C: New test.
+	* g++.dg/asan/pr117845.C: New test.
+
+2024-12-08  Uros Bizjak  <ubizjak@gmail.com>
+
+	Backported from master:
+	2024-12-06  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR target/117926
+	* gcc.target/i386/pr117926.c: New test.
+
+2024-12-07  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	Backported from master:
+	2024-12-07  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	PR modula2/117948
+	* gm2/pim/fail/forward.mod: New test.
+
+2024-12-06  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2024-12-04  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/117820
+	* gfortran.dg/pr117820.f90: New test.
+
+2024-12-06  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	Backported from master:
+	2024-12-05  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	PR modula2/117904
+	* gm2/iso/pass/forloopbyconst.mod: New test.
+
+2024-12-06  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2024-11-28  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/117791
+	* gfortran.dg/bounds_check_array_io.f90: New test.
+
+2024-12-05  Simon Martin  <simon@nasilyan.com>
+
+	Backported from master:
+	2024-12-04  Simon Martin  <simon@nasilyan.com>
+
+	PR c++/117615
+	* g++.dg/cpp2a/constexpr-virtual22.C: New test.
+
 2024-12-04  Gaius Mulley  <gaiusmod2@gmail.com>
 
 	Backported from master:
