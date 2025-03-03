@@ -2724,7 +2724,9 @@ min_vis_expr_r (tree *tp, int */*walk_subtrees*/, void *data)
 	/* The ODR allows definitions in different TUs to refer to distinct
 	   constant variables with internal or no linkage, so such a reference
 	   shouldn't affect visibility (PR110323).  FIXME but only if the
-	   lvalue-rvalue conversion is applied.  */;
+	   lvalue-rvalue conversion is applied.  We still want to restrict
+	   visibility according to the type of the declaration however.  */
+	tpvis = type_visibility (TREE_TYPE (t));
       else if (! TREE_PUBLIC (t))
 	tpvis = VISIBILITY_ANON;
       else
@@ -4650,7 +4652,8 @@ decl_maybe_constant_var_p (tree decl)
   tree type = TREE_TYPE (decl);
   if (!VAR_P (decl))
     return false;
-  if (DECL_DECLARED_CONSTEXPR_P (decl) && !TREE_THIS_VOLATILE (decl))
+  if (DECL_DECLARED_CONSTEXPR_P (decl)
+      && (!TREE_THIS_VOLATILE (decl) || NULLPTR_TYPE_P (type)))
     return true;
   if (DECL_HAS_VALUE_EXPR_P (decl))
     /* A proxy isn't constant.  */
