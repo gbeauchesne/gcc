@@ -1,3 +1,187 @@
+2025-03-12  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-03-12  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/117512
+	* g++.dg/cpp0x/alignas23.C: New test.
+	* g++.dg/ext/align3.C: New test.
+	* g++.dg/ext/align4.C: New test.
+	* g++.dg/ext/align5.C: New test.
+
+2025-03-12  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-03-12  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/119134
+	* g++.dg/cpp2a/lambda-uneval24.C: New test.
+
+2025-03-12  Richard Earnshaw  <rearnsha@arm.com>
+
+	Backported from master:
+	2025-03-11  Richard Earnshaw  <rearnsha@arm.com>
+
+	* lib/target-supports.exp
+	(check_effective_target_arm_neon_h_ok_nocache): Return zero if
+	check_effective_target_arm_libc_fp_abi_ok reports failure.
+
+2025-03-12  Richard Earnshaw  <rearnsha@arm.com>
+
+	Backported from master:
+	2025-03-07  Richard Earnshaw  <rearnsha@arm.com>
+
+	* lib/target-supports.exp
+	(check_effective_target_arm_neon_h_ok_nocache): New function.
+	(check_effective_target_arm_neon_h_ok): Likewise.
+	(add_options_for_arm_neon_h): Likewise.
+	(check_effective_target_arm_libc_fp_abi_ok_nocache): Allow any
+	Arm target, not just arm32.
+	* gcc.target/arm/attr-neon-builtin-fail.c: Use it.
+	* gcc.target/arm/attr-neon-builtin-fail2.c: Likewise.
+	* gcc.target/arm/attr-neon-fp16.c: Likewise.
+	* gcc.target/arm/attr-neon2.c: Likewise.
+
+2025-03-11  Iain Buclaw  <ibuclaw@gdcproject.org>
+
+	Backported from master:
+	2025-03-11  Iain Buclaw  <ibuclaw@gdcproject.org>
+
+	PR d/119139
+	* gdc.dg/pr119139.d: New test.
+
+2025-03-10  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2025-01-27  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/118640
+	* gfortran.dg/pr118640.f90: New test.
+
+2025-03-09  Paul Thomas  <pault@gcc.gnu.org>
+
+	Backported from master:
+	2024-11-16  Paul Thomas  <pault@gcc.gnu.org>
+
+	PR fortran/109066
+	* gfortran.dg/defined_assignment_12.f90: New test.
+
+2025-03-09  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2025-03-08  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/119054
+	* gfortran.dg/pr95446.f90: Expand test case to literals and
+	function calls.
+	Signed-off-by: Peter Hill <peter.hill@york.ac.uk>
+
+2025-03-09  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	Backported from master:
+	2025-03-04  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	PR fortran/103391
+	* gfortran.dg/assign_12.f90: New test.
+
+2025-03-07  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2025-03-07  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	PR target/115485
+	* g++.target/arm/pr115485.C: New test.
+
+2025-03-06  Xi Ruoyao  <xry111@xry111.site>
+
+	PR target/119084
+	* gcc.target/loongarch/pr119084.c: New test.
+
+2025-03-05  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-03-05  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/115580
+	* g++.dg/warn/Wnonnull16.C: New test.
+
+2025-03-05  Richard Sandiford  <richard.sandiford@arm.com>
+	    Alex Coplan  <alex.coplan@arm.com>
+
+	PR rtl-optimization/118320
+	* g++.dg/torture/pr118320.C: New test.
+
+2025-03-05  Hannes Braun  <hannes@hannesbraun.net>
+
+	Backported from master:
+	2025-03-05  Hannes Braun  <hannes@hannesbraun.net>
+
+	PR target/118942
+	* gcc.target/arm/simd/vld1q_base_xN_1.c: Add -Wpointer-sign.
+
+2025-03-04  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-02-28  Patrick Palka  <ppalka@redhat.com>
+
+	PR c++/119038
+	* g++.dg/cpp23/explicit-obj-lambda15.C: New test.
+
+2025-03-04  Richard Sandiford  <richard.sandiford@arm.com>
+
+	Backported from master:
+	2025-01-20  Richard Sandiford  <richard.sandiford@arm.com>
+
+	* gcc.target/aarch64/ins_bitfield_1a.c: New test.
+	* gcc.target/aarch64/ins_bitfield_3a.c: Likewise.
+	* gcc.target/aarch64/ins_bitfield_5a.c: Likewise.
+
+2025-03-04  Richard Earnshaw  <rearnsha@arm.com>
+
+	* gcc.target/arm/unsigned-extend-1.c: Expand check for any
+	insn suggesting a zero-extend.  XFAIL for thumb1 code.
+
+2025-03-04  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2025-03-04  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.target/arm/pr68674.c: Use effective-target arm_arch_v7a
+	and arm_libc_fp_abi.
+
+2025-03-04  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-03-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR rtl-optimization/119071
+	* gcc.dg/pr119071.c: New test.
+	* gcc.c-torture/execute/pr119071.c: New test.
+
+2025-03-04  Uros Bizjak  <ubizjak@gmail.com>
+
+	Backported from master:
+	2025-03-03  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR rtl-optimization/118739
+	* gcc.target/i386/pr118739.c: New test.
+
+2025-03-04  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-02-28  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/118243
+	* g++.dg/ipa/pr118243.C: New test.
+
+2025-03-03  Filip Kastl  <fkastl@suse.cz>
+
+	Backported from master:
+	2025-03-02  Filip Kastl  <fkastl@suse.cz>
+
+	PR tree-optimization/117919
+	* g++.dg/pr117919.C: New test.
+
 2025-03-02  Jeff Law  <jlaw@ventanamicro.com>
 
 	Backported from master:

@@ -1,3 +1,93 @@
+2025-03-07  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2025-03-07  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	PR target/115485
+	* config/arm/arm.cc (require_pic_register): Fix typos in
+	comment. Handle fixed arm_pic_register.
+
+2025-03-06  Xi Ruoyao  <xry111@xry111.site>
+
+	PR target/119084
+	* config/loongarch/lasx.md (UNSPEC_LASX_XVLDX): Remove.
+	(lasx_xvldx): Remove.
+	* config/loongarch/lsx.md (UNSPEC_LSX_VLDX): Remove.
+	(lsx_vldx): Remove.
+	* config/loongarch/simd.md (QIVEC): New define_mode_iterator.
+	(<simd_isa>_<x>vldx): New define_expand.
+
+2025-03-05  Richard Sandiford  <richard.sandiford@arm.com>
+	    Alex Coplan  <alex.coplan@arm.com>
+
+	PR rtl-optimization/118320
+	* config/aarch64/aarch64-ldp-fusion.cc (ldp_bb_info::fuse_pair):
+	Commonize the merge of input_uses and return early if it
+	fails.
+
+2025-03-05  Hannes Braun  <hannes@hannesbraun.net>
+
+	Backported from master:
+	2025-03-05  Hannes Braun  <hannes@hannesbraun.net>
+
+	PR target/118942
+	* config/arm/arm_neon.h (vld1q_s8_x3): Use int8_t instead of
+	uint16_t.
+	(vld1q_s16_x3): Use int16_t instead of uint16_t.
+	(vld1q_s8_x4): Likewise.
+	(vld1q_s16_x4): Likewise.
+
+2025-03-04  Richard Sandiford  <richard.sandiford@arm.com>
+
+	Backported from master:
+	2025-01-20  Richard Sandiford  <richard.sandiford@arm.com>
+
+	PR target/118531
+	* config/aarch64/aarch64.md (*insv_reg<mode>_<SUBDI_BITS>)
+	(*aarch64_bfi<GPI:mode><ALLX:mode>_<SUBDI_BITS>)
+	(*aarch64_bfidi<ALLX:mode>_subreg_<SUBDI_BITS>): Add missing
+	simd requirements.
+
+2025-03-04  Richard Sandiford  <richard.sandiford@arm.com>
+
+	Backported from master:
+	2025-03-04  Richard Sandiford  <richard.sandiford@arm.com>
+
+	PR tree-optimization/118976
+	* fold-const.cc (const_unop): Use ~ rather than - for BIT_NOT_EXPR.
+	* config/aarch64/aarch64.cc (aarch64_test_sve_folding): New function.
+	(aarch64_run_selftests): Run it.
+
+2025-03-04  Uros Bizjak  <ubizjak@gmail.com>
+
+	Backported from master:
+	2025-03-03  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR rtl-optimization/118739
+	* combine.cc (distribute_notes) <case REG_UNUSED>: Correct the
+	logic when the register is used by I3.
+
+2025-03-04  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-02-28  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/118243
+	* ipa-sra.cc (pull_accesses_from_callee): New parameters
+	caller_ipcp_ts and param_idx.  Check that scalar pulled accesses would
+	not clash with a known IPA-CP aggregate constant.
+	(param_splitting_across_edge): Pass IPA-CP transformation summary and
+	caller parameter index to pull_accesses_from_callee.
+
+2025-03-03  Filip Kastl  <fkastl@suse.cz>
+
+	Backported from master:
+	2025-03-02  Filip Kastl  <fkastl@suse.cz>
+
+	PR tree-optimization/117919
+	* gimple-ssa-sccopy.cc (scc_copy_prop::propagate): Prune
+	statements that 'replace_uses_by ()' removed.
+
 2025-03-02  Jeff Law  <jlaw@ventanamicro.com>
 
 	Backported from master:
