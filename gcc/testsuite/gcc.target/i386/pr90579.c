@@ -17,7 +17,7 @@ loop (int k, double x)
 }
 
 /* Verify we end up with scalar loads from r for the final sum.  */
-/* { dg-final { scan-assembler "vaddsd\tr\\\+40" } } */
-/* { dg-final { scan-assembler "vaddsd\tr\\\+32" } } */
-/* { dg-final { scan-assembler "vaddsd\tr\\\+24" } } */
-/* { dg-final { scan-assembler "vaddsd\tr\\\+16" } } */
+/* { dg-final { scan-assembler "vaddsd\t\(r\\\+40\|40\\\+r\)" } } */
+/* { dg-final { scan-assembler "vaddsd\t\(r\\\+32\|32\\\+r\)" } } */
+/* { dg-final { scan-assembler "vaddsd\t\(r\\\+24\|24\\\+r\)" } } */
+/* { dg-final { scan-assembler "vaddsd\t\(r\\\+16\|16\\\+r\)" } } */
