@@ -9995,12 +9995,12 @@ aarch64_expand_epilogue (rtx_call_insn *sibcall)
 	1) Sibcalls don't return in a normal way, so if we're about to call one
 	   we must authenticate.
 
-	2) The RETAA instruction is not available before ARMv8.3-A, so if we are
-	   generating code for !TARGET_ARMV8_3 we can't use it and must
+	2) The RETAA instruction is not available without FEAT_PAuth, so if we
+	   are generating code for !TARGET_PAUTH we can't use it and must
 	   explicitly authenticate.
     */
   if (aarch64_return_address_signing_enabled ()
-      && (sibcall || !TARGET_ARMV8_3))
+      && (sibcall || !TARGET_PAUTH))
     {
       switch (aarch64_ra_sign_key)
 	{
@@ -25333,26 +25333,25 @@ aarch64_output_sve_ptrues (rtx const_unspec)
 void
 aarch64_split_combinev16qi (rtx operands[3])
 {
-  unsigned int dest = REGNO (operands[0]);
-  unsigned int src1 = REGNO (operands[1]);
-  unsigned int src2 = REGNO (operands[2]);
   machine_mode halfmode = GET_MODE (operands[1]);
-  unsigned int halfregs = REG_NREGS (operands[1]);
-  rtx destlo, desthi;
 
   gcc_assert (halfmode == V16QImode);
 
-  if (src1 == dest && src2 == dest + halfregs)
+  rtx destlo = simplify_gen_subreg (halfmode, operands[0],
+				    GET_MODE (operands[0]), 0);
+  rtx desthi = simplify_gen_subreg (halfmode, operands[0],
+				    GET_MODE (operands[0]),
+				    GET_MODE_SIZE (halfmode));
+
+  bool skiplo = rtx_equal_p (destlo, operands[1]);
+  bool skiphi = rtx_equal_p (desthi, operands[2]);
+
+  if (skiplo && skiphi)
     {
       /* No-op move.  Can't split to nothing; emit something.  */
       emit_note (NOTE_INSN_DELETED);
       return;
     }
-
-  /* Preserve register attributes for variable tracking.  */
-  destlo = gen_rtx_REG_offset (operands[0], halfmode, dest, 0);
-  desthi = gen_rtx_REG_offset (operands[0], halfmode, dest + halfregs,
-			       GET_MODE_SIZE (halfmode));
 
   /* Special case of reversed high/low parts.  */
   if (reg_overlap_mentioned_p (operands[2], destlo)
@@ -25366,16 +25365,16 @@ aarch64_split_combinev16qi (rtx operands[3])
     {
       /* Try to avoid unnecessary moves if part of the result
 	 is in the right place already.  */
-      if (src1 != dest)
+      if (!skiplo)
 	emit_move_insn (destlo, operands[1]);
-      if (src2 != dest + halfregs)
+      if (!skiphi)
 	emit_move_insn (desthi, operands[2]);
     }
   else
     {
-      if (src2 != dest + halfregs)
+      if (!skiphi)
 	emit_move_insn (desthi, operands[2]);
-      if (src1 != dest)
+      if (!skiplo)
 	emit_move_insn (destlo, operands[1]);
     }
 }
@@ -26179,8 +26178,8 @@ aarch64_vectorize_vec_perm_const (machine_mode vmode, machine_mode op_mode,
   d.op_vec_flags = aarch64_classify_vector_mode (d.op_mode);
   d.target = target;
   d.op0 = op0 ? force_reg (op_mode, op0) : NULL_RTX;
-  if (op0 == op1)
-    d.op1 = d.op0;
+  if (op0 && d.one_vector_p)
+    d.op1 = copy_rtx (d.op0);
   else
     d.op1 = op1 ? force_reg (op_mode, op1) : NULL_RTX;
   d.testing_p = !target;
@@ -30345,8 +30344,6 @@ aarch64_valid_sysreg_name_p (const char *regname)
   const sysreg_t *sysreg = aarch64_lookup_sysreg_map (regname);
   if (sysreg == NULL)
     return aarch64_is_implem_def_reg (regname);
-  if (sysreg->arch_reqs)
-    return (aarch64_isa_flags & sysreg->arch_reqs);
   return true;
 }
 
@@ -30369,8 +30366,6 @@ aarch64_retrieve_sysreg (const char *regname, bool write_p, bool is128op)
     return NULL;
   if ((write_p && (sysreg->properties & F_REG_READ))
       || (!write_p && (sysreg->properties & F_REG_WRITE)))
-    return NULL;
-  if ((~aarch64_isa_flags & sysreg->arch_reqs) != 0)
     return NULL;
   return sysreg->encoding;
 }

@@ -1286,6 +1286,22 @@ struct constexpr_ctx {
   mce_value manifestly_const_eval;
 };
 
+/* True if the constexpr relaxations afforded by P2280R4 for unknown
+   references and objects are in effect.  */
+
+static bool
+p2280_active_p (const constexpr_ctx *ctx)
+{
+  if (ctx->manifestly_const_eval != mce_true)
+    /* Disable these relaxations during speculative constexpr folding,
+       as it can significantly increase compile time/memory use
+       (PR119387).  */
+    return false;
+
+  /* P2280R4 was accepted as a DR against C++11.  */
+  return cxx_dialect >= cxx11;
+}
+
 /* Remove T from the global values map, checking for attempts to destroy
    a value that has already finished its lifetime.  */
 
@@ -2340,20 +2356,28 @@ is_std_construct_at (const constexpr_call *call)
 	  && is_std_construct_at (call->fundef->decl));
 }
 
-/* True if CTX is an instance of std::allocator.  */
+/* True if CTX is an instance of std::NAME class.  */
 
 bool
-is_std_allocator (tree ctx)
+is_std_class (tree ctx, const char *name)
 {
   if (ctx == NULL_TREE || !CLASS_TYPE_P (ctx) || !TYPE_MAIN_DECL (ctx))
     return false;
 
   tree decl = TYPE_MAIN_DECL (ctx);
-  tree name = DECL_NAME (decl);
-  if (name == NULL_TREE || !id_equal (name, "allocator"))
+  tree dname = DECL_NAME (decl);
+  if (dname == NULL_TREE || !id_equal (dname, name))
     return false;
 
   return decl_in_std_namespace_p (decl);
+}
+
+/* True if CTX is an instance of std::allocator.  */
+
+bool
+is_std_allocator (tree ctx)
+{
+  return is_std_class (ctx, "allocator");
 }
 
 /* Return true if FNDECL is std::allocator<T>::{,de}allocate.  */
@@ -3030,11 +3054,23 @@ cxx_eval_call_expression (const constexpr_ctx *ctx, tree t,
       ctx->global->put_value (new_ctx.object, ctor);
       ctx = &new_ctx;
     }
+  /* An immediate invocation is manifestly constant evaluated including the
+     arguments of the call, so use mce_true even for the argument
+     evaluation.  */
+  if (DECL_IMMEDIATE_FUNCTION_P (fun))
+    {
+      new_ctx.manifestly_const_eval = mce_true;
+      new_call.manifestly_const_eval = mce_true;
+      ctx = &new_ctx;
+    }
 
   /* We used to shortcut trivial constructor/op= here, but nowadays
      we can only get a trivial function here with -fno-elide-constructors.  */
   gcc_checking_assert (!trivial_fn_p (fun)
 		       || !flag_elide_constructors
+		       /* Or it's a call from maybe_thunk_body (111075).  */
+		       || (TREE_CODE (t) == CALL_EXPR ? CALL_FROM_THUNK_P (t)
+			   : AGGR_INIT_FROM_THUNK_P (t))
 		       /* We don't elide constructors when processing
 			  a noexcept-expression.  */
 		       || cp_noexcept_operand);
@@ -6313,7 +6349,7 @@ cxx_eval_store_expression (const constexpr_ctx *ctx, tree t,
 	  break;
 
 	case REALPART_EXPR:
-	  gcc_assert (probe == target);
+	  gcc_assert (refs->is_empty ());
 	  vec_safe_push (refs, NULL_TREE);
 	  vec_safe_push (refs, probe);
 	  vec_safe_push (refs, TREE_TYPE (probe));
@@ -6321,7 +6357,7 @@ cxx_eval_store_expression (const constexpr_ctx *ctx, tree t,
 	  break;
 
 	case IMAGPART_EXPR:
-	  gcc_assert (probe == target);
+	  gcc_assert (refs->is_empty ());
 	  vec_safe_push (refs, NULL_TREE);
 	  vec_safe_push (refs, probe);
 	  vec_safe_push (refs, TREE_TYPE (probe));
@@ -7517,7 +7553,7 @@ cxx_eval_constant_expression (const constexpr_ctx *ctx, tree t,
 	r = TARGET_EXPR_INITIAL (r);
       if (DECL_P (r)
 	  /* P2280 allows references to unknown.  */
-	  && !(VAR_P (t) && TYPE_REF_P (TREE_TYPE (t))))
+	  && !(p2280_active_p (ctx) && VAR_P (t) && TYPE_REF_P (TREE_TYPE (t))))
 	{
 	  if (!ctx->quiet)
 	    non_const_var_error (loc, r, /*fundef_p*/false);
@@ -7569,9 +7605,9 @@ cxx_eval_constant_expression (const constexpr_ctx *ctx, tree t,
 	  r = build_constructor (TREE_TYPE (t), NULL);
 	  TREE_CONSTANT (r) = true;
 	}
-      else if (TYPE_REF_P (TREE_TYPE (t)))
+      else if (p2280_active_p (ctx) && TYPE_REF_P (TREE_TYPE (t)))
 	/* P2280 allows references to unknown...  */;
-      else if (is_this_parameter (t))
+      else if (p2280_active_p (ctx) && is_this_parameter (t))
 	/* ...as well as the this pointer.  */;
       else
 	{
@@ -8823,6 +8859,15 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
 	  tree fndecl = cp_get_callee_fndecl_nofold (x);
 	  if (fndecl && DECL_IMMEDIATE_FUNCTION_P (fndecl))
 	    is_consteval = true;
+      /* Don't try to evaluate a std::vector constructor taking an integer, it
+	 will fail in the 'if (heap_var)' block below after doing all the work
+	 (c++/113835).  This will need adjustment if P3554 is accepted.  Note
+	 that evaluation of e.g. the vector default constructor can succeed, so
+	 we don't shortcut all vector constructors.  */
+      if (fndecl && DECL_CONSTRUCTOR_P (fndecl) && allow_non_constant
+	  && is_std_class (type, "vector") && call_expr_nargs (x) > 1
+	  && TREE_CODE (TREE_TYPE (get_nth_callarg (x, 1))) == INTEGER_TYPE)
+	return t;
 	}
     }
   if (AGGREGATE_TYPE_P (type) || VECTOR_TYPE_P (type))
@@ -9009,7 +9054,8 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
       if (TREE_CODE (t) == TARGET_EXPR
 	  && TARGET_EXPR_INITIAL (t) == r)
 	return t;
-      else if (TREE_CODE (t) == CONSTRUCTOR || TREE_CODE (t) == CALL_EXPR)
+      else if (TREE_CODE (t) == CONSTRUCTOR || TREE_CODE (t) == CALL_EXPR
+	       || TREE_CODE (t) == AGGR_INIT_EXPR)
 	/* Don't add a TARGET_EXPR if our argument didn't have one.  */;
       else if (TREE_CODE (t) == TARGET_EXPR && TARGET_EXPR_CLEANUP (t))
 	r = get_target_expr (r);

@@ -6948,6 +6948,7 @@ extern tree convert_to_reference		(tree, tree, int, int, tree,
 						 tsubst_flags_t);
 extern tree convert_from_reference		(tree);
 extern tree force_rvalue			(tree, tsubst_flags_t);
+extern tree force_lvalue			(tree, tsubst_flags_t);
 extern tree ocp_convert				(tree, tree, int, int,
 						 tsubst_flags_t);
 extern tree cp_convert				(tree, tree, tsubst_flags_t);
@@ -8682,6 +8683,7 @@ extern bool is_rvalue_constant_expression (tree);
 extern bool is_nondependent_constant_expression (tree);
 extern bool is_nondependent_static_init_expression (tree);
 extern bool is_static_init_expression    (tree);
+extern bool is_std_class (tree, const char *);
 extern bool is_std_allocator (tree);
 extern bool potential_rvalue_constant_expression (tree);
 extern bool require_potential_constant_expression (tree);

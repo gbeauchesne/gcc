@@ -1137,6 +1137,7 @@ ix86_valid_target_attribute_inner_p (tree fndecl, tree args, char *p_strings[],
     IX86_ATTR_ISA ("usermsr", OPT_musermsr),
     IX86_ATTR_ISA ("avx10.1-256", OPT_mavx10_1_256),
     IX86_ATTR_ISA ("avx10.1-512", OPT_mavx10_1_512),
+    IX86_ATTR_ISA ("avx10.1", OPT_mavx10_1_512),
 
     /* enum options */
     IX86_ATTR_ENUM ("fpmath=",	OPT_mfpmath_),
@@ -1263,6 +1264,13 @@ ix86_valid_target_attribute_inner_p (tree fndecl, tree args, char *p_strings[],
 	      mask = attrs[i].mask;
 	      break;
 	    }
+	}
+
+      /* Fixup -msse4 which is RejectNegative to -mno-sse4 when negated.  */
+      if (opt == OPT_msse4 && !opt_set_p)
+	{
+	  opt = OPT_mno_sse4;
+	  opt_set_p = true;
 	}
 
       /* Process the option.  */
@@ -2841,8 +2849,8 @@ ix86_option_override_internal (bool main_args_p,
   if (flag_nop_mcount)
     error ("%<-mnop-mcount%> is not compatible with this target");
 #endif
-  if (flag_nop_mcount && flag_pic)
-    error ("%<-mnop-mcount%> is not implemented for %<-fPIC%>");
+  if (flag_nop_mcount && flag_pic && !flag_plt)
+    error ("%<-mnop-mcount%> is not implemented for %<-fno-plt%>");
 
   /* Accept -msseregparm only if at least SSE support is enabled.  */
   if (TARGET_SSEREGPARM_P (opts->x_target_flags)
