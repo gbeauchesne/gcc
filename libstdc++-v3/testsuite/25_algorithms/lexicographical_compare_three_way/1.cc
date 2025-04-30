@@ -16,6 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 
 // { dg-do run { target c++20 } }
+// { dg-options "-Wno-nonnull" }
 
 #include <algorithm>
 #include <array>
