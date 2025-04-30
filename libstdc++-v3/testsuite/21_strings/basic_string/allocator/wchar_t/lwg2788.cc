@@ -36,7 +36,7 @@ template <class Tp>
 struct TestAllocator
 {
   typedef Tp value_type;
-  using size_type = unsigned;
+  using size_type = std::size_t;
 
   TestAllocator() noexcept { constructCount++; }
 
