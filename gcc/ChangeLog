@@ -1,3 +1,95 @@
+2025-05-16  Maciej W. Rozycki  <macro@orcam.me.uk>
+
+	Backported from master:
+	2025-04-19  Maciej W. Rozycki  <macro@orcam.me.uk>
+
+	* config/alpha/alpha.cc
+	(alpha_get_mem_rtx_alignment_and_offset): Recurse into
+	COMPONENT_REF nodes.
+
+2025-05-14  Kyle Huey  <me@kylehuey.com>
+
+	* dwarf2out.cc (resolve_addr_in_expr): Propagate dtprel into the address
+	table when appropriate.
+
+2025-05-13  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	Backported from master:
+	2025-05-12  Gaius Mulley  <gaiusmod2@gmail.com>
+
+	PR modula2/120188
+	* doc/gm2.texi (Semantic checking): Add -fm2-plugin command line option.
+
+2025-05-11  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120211
+	* tree-vect-stmts.cc (vect_stmt_relevant_p): Only add PHIs
+	from the loop header to LOOP_VINFO_EARLY_BREAKS_LIVE_IVS.
+
+2025-05-11  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-08  Richard Biener  <rguenther@suse.de>
+
+	PR ipa/120146
+	* tree-ssa-structalias.cc (create_variable_info_for): If
+	the symtab cannot tell us whether all refs to a variable
+	are explicit assume they are not.
+
+2025-05-11  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-08  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120143
+	* tree-vect-data-refs.cc (vect_analyze_early_break_dependences):
+	Move/update the original stmts, not the pattern stmts which
+	lack virtual operands and are not in the IL.
+
+2025-05-11  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-08  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120089
+	* tree-vect-stmts.cc (vect_stmt_relevant_p): Mark all
+	PHIs live when not already so and doing early-break
+	vectorization.
+	(vect_mark_stmts_to_be_vectorized): Skip virtual PHIs.
+	* tree-vect-slp.cc (vect_analyze_slp): Robustify handling
+	of early-break forced IVs.
+
+2025-05-11  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-08  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120043
+	* tree-ssa-phiopt.cc (cond_store_replacement): Check
+	whether the store is to readonly memory.
+
+2025-05-09  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* vr-values.cc (simplify_using_ranges::simplify) <BIT_AND_EXPR>:
+	Do not call simplify_bit_ops_using_ranges for boolean types whose
+	precision is not 1.
+
+2025-05-07  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-05-06  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/119852
+	* cgraphclones.cc (dump_callgraph_transformation): Document the
+	function.  Do not dump if suffix is NULL.
+
+2025-05-07  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-05-06  Martin Jambor  <mjambor@suse.cz>
+
+	* doc/invoke.texi (Developer Options): Document -fdump-ipa-clones.
+
 2025-05-06  Andrew MacLeod  <amacleod@redhat.com>
 
 	PR tree-optimization/120048
