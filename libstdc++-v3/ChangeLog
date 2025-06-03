@@ -1,3 +1,105 @@
+2025-06-01  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-05-29  Patrick Palka  <ppalka@redhat.com>
+
+	* include/std/flat_map (_Flat_map_impl::operator==): Compare
+	keys and values separately.
+
+2025-06-01  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-05-29  Patrick Palka  <ppalka@redhat.com>
+		    Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120465
+	* include/std/flat_map (_Flat_map_impl::_M_erase_if): Use a
+	projection with ranges::remove_if to pass a pair instead of
+	a tuple to the predicate.
+	* testsuite/23_containers/flat_map/1.cc (test07): Strengthen
+	to expect the argument passed to the predicate is a pair.
+	* testsuite/23_containers/flat_multimap/1.cc (test07): Likewise.
+
+2025-05-27  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-22  Jonathan Wakely  <jwakely@redhat.com>
+
+	* testsuite/util/pstl/test_utils.h (ForwardIterator::operator++):
+	Fix return type.
+	(BidirectionalIterator::operator++): Likewise.
+	(BidirectionalIterator::operator--): Likewise.
+
+2025-05-27  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-22  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120367
+	* include/bits/stl_vector.h (_M_range_initialize): Initialize
+	_M_impl._M_finish.
+	* testsuite/23_containers/vector/cons/from_range.cc: Check with
+	a type that throws on construction.
+	exceptions during construction.
+
+2025-05-20  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-20  Jonathan Wakely  <jwakely@redhat.com>
+
+	* doc/xml/faq.xml: Update URL for archived SGI STL docs.
+	* doc/xml/manual/containers.xml: Likewise.
+	* doc/xml/manual/extensions.xml: Likewise.
+	* doc/xml/manual/using.xml: Likewise.
+	* doc/xml/manual/utilities.xml: Likewise.
+	* doc/html/*: Regenerate.
+
+2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/std/ranges (_ZipTransform::operator()): Remove name of
+	unused parameter.
+	(chunk_view::_Iterator, stride_view::_Iterator): Likewise.
+	(join_with_view): Declare _Iterator and _Sentinel as class
+	instead of struct.
+	(repeat_view): Declare _Iterator as class instead of struct.
+
+2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120293
+	* include/bits/chrono_io.h (_M_format_to_ostream): Add special
+	case for local_time convertible to local_days.
+	* testsuite/std/time/clock/local/io.cc: Check formatting of
+	chrono::local_days.
+
+2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-06  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120029
+	* src/c++17/fs_path.cc (path::operator+=(const path&)): Handle
+	parameters that alias the path or one of its components.
+	* testsuite/27_io/filesystem/path/concat/120029.cc: New test.
+	* testsuite/experimental/filesystem/path/concat/120029.cc: New
+	test.
+
+2025-05-19  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-05-15  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120190
+	* include/std/format (format_kind): Adjust primary template to
+	not depend on itself.
+	* testsuite/std/format/ranges/format_kind_neg.cc: Adjust
+	expected errors. Check more invalid specializations.
+
 2025-05-12  Jonathan Wakely  <jwakely@redhat.com>
 
 	Backported from master:
