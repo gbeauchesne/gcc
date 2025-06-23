@@ -4991,7 +4991,7 @@ package body Sem_Ch3 is
 
             if Is_Array_Type (T)
               and then No_Initialization (N)
-              and then Nkind (Original_Node (E)) = N_Aggregate
+              and then Nkind (Unqualify (Original_Node (E))) = N_Aggregate
             then
                Act_T := Etype (E);
 
@@ -5137,10 +5137,7 @@ package body Sem_Ch3 is
 
       elsif Is_Array_Type (T)
         and then No_Initialization (N)
-        and then (Nkind (Original_Node (E)) = N_Aggregate
-                   or else (Nkind (Original_Node (E)) = N_Qualified_Expression
-                             and then Nkind (Original_Node (Expression
-                                        (Original_Node (E)))) = N_Aggregate))
+        and then Nkind (Unqualify (Original_Node (E))) = N_Aggregate
       then
          if not Is_Entity_Name (Object_Definition (N)) then
             Act_T := Etype (E);
@@ -6633,8 +6630,6 @@ package body Sem_Ch3 is
          end;
       end if;
 
-      --  Constrained array case
-
       if No (T) then
          --  We might be creating more than one itype with the same Related_Id,
          --  e.g. for an array object definition and its initial value. Give
@@ -6643,6 +6638,8 @@ package body Sem_Ch3 is
 
          T := Create_Itype (E_Void, P, Related_Id, 'T', Suffix_Index => -1);
       end if;
+
+      --  Constrained array case
 
       if Nkind (Def) = N_Constrained_Array_Definition then
          Index := First (Discrete_Subtype_Definitions (Def));
@@ -8491,10 +8488,18 @@ package body Sem_Ch3 is
 
                Analyze (Decl);
 
-               pragma Assert (Has_Discriminants (Full_Der)
-                 and then not Has_Unknown_Discriminants (Full_Der));
+               pragma
+                 Assert
+                   ((Has_Discriminants (Full_Der)
+                     and then not Has_Unknown_Discriminants (Full_Der))
+                      or else Serious_Errors_Detected > 0);
 
                Uninstall_Declarations (Par_Scope);
+
+               if Etype (Full_Der) = Any_Type then
+                  pragma Assert (Serious_Errors_Detected > 0);
+                  return;
+               end if;
 
                --  Freeze the underlying record view, to prevent generation of
                --  useless dispatching information, which is simply shared with
@@ -9460,8 +9465,8 @@ package body Sem_Ch3 is
       if Constraint_Present then
          if not Has_Discriminants (Parent_Base)
            or else
-             (Has_Unknown_Discriminants (Parent_Base)
-               and then Is_Private_Type (Parent_Base))
+             (Has_Unknown_Discriminants (Parent_Type)
+               and then Is_Private_Type (Parent_Type))
          then
             Error_Msg_N
               ("invalid constraint: type has no discriminant",
@@ -15095,7 +15100,8 @@ package body Sem_Ch3 is
       --  If this is a range for a fixed-lower-bound subtype, then set the
       --  index itype's low bound to the FLB and the index itype's upper bound
       --  to the high bound of the parent array type's index subtype. Also,
-      --  mark the itype as an FLB index subtype.
+      --  set the Etype of the new scalar range and mark the itype as an FLB
+      --  index subtype.
 
       if Nkind (S) = N_Range and then Is_FLB_Index then
          Set_Scalar_Range
@@ -15103,6 +15109,7 @@ package body Sem_Ch3 is
             Make_Range (Sloc (S),
               Low_Bound  => Low_Bound (S),
               High_Bound => Type_High_Bound (T)));
+         Set_Etype (Scalar_Range (Def_Id), Etype (Index));
          Set_Is_Fixed_Lower_Bound_Index_Subtype (Def_Id);
 
       else

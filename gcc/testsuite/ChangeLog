@@ -1,3 +1,200 @@
+2025-06-20  Jeff Law  <jlaw@ventanamicro.com>
+
+	Backported from master:
+	2025-05-05  Jeff Law  <jlaw@ventanamicro.com>
+
+	PR target/119971
+	* gcc.target/riscv/pr119971.c: New test.
+	* gcc.target/riscv/zbb-rol-ror-03.c: Adjust test slightly.
+
+2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120631
+	* gcc.dg/dfp/bitint-10.c: New test.
+	* gcc.dg/dfp/pr120631.c: New test.
+
+2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120631
+	* gcc.dg/dfp/bitint-9.c: New test.
+
+2025-06-18  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-06-16  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/51961
+	* gfortran.dg/allocate_with_mold_5.f90: New test.
+
+2025-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/120677
+	* gcc.c-torture/execute/pr120677.c: New test.
+
+2025-06-14  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR rtl-optimization/120423
+	PR rtl-optimization/116389
+	* gcc.target/avr/torture/pr120423-1.c: New test.
+	* gcc.target/avr/torture/pr120423-2.c: New test.
+	* gcc.target/avr/torture/pr120423-116389.c: New test.
+
+2025-06-13  Georg-Johann Lay  <avr@gjlay.de>
+
+	Backported from master:
+	2025-06-12  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR middle-end/117811
+	PR testsuite/52641
+	* gcc.dg/torture/pr117811.c: Fix for int < 32 bit.
+
+2025-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-12  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/120638
+	* gcc.dg/pr120638.c: New test.
+
+2025-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120547
+	* gcc.dg/bitint-123.c: New test.
+
+2025-06-13  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	Backported from master:
+	2025-06-13  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	PR fortran/120483
+	* gfortran.dg/save_8.f90: New test.
+
+2025-06-12  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-05-29  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/120295
+	* gcc.dg/ipa/pr120295.c: New test.
+
+2025-06-09  Jason Merrill  <jason@redhat.com>
+
+	Backported from master:
+	2025-06-06  Jason Merrill  <jason@redhat.com>
+
+	PR c++/120555
+	* g++.dg/cpp1z/constexpr-if39.C: New test.
+
+2025-06-09  Jason Merrill  <jason@redhat.com>
+
+	PR c++/120502
+	* g++.dg/cpp2a/constexpr-prvalue2.C: New test.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-31  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120357
+	* gcc.dg/vect/vect-early-break_136-pr120357.c: New testcase.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-30  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120341
+	* gcc.dg/torture/pr120341-1.c: New testcase.
+	* gcc.dg/torture/pr120341-2.c: Likewise.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-09  Richard Biener  <rguenther@suse.de>
+
+	PR rtl-optimization/120182
+	* gcc.dg/torture/pr120182.c: New testcase.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-01  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120003
+	* gcc.dg/tree-ssa/ssa-dom-thread-7.c: Adjust aarch64 expected
+	thread2 number of threads.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-04-30  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120003
+	* gcc.dg/tree-ssa/ssa-thread-23.c: New testcase.
+	* gcc.dg/tree-ssa/ssa-dom-thread-7.c: Adjust.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-09  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/119960
+	* gcc.dg/vect/bb-slp-pr119960-1.c: New testcase.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-15  Richard Biener  <rguenther@suse.de>
+
+	* gcc.target/i386/vect-epilogues-1.c: New testcase.
+	* gcc.target/i386/vect-epilogues-2.c: Likewise.
+	* gcc.target/i386/vect-epilogues-3.c: Likewise.
+	* gcc.target/i386/vect-epilogues-4.c: Likewise.
+	* gcc.target/i386/vect-epilogues-5.c: Likewise.
+
+2025-06-05  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/specs/opt7.ads: New test.
+	* gnat.dg/specs/opt7_pkg.ads: New helper.
+	* gnat.dg/specs/opt7_pkg.adb: Likewise.
+
+2025-06-04  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-06-03  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/99838
+	* gfortran.dg/coarray_data_2.f90: New test.
+
+2025-06-03  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-05-30  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/102599
+	PR fortran/114022
+	* gfortran.dg/inquiry_type_ref_8.f90: New test.
+
+2025-06-03  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-05-27  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/101735
+	* gfortran.dg/inquiry_type_ref_7.f90: New test.
+
 2025-06-02  Jason Merrill  <jason@redhat.com>
 
 	PR c++/120123

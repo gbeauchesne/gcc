@@ -1,3 +1,217 @@
+2025-06-20  Jeff Law  <jlaw@ventanamicro.com>
+
+	Backported from master:
+	2025-05-05  Jeff Law  <jlaw@ventanamicro.com>
+
+	PR target/119971
+	* config/riscv/bitmanip.md (rotation with masked count): Rewrite
+	as define_insn patterns.  Fix formatting.
+	* config/riscv/riscv.md (shift with masked count): Similarly.
+
+2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120631
+	* dfp.cc (decimal_real_to_integer): Use result multiplication not just
+	when precision > 128 and dn.exponent > 19, but when precision > 64
+	and dn.exponent > 0.
+
+2025-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120631
+	* real.cc (decimal_from_integer): Add digits argument, if larger than
+	256, use XALLOCAVEC allocated buffer.
+	(real_from_integer): Pass val_in's precision divided by 3 to
+	decimal_from_integer.
+	* dfp.cc (decimal_real_to_integer): For precision > 128 if finite
+	and exponent is large, decrease exponent and multiply resulting
+	wide_int by powers of 10^19.
+
+2025-06-18  Jan Beulich  <jbeulich@suse.com>
+
+	* doc/gcov.texi: Drop blank after @anchor.
+
+2025-06-18  Jan Beulich  <jbeulich@suse.com>
+
+	* doc/extend.texi: Fill first argument of @xref{}.
+
+2025-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/120677
+	* gimple-crc-optimization.cc (crc_optimization::optimize_crc_loop):
+	Insert before gsi_after_labels instead of gsi_start_bb.  Use
+	gimple_bb (output_crc) instead of output_crc->bb.  Formatting fix.
+
+2025-06-14  Georg-Johann Lay  <avr@gjlay.de>
+
+	PR rtl-optimization/120423
+	PR rtl-optimization/116389
+	* config/avr/avr.md [-mno-lra]: Add pre-reload split to transform
+	(left shift of) a paradoxical subreg to a (left shift of) zero-extend.
+
+2025-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-12  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/120638
+	* tree-ssa-math-opts.cc (pass_cse_reciprocals::execute): Call
+	reset_flow_sensitive_info on arg1.
+
+2025-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120547
+	* real.cc (real_from_integer): Remove maxbitlen variable, use
+	len instead of that.  When shifting right, or in 1 if any of the
+	shifted away bits are non-zero.  Formatting fix.
+
+2025-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-05-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* tree-chrec.cc (convert_affine_scev): Use signed_type_for instead of
+	build_nonstandard_integer_type.
+
+2025-06-12  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2025-05-29  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/120295
+	* ipa-prop.cc (update_jump_functions_after_inlining): Do not
+	combine pass-through jump functions with type-casts changing
+	signedness.
+
+2025-06-10  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	Backported from master:
+	2025-04-30  Andrew Pinski  <quic_apinski@quicinc.com>
+
+	PR target/120042
+	* tree-vectorizer.h: Include dominance.h.
+
+2025-06-10  Xi Ruoyao  <xry111@xry111.site>
+
+	Backported from master:
+	2025-06-04  Xi Ruoyao  <xry111@xry111.site>
+
+	PR rtl-optimization/120050
+	* ext-dce.cc (ext_dce_process_uses): Break early if a SUBREG in
+	rhs is promoted and the truncation from the inner mode to the
+	outer mode is not a noop when handling SETs.
+
+2025-06-06  Tobias Burnus  <tburnus@baylibre.com>
+
+	Backported from master:
+	2025-06-05  Tobias Burnus  <tburnus@baylibre.com>
+
+	* config.gcc (--with-{arch,tune}): Use .def file to validate gcn
+	processor names.
+	* doc/install.texi (amdgcn*-*-*): Update list of devices supported
+	by --with-arch/--with-tune.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-31  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120357
+	* tree-vect-loop.cc (vect_create_epilog_for_reduction): Create
+	the conditional reduction induction IV increment before the
+	main IV exit.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-30  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120341
+	* tree-ssa-loop-im.cc (can_sm_ref_p): STRING_CSTs are readonly.
+	* tree-ssa-phiopt.cc (cond_store_replacement): Likewise.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-09  Richard Biener  <rguenther@suse.de>
+
+	PR rtl-optimization/120182
+	* dse.cc (canon_address): Constant addresses have no
+	separate store group.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-04-30  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/120003
+	* tree-ssa-threadbackward.cc (back_threader::find_paths_to_names):
+	Allow block re-use but do not enlarge the path beyond such a
+	re-use.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-09  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/119960
+	* tree-vect-slp.cc (vect_slp_can_convert_to_external):
+	Handle cases where defs from multiple BBs are ordered
+	by their dominance relation.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-08  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/116352
+	* tree-vect-slp.cc (vect_build_slp_tree_2): When compressing
+	operands from a two-operator node make sure the resulting
+	operation does not mix defs from different basic-blocks.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-04-30  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/119960
+	* tree-vect-slp.cc (vect_schedule_slp_node): Sanity
+	check dominance check on operand defs.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-04-30  Richard Biener  <rguenther@suse.de>
+
+	* tree-vectorizer.h (get_later_stmt): Robustify against
+	stmts in different BBs, assert when they are unordered.
+
+2025-06-06  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2025-05-15  Richard Biener  <rguenther@suse.de>
+
+	* config/i386/i386.cc (ix86_vector_costs::finish_cost):
+	Do not suggest a first epilogue mode for AVX512 sized
+	main loops with X86_TUNE_AVX512_TWO_EPILOGUES as that
+	interferes with using a masked epilogue.
+
+2025-06-05  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* tree-vect-data-refs.cc (vect_can_force_dr_alignment_p): Return
+	false if the variable has no symtab node.
+
 2025-05-29  Yuta Mukai  <mukai.yuta@fujitsu.com>
 
 	Backported from master:
