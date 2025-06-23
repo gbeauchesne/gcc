@@ -12,6 +12,9 @@ struct S
 static void __attribute__((noipa))
 allocate(void *addr, unsigned long long size)
 {
+#ifndef MAP_FIXED_NOREPLACE
+#define MAP_FIXED_NOREPLACE MAP_FIXED
+#endif
   void *ptr = mmap((void *)addr, size,
 		   PROT_READ | PROT_WRITE,
 		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE,
