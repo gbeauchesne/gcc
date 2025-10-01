@@ -1,3 +1,80 @@
+2025-09-24  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-09-24  Patrick Palka  <ppalka@redhat.com>
+
+	* testsuite/17_intro/names.cc: Undefine 'u' on s390*-linux.
+
+2025-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-09-08  Jakub Jelinek  <jakub@redhat.com>
+
+	PR libstdc++/121827
+	* include/precompiled/extc++.h: Don't include ext/cast.h which is an
+	internal header.
+	* include/ext/pointer.h: Include bits/c++config.h before
+	#if _GLIBCXX_HOSTED.
+
+2025-09-18  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-09-17  Patrick Palka  <ppalka@redhat.com>
+
+	* testsuite/20_util/bind/dangling_ref.cc: Compile with
+	-Wsystem-headers.
+	* testsuite/20_util/ratio/operations/ops_overflow_neg.cc: Likewise.
+	* testsuite/20_util/unique_ptr/lwg4148.cc: Likewise.
+	* testsuite/29_atomics/atomic/operators/pointer_partial_void.cc:
+	Likewise.
+	* testsuite/30_threads/packaged_task/cons/dangling_ref.cc:
+	Likewise.
+
+2025-09-12  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-09-12  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/117276
+	* include/pstl/parallel_backend_tbb.h (__func_task::finalize):
+	Make deallocation unconditional.
+
+2025-09-10  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-09-10  Jonathan Wakely  <jwakely@redhat.com>
+
+	* include/bits/unique_ptr.h: Remove blank line.
+
+2025-09-09  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	Backported from master:
+	2025-09-05  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* doc/html/manual/status.html: Regenerate.
+	* doc/xml/manual/status_cxx2011.xml: Add entry for bad_function_call.
+	* doc/xml/manual/status_cxx2017.xml: Add entries for bad_any_cast
+	and nullptr_t output. Update entry for sf.cmath. Fix stable name for
+	mem.res.
+
+2025-09-09  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	Backported from master:
+	2025-09-05  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* doc/html/manual/status.html: Regenerate the file.
+	* doc/xml/manual/status_cxx2017.xml: Addd more entires.
+
+2025-09-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	Backported from master:
+	2025-09-08  Jonathan Wakely  <jwakely@redhat.com>
+
+	PR libstdc++/120698
+	* doc/xml/manual/configure.xml: Do not claim that vtv is enabled
+	by default.
+	* doc/html/manual/configure.html: Regenerate.
+
 2025-09-04  Yihan Wang  <yronglin777@gmail.com>
 
 	Backported from master:
