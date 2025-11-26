@@ -1,3 +1,146 @@
+2025-11-25  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	Backported from master:
+	2025-11-25  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	PR c++/122789
+	* g++.dg/modules/concept-12_a.C: New test.
+	* g++.dg/modules/concept-12_b.C: New test.
+
+2025-11-25  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	* gcc.dg/Wstringop-overflow-47.c: Adjust warnings to allow for 32-bit
+	stores.
+
+2025-11-24  Pan Li  <pan2.li@intel.com>
+
+	Backported from master:
+	2025-11-20  Pan Li  <pan2.li@intel.com>
+
+	PR target/122692
+	* g++.target/riscv/pr122692-run-1.C: New test.
+	* g++.target/riscv/pr122692-run-2.C: New test.
+
+2025-11-21  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-11-21  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/120529
+	* g++.dg/ext/reference_xes_from_temporary1.C: New test.
+
+2025-11-20  Xi Ruoyao  <xry111@xry111.site>
+
+	Backported from master:
+	2025-11-20  Xi Ruoyao  <xry111@xry111.site>
+
+	PR target/122695
+	* gcc.target/loongarch/pr122695-1.c: New test.
+	* gcc.target/loongarch/pr122695-2.c: New test.
+
+2025-11-19  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-11-19  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/119580
+	* g++.dg/template/crash106.C: Adjust expected diagnostics.
+	* g++.dg/template/crash112.C: Likewise.
+	* g++.dg/template/dependent-args1.C: Likewise.
+	* g++.dg/cpp0x/pr119580.C: New test.
+
+2025-11-18  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-11-17  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/122709
+	* gfortran.dg/select_contiguous.f90: New test.
+
+2025-11-18  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	Backported from master:
+	2025-11-12  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	* gcc.target/arm/cmse/mainline/8m/hard/union-fp.c: New.
+	* gcc.target/arm/cmse/baseline/union-4.c: New.
+	* gcc.target/arm/cmse/mainline/8m/hard/union-4.c: New.
+	* gcc.target/arm/cmse/mainline/8m/soft/union-4.c: New.
+	* gcc.target/arm/cmse/mainline/8m/softfp/union-4.c: New.
+	* gcc.target/arm/cmse/union-4.x: New.
+
+2025-11-18  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	Backported from master:
+	2025-11-12  Andre Vieira  <andre.simoesdiasvieira@arm.com>
+
+	* gcc.target/arm/cmse/union-3.x: New test.
+	* gcc.target/arm/cmse/baseline/union-3.c: New test.
+	* gcc.target/arm/cmse/mainline/8m/union-3.c: New test.
+	* gcc.target/arm/cmse/mainline/8_1m/union-3.c: New test.
+
+2025-11-18  Siddhesh Poyarekar  <siddhesh@gotplt.org>
+
+	Backported from master:
+	2025-11-04  Siddhesh Poyarekar  <siddhesh@gotplt.org>
+
+	PR lto/122515
+	* lib/lto.exp (lto-build-archive): New procedure.
+	(lto-execute-1): Use it.
+	(lto-link-and-maybe-run, lto-get-options-main): Handle ar-link.
+	* gcc.dg/lto/pr122515_0.c: New test case.
+	* gcc.dg/lto/pr122515_1.c: New file.
+	* gcc.dg/lto/pr122515_2.c: Likewise.
+	* gcc.dg/lto/pr122515_3.c: Likewise.
+	* gcc.dg/lto/pr122515_4.c: Likewise.
+	* gcc.dg/lto/pr122515_5.c: Likewise.
+	* gcc.dg/lto/pr122515_6.c: Likewise.
+	* gcc.dg/lto/pr122515_7.c: Likewise.
+	* gcc.dg/lto/pr122515_8.c: Likewise.
+	* gcc.dg/lto/pr122515_9.c: Likewise.
+
+2025-11-18  Tamar Christina  <tamar.christina@arm.com>
+
+	Backported from master:
+	2025-10-31  Tamar Christina  <tamar.christina@arm.com>
+
+	PR target/121853
+	* gcc.target/aarch64/pr121853_1.c: New test.
+	* gcc.target/aarch64/pr121853_2.c: New test.
+
+2025-11-17  Jeff Law  <jlaw@ventanamicro.com>
+
+	PR rtl-optimization/122627
+	* gcc.target/riscv/rvv/autovec/pr122627.c: New test.
+
+2025-11-16  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	Backported from master:
+	2025-11-16  Nathaniel Shead  <nathanieloshead@gmail.com>
+
+	PR c++/122625
+	* g++.dg/modules/inst-7_a.C: New test.
+	* g++.dg/modules/inst-7_b.C: New test.
+
+2025-11-16  Lewis Hyatt  <lhyatt@gmail.com>
+
+	* gcc.dg/plugin/location-overflow-test-3.c: New test.
+	* gcc.dg/plugin/plugin.exp: Add the new test.
+
+2025-11-14  Jeff Law  <jlaw@ventanamicro.com>
+
+	Backported from master:
+	2025-08-14  Jeff Law  <jlaw@ventanamicro.com>
+
+	PR target/119275
+	* gcc.target/riscv/pr119275.c: New test.
+
+2025-11-14  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	PR target/122216
+	* gcc.target/arm/mve/intrinsics/asrl-various-ranges.c: New test.
+	* gcc.target/arm/mve/intrinsics/lsll-various-ranges.c: New test.
+
 2025-11-12  Christophe Lyon  <christophe.lyon@linaro.org>
 
 	Backported from master:
