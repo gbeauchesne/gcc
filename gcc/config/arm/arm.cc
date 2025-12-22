@@ -16234,7 +16234,9 @@ arm_select_cc_mode (enum rtx_code op, rtx x, rtx y)
 	case LE:
 	case GT:
 	case GE:
-	  return CCFPEmode;
+	  return (flag_finite_math_only
+		  ? CCFPmode
+		  : CCFPEmode);
 
 	default:
 	  gcc_unreachable ();
@@ -24231,7 +24233,7 @@ arm_print_condition (FILE *stream)
 
 
 /* Globally reserved letters: acln
-   Puncutation letters currently used: @_|?().!#
+   Puncutation letters currently used: @_-|?().!#
    Lower case letters currently used: bcdefhimpqtvwxyz
    Upper case letters currently used: ABCDEFGHIJKLMOPQRSTUV
    Letters previously used, but now deprecated/obsolete: sNWXYZ.
@@ -24263,6 +24265,11 @@ arm_print_operand (FILE *stream, rtx x, int code)
 
     case '_':
       fputs (user_label_prefix, stream);
+      return;
+    case '-':
+#ifdef LOCAL_LABEL_PREFIX
+      fputs (LOCAL_LABEL_PREFIX, stream);
+#endif
       return;
 
     case '|':
@@ -25113,9 +25120,9 @@ arm_print_operand_punct_valid_p (unsigned char code)
 {
   return (code == '@' || code == '|' || code == '.'
 	  || code == '(' || code == ')' || code == '#'
+	  || code == '-' || code == '_'
 	  || (TARGET_32BIT && (code == '?'))
-	  || (TARGET_THUMB2 && (code == '!'))
-	  || (TARGET_THUMB && (code == '_')));
+	  || (TARGET_THUMB2 && (code == '!')));
 }
 
 /* Target hook for assembling integer objects.  The ARM version needs to

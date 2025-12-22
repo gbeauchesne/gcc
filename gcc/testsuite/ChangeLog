@@ -1,3 +1,225 @@
+2025-12-21  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2025-12-15  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR libfortran/122936
+	* gfortran.dg/pr122936.f90: New test.
+
+2025-12-19  Yury Khrustalev  <yury.khrustalev@arm.com>
+
+	Backported from master:
+	2025-11-24  Yury Khrustalev  <yury.khrustalev@arm.com>
+
+	PR debug/121964
+	* g++.target/aarch64/dwarf-bit-stride-func.C: New test.
+	* g++.target/aarch64/dwarf-bit-stride-pragma.C: New test.
+	* g++.target/aarch64/dwarf-bit-stride-pragma-sme.C: New test.
+	* g++.target/aarch64/sve/dwarf-bit-stride.C: New test.
+	* gcc.target/aarch64/dwarf-bit-stride-func.c: New test.
+	* gcc.target/aarch64/dwarf-bit-stride-pragma.c: New test.
+	* gcc.target/aarch64/dwarf-bit-stride-pragma-sme.c: New test.
+	* gcc.target/aarch64/sve/dwarf-bit-stride.c: New test.
+
+2025-12-16  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-12-15  Patrick Palka  <ppalka@redhat.com>
+
+	PR c++/122752
+	* g++.dg/template/dependent-name19.C: New test.
+
+2025-12-16  Patrick Palka  <ppalka@redhat.com>
+
+	Backported from master:
+	2025-11-19  Patrick Palka  <ppalka@redhat.com>
+
+	PR c++/122668
+	PR c++/114764
+	* g++.dg/cpp0x/noexcept91.C: New test.
+
+2025-12-16  Robin Dapp  <rdapp@ventanamicro.com>
+
+	Backported from master:
+	2025-12-09  Robin Dapp  <rdapp@ventanamicro.com>
+
+	PR target/123022
+	* gcc.target/riscv/rvv/autovec/pr123022-2.c: New test.
+	* gcc.target/riscv/rvv/autovec/pr123022.c: New test.
+
+2025-12-16  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	Backported from master:
+	2025-12-11  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/107406
+	* gfortran.dg/coarray_lock_3.f90: Remove dg-error on
+	valid code.
+	* gfortran.dg/coarray_lock_4.f90: Likewise.
+	* gfortran.dg/coarray_lock_5.f90: Likwise
+	Co-Authored by: Andre Vehreschild <vehre@gcc.gnu.org>
+
+2025-12-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/reduce4.adb: New test.
+	* gnat.dg/reduce5.adb: Likewise.
+
+2025-12-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/lto30.ads, gnat.dg/lto30.adb: New test.
+
+2025-12-11  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/specs/put_image2.ads: New test.
+
+2025-12-11  Vladimir N. Makarov  <vmakarov@redhat.com>
+
+	PR rtl-optimization/122215
+	* gcc.target/riscv/pr122215.c: New.
+	* lib/target-supports.exp (check_effective_target_valgrind): New.
+
+2025-12-11  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/aggr33.adb: New test.
+
+2025-12-11  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c/123018
+	* gcc.dg/pr123018.c: New test.
+
+2025-12-10  Robin Dapp  <rdapp@ventanamicro.com>
+
+	Backported from master:
+	2025-12-01  Robin Dapp  <rdapp@ventanamicro.com>
+
+	PR target/122652
+	* gcc.target/riscv/rvv/base/pr122652.c: New test.
+
+2025-12-09  Harald Anlauf  <anlauf@gmx.de>
+
+	Backported from master:
+	2025-12-05  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/122977
+	* gfortran.dg/contiguous_16.f90: New test.
+
+2025-12-09  Robin Dapp  <rdapp.gcc@gmail.com>
+
+	Backported from master:
+	2025-12-02  Robin Dapp  <rdapp.gcc@gmail.com>
+
+	PR target/122656
+	* gcc.target/riscv/rvv/base/pr122656-1.c: New test.
+	* gcc.target/riscv/rvv/base/pr122656-2.c: New test.`
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-12-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/122991
+	* gcc.dg/pr122991.c: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-12-03  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/122943
+	* gcc.c-torture/execute/pr122943.c: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c/121506
+	* gcc.dg/pr121506.c: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-11-25  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120052
+	* c-c++-common/gomp/pr120052.c: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-11-25  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/120564
+	* c-c++-common/gomp/pr120564.c: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-11-21  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/121445
+	* g++.dg/cpp1y/constexpr-121445.C: New test.
+
+2025-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from master:
+	2025-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/120876
+	* g++.dg/parse/crash81.C: New test.
+
+2025-12-01  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backported from master:
+	2025-12-01  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	PR target/122858
+	* gcc.target/arm/mve/pr122858.c: New test.
+
+2025-12-01  Richard Earnshaw  <rearnsha@arm.com>
+
+	Backported from master:
+	2025-05-07  Richard Earnshaw  <rearnsha@arm.com>
+
+	PR target/110796
+	PR target/118446
+	* gcc.target/arm/armv8_2-fp16-arith-1.c: Adjust due to no-longer
+	emitting VCMPE when -ffast-math..
+
+2025-11-28  Daniele Sahebi  <daniele@mkryss.me>
+
+	Backported from master:
+	2025-11-22  Daniele Sahebi  <daniele@mkryss.me>
+		    Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/122658
+	* g++.dg/cpp2a/consteval42.C: New test.
+
+2025-11-28  Avinash Jayakar  <avinashd@linux.ibm.com>
+
+	PR tree-optimization/122126
+	* gcc.dg/pr122126_vextr.c: New test.
+	* gcc.dg/pr122126_vset.c: New test.
+
+2025-11-27  Richard Earnshaw  <rearnsha@arm.com>
+
+	Backported from master:
+	2025-11-26  Richard Earnshaw  <rearnsha@arm.com>
+
+	PR target/122867
+	* gcc.target/arm/cbz-range.c: New test.
+
+2025-11-26  Marek Polacek  <polacek@redhat.com>
+
+	Backported from master:
+	2025-11-26  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/121325
+	* g++.dg/cpp26/pack-indexing18.C: New test.
+
 2025-11-25  Nathaniel Shead  <nathanieloshead@gmail.com>
 
 	Backported from master:

@@ -1,3 +1,40 @@
+2025-12-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/123138
+	* exp_attr.adb (Expand_N_Attribute_Reference) <Attribute_Reduce>:
+	Override a universal numeric type only if the prefix is not an
+	aggregate.
+
+2025-12-15  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/123060
+	* gcc-interface/utils.cc (update_pointer_to): Synthesize a new
+	TYPE_CANONICAL for the old pointer type in the case where there
+	is no new pointer type.  Likewise for references.
+
+2025-12-11  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/123096
+	* exp_put_image.adb (Build_Record_Put_Image_Procedure): Call
+	Incomplete_Or_Partial_View with Partial_Only set to True.
+
+2025-12-11  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/123088
+	* sem_aggr.adb (Resolve_Record_Aggregate): Add missing guard.
+
+2025-12-08  Eric Botcazou  <ebotcazou@adacore.com>
+
+	PR ada/123037
+	* rtinit.c [__MINGW32__]: Include <stdlib.h> and not <windows.h>.
+	* rtfinal.c [__MINGW32__]: Do not include <windows.h>.
+
+2025-12-06  Iain Sandoe  <iain@sandoe.co.uk>
+
+	PR ada/115305
+	* Makefile.rtl: Use s-oslock__darwin instead of the Posix version.
+	* libgnat/s-oslock__darwin.ads: New file.
+
 2025-11-21  Eric Botcazou  <ebotcazou@adacore.com>
 
 	* repinfo.adb (List_Location): Do not output the final comma.
